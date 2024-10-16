@@ -1,5 +1,3 @@
-// Create var when we define what it is and export it
+const Item = require('./Item');
 
-// const = require('');
-
-// module.exports = {  };
+module.exports = { Item };

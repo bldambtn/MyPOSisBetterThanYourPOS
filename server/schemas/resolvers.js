@@ -1,12 +1,17 @@
+const { Item } = require('../models');
+
 const resolvers = {
-    Query: {
-      hello: () => 'Hello, World!',
-      getItems: () => [
-        { id: 1, name: 'Paint', quantity: 100 },
-        { id: 2, name: 'Brush', quantity: 50 },
-      ],
+  Query: {
+    hello: () => 'Hello, World!',
+    getItems: async () => {
+      try {
+        return await Item.find();
+      } catch (err) {
+        console.error('❌ Error fetching items:', err);
+        return [];
+      }
     },
-  };
-  
-  module.exports = resolvers;
-  
+  },
+};
+
+module.exports = resolvers;
