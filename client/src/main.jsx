@@ -9,7 +9,7 @@ const router = createBrowserRouter([
     {
         path: '/',
         element: <App />,
-        error: <NoMatch />,
+        errorElement: <NoMatch />,
         children: [
             {
             index: true, 
