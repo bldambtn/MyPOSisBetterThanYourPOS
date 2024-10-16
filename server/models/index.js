@@ -1,5 +1,4 @@
-// Create var when we define what it is and export it
+// models/index.js
+const User = require('./user');
 
-// const = require('');
-
-// module.exports = {  };
+module.exports = { User };
