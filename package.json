@@ -1,0 +1,15 @@
+{
+  "name": "myposisbetterthanyourpos",
+  "version": "1.0.0",
+  "description": "A MERN-stack single-page application that integrates user-focused functionality, using technologies like React, GraphQL, Node.js, Express.js, MongoDB, and JWT for authentication.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^9.0.1"
+  }
+}
