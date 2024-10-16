@@ -1,4 +1,3 @@
-//import components up here
 
 const Home = () => {
   return (
