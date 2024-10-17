@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
-// Establish connection to MongoDB
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/programming-thoughts', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 });
 
 const db = mongoose.connection;
 
-// Log connection success or error
 db.on('error', (err) => {
   console.error('❌ MongoDB connection error:', err);
 });
