@@ -1,5 +1,6 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import SignupModal from "../components/SignUp";
 import { Link } from 'react-router-dom';
 
 const Home = () => {

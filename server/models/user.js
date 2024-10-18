@@ -14,20 +14,21 @@ const userSchema = new Schema({
     required: true,
     trim: true
   },
-  company: {
+  username: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    trim: true
   },
-  userName: {
+  organization: {
     type: String,
-    required: true,
-    unique: true
+    trim: true
   },
-  role: {
+  email: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    match: [/.+@.+\..+/, 'Must use a valid email address']
   },
   password: {
     type: String,
