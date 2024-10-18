@@ -1,6 +1,5 @@
 import React from "react";
-import LoginModal from "../components/LoginModal";
-import SignupModal from "../components/SignUp";
+import LoginSignupModal from "../components/LoginSignupModal";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link } from "react-router-dom";
 
@@ -9,8 +8,8 @@ const Enterprise = () => {
     <div className="container">
       <h1>Welcome to the Enterprise Page</h1>
       <p>Hello World!</p>
-      <LoginModal />
-      <SignupModal/>
+      <LoginSignupModal />
+    
       <h1 className="title-banner">Welcome to Our Application</h1>
       <div className="button-container">
         <Link to="/enterprise">
