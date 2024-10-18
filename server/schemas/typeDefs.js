@@ -17,6 +17,8 @@ const typeDefs = gql`
     _id: ID
     firstName: String
     lastName: String
+    username: String
+    organization: String
     email: String
   }
 
@@ -29,12 +31,16 @@ const typeDefs = gql`
     addUser(
       firstName: String!
       lastName: String!
+      username: String!
+      organization: String
       email: String!
       password: String!
     ): Auth
     updateUser(
       firstName: String
       lastName: String
+      username: String
+      organization: String
       email: String
       password: String
     ): User
