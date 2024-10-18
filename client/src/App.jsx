@@ -13,6 +13,8 @@ const httpLink = createHttpLink({
   uri: '/graphql',
 });
 
+// This checks sto see if we have a JWT stored in local storage, 
+// If so, it is included in the autorization header for all future GraphQL requests.
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('id_token');
   return {

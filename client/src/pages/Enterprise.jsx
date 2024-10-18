@@ -1,12 +1,14 @@
-import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { Link } from 'react-router-dom';
+import React from "react";
+import LoginModal from "../components/LoginModal";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { Link } from "react-router-dom";
 
-const Home = () => {
+const Enterprise = () => {
   return (
     <div className="container">
-      <h1>Welcome to the Home Page</h1>
+      <h1>Welcome to the Enterprise Page</h1>
       <p>Hello World!</p>
+      <LoginModal />
       <h1 className="title-banner">Welcome to Our Application</h1>
       <div className="button-container">
         <Link to="/enterprise">
@@ -20,8 +22,4 @@ const Home = () => {
   );
 };
 
-
-
-
-export default Home;
-
+export default Enterprise;
