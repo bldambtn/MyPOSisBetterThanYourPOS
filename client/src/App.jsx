@@ -9,8 +9,6 @@ import {
 
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-import { StoreProvider } from "./utils/GlobalState";
-
 import { StoreProvider } from './utils/GlobalState';
 import Home from './pages/Home'; // Import the home page
 import InventoryDashboard from './pages/InventoryDashboard'; // Import the new Inventory Dashboard page
