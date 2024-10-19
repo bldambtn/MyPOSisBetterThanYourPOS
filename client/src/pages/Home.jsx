@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, React } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link } from "react-router-dom";
+
 
 const Home = () => {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
@@ -47,6 +48,10 @@ const Home = () => {
         <button className="marketplace-button" disabled>
           Marketplace (coming soon)
         </button>
+        {/* Added the link to Inventory Dashboard */}
+        <Link to="/inventory">
+          <button className="inventory-button">Inventory Dashboard</button>
+        </Link>
       </div>
 
       {/* Install button: Only shown if the deferred prompt is available */}
