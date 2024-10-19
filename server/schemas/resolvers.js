@@ -1,4 +1,4 @@
-const { Item, User } = require("../models");
+const { Item, User, Inventory } = require("../models");
 const { AuthenticationError } = require("apollo-server-express");
 const { signToken } = require("../utils/auth");
 
@@ -20,6 +20,22 @@ const resolvers = {
       }
 
       throw new AuthenticationError("Not authenticated");
+    },
+    getInventories: async () => {
+      try {
+        return await Inventory.find().populate('company');
+      } catch (err) {
+        console.error("❌ Error fetching inventories:", err);
+        return [];
+      }
+    },
+    getInventory: async (parent, { id }) => {
+      try {
+        return await Inventory.findById(id).populate('company');
+      } catch (err) {
+        console.error("❌ Error fetching inventory:", err);
+        return null;
+      }
     },
   },
   Mutation: {
@@ -45,6 +61,37 @@ const resolvers = {
       const token = signToken(user);
 
       return { token, user };
+    },
+    addInventory: async (parent, { upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin, company }) => {
+      try {
+        const newInventory = await Inventory.create({ upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin, company });
+        return newInventory;
+      } catch (err) {
+        console.error("❌ Error adding inventory:", err);
+        throw new Error("Error adding inventory");
+      }
+    },
+    updateInventory: async (parent, { id, upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin }) => {
+      try {
+        const updatedInventory = await Inventory.findByIdAndUpdate(
+          id,
+          { upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin },
+          { new: true }
+        );
+        return updatedInventory;
+      } catch (err) {
+        console.error("❌ Error updating inventory:", err);
+        throw new Error("Error updating inventory");
+      }
+    },
+    deleteInventory: async (parent, { id }) => {
+      try {
+        const deletedInventory = await Inventory.findByIdAndDelete(id);
+        return deletedInventory;
+      } catch (err) {
+        console.error("❌ Error deleting inventory:", err);
+        throw new Error("Error deleting inventory");
+      }
     },
   },
 };
