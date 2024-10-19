@@ -1,15 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import ActionButtons from '../components/ActionButtons';
-import EntryField from '../components/EntryField';
-import ItemScreen from '../components/ItemScreen';
-import Totals from '../components/Totals';
-import WarningMessage from '../components/WarningMessage';
+// import ActionButtons from '../components/ActionButtons';
+// import EntryField from '../components/EntryField';
+// import ItemScreen from '../components/ItemScreen';
+// import Totals from '../components/Totals';
+// import WarningMessage from '../components/WarningMessage';
 
-const PointOfSale = () {
+const PointOfSale = () => {
     return (
-        <div className="pos">
+        {/*<div className="pos">
             <div className="warning-text">
                 <WarningMessage />
             </div>
@@ -25,6 +25,8 @@ const PointOfSale = () {
             <div className="entry-field">
                 <EntryField />
             </div>
-        </div>
+        </div>*/}
     );
-};
+}
+
+export default PointOfSale;
