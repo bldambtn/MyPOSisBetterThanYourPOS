@@ -47,9 +47,6 @@ const Home = () => {
           Marketplace (coming soon)
         </button>
         {/* Added the link to Inventory Dashboard */}
-        <Link to="/inventory">
-          <button className="inventory-button">Inventory Dashboard</button>
-        </Link>
       </div>
 
       {/* Install button: Only shown if the deferred prompt is available */}
