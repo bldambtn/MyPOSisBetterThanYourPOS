@@ -11,7 +11,7 @@ import {
 import { setContext } from '@apollo/client/link/context';
 import { StoreProvider } from "./utils/GlobalState";
 
-import { StoreProvider } from './utils/GlobalState';
+import TitleBanner from './components/TitleBanner';
 import Home from './pages/Home'; // Import the home page
 import InventoryDashboard from './pages/InventoryDashboard'; // Import the new Inventory Dashboard page
 import Signup from './pages/Signup'; // Example of another page
@@ -75,10 +75,12 @@ function App() {
 
   return (
     <ApolloProvider client={client}>
+        <TitleBanner />
+        
       <Router>
         <StoreProvider>
           <Routes>
-            <Route path="/" element={<Home />} /> {/* Home Page */}
+            <Route path="/enterprise" element={<Enterprise />} /> {/* Home Page */}
             <Route path="/inventory" element={<InventoryDashboard />} /> {/* Inventory Dashboard */}
             <Route path="/signup" element={<Signup />} /> {/* Signup Page */}
             <Route path="*" element={<NoMatch />} /> {/* 404 Page */}
