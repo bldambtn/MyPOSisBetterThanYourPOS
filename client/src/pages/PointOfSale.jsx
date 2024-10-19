@@ -13,8 +13,12 @@ const PointOfSale = () {
             <div className="warning-text">
                 <WarningMessage />
             </div>
-            <ItemScreen />
-            <Totals />
+            <div className="item-screen">
+                <ItemScreen />
+            </div>
+            <div className="totals">
+                <Totals />
+            </div>
             <ActionButtons />
             <EntryField />
         </div>
