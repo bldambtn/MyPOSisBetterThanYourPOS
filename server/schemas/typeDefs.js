@@ -34,6 +34,20 @@ const typeDefs = gql`
     email: String
   }
 
+    type Inventory {
+    _id: ID
+    upc: String
+    plu: String!
+    productName: String!
+    weightPerItem: Float
+    salePrice: Float
+    vendorPrice: Float
+    inStock: Int
+    coo: String
+    companyOfOrigin: String
+    company: User
+  }
+
   type Auth {
     token: ID
     user: User
@@ -58,6 +72,7 @@ const typeDefs = gql`
     ): User
     login(email: String!, password: String!): Auth
     addItem(
+    addInventory(
       upc: String
       plu: String!
       productName: String!
@@ -67,7 +82,22 @@ const typeDefs = gql`
       inStock: Int
       coo: String!
       company: ID!
-    ): Item
+      companyOfOrigin: String
+    ): Inventory
+    updateInventory(
+      id: ID!
+      upc: String
+      plu: String
+      productName: String
+      weightPerItem: Float
+      salePrice: Float
+      vendorPrice: Float
+      inStock: Int
+      coo: String
+      companyOfOrigin: String
+    ): Inventory
+    deleteInventory(id: ID!): Inventory
+
   }
 `;
 
