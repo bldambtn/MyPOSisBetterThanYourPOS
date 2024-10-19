@@ -1,6 +1,5 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import SignupModal from "../components/SignUp";
 import { Link } from 'react-router-dom';
 
 const Home = () => {
@@ -16,13 +15,13 @@ const Home = () => {
         <button className="marketplace-button" disabled>
           Marketplace (coming soon)
         </button>
+        {/* Added the link to Inventory Dashboard */}
+        <Link to="/inventory">
+          <button className="inventory-button">Inventory Dashboard</button>
+        </Link>
       </div>
     </div>
   );
 };
 
-
-
-
 export default Home;
-
