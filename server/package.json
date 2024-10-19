@@ -5,7 +5,8 @@
     "main": "server.js",
     "scripts": {
         "start": "node server.js",
-        "watch": "nodemon"
+        "watch": "nodemon",
+        "test:echo": "echo run server/tests/"
     },
     "keywords": [],
     "author": "",

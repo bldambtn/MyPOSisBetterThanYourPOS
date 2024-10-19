@@ -9,8 +9,20 @@ const typeDefs = gql`
 
   type Item {
     id: ID!
+    upc: String
+    plu: String!
+    productName: String!
+    weightPerItem: Float
+    salePrice: Float
+    vendorPrice: Float
+    inStock: Int
+    coo: String!
+    company: Company!
+  }
+
+  type Company {
+    id: ID!
     name: String!
-    quantity: Int!
   }
 
   type User {
@@ -45,6 +57,17 @@ const typeDefs = gql`
       password: String
     ): User
     login(email: String!, password: String!): Auth
+    addItem(
+      upc: String
+      plu: String!
+      productName: String!
+      weightPerItem: Float
+      salePrice: Float
+      vendorPrice: Float
+      inStock: Int
+      coo: String!
+      company: ID!
+    ): Item
   }
 `;
 
