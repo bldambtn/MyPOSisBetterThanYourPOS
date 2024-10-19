@@ -1,0 +1,14 @@
+# Testing user login
+
+### Login Test
+POST http://localhost:4000/graphql
+Content-Type: application/json
+
+{
+  "query": "mutation { login(email: \"user@example.com\", password: \"password123\") { token user { email } } }"
+}
+
+> {%
+client.assert(response.status === 200, 'Expected response status to be 200');
+client.assert(response.body.data.login.user.email === 'user@example.com', 'Expected email to be "user@example.com"');
+%}

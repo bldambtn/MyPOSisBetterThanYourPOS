@@ -5,12 +5,26 @@ const typeDefs = gql`
     hello: String
     getItems: [Item]
     user: User # 'user' query
+     getInventories: [Inventory] # Query to fetch all inventories
+    getInventory(id: ID!): Inventory # Query to fetch a specific inventory by ID
   }
 
   type Item {
     id: ID!
+    upc: String
+    plu: String!
+    productName: String!
+    weightPerItem: Float
+    salePrice: Float
+    vendorPrice: Float
+    inStock: Int
+    coo: String!
+    company: Company!
+  }
+
+  type Company {
+    id: ID!
     name: String!
-    quantity: Int!
   }
 
   type User {
@@ -59,6 +73,7 @@ const typeDefs = gql`
       password: String
     ): User
     login(email: String!, password: String!): Auth
+    addItem(
     addInventory(
       upc: String
       plu: String!
@@ -67,9 +82,9 @@ const typeDefs = gql`
       salePrice: Float
       vendorPrice: Float
       inStock: Int
-      coo: String
-      companyOfOrigin: String
+      coo: String!
       company: ID!
+      companyOfOrigin: String
     ): Inventory
     updateInventory(
       id: ID!
@@ -84,6 +99,7 @@ const typeDefs = gql`
       companyOfOrigin: String
     ): Inventory
     deleteInventory(id: ID!): Inventory
+
   }
 `;
 
