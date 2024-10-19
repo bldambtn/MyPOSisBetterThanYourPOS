@@ -1,0 +1,15 @@
+# Testing adding an item to the inventory
+
+### Create Item Test
+POST http://localhost:4000/graphql
+Content-Type: application/json
+
+{
+  "query": "mutation { addItem(upc: \"123456789012\", plu: \"1234\", productName: \"Test Product\", weightPerItem: 1.5, salePrice: 9.99, vendorPrice: 5.99, inStock: 100, coo: \"USA\", company: \"60df75f7b70a5b0017a2b123\") { productName inStock } }"
+}
+
+> {%
+client.assert(response.status === 200, 'Expected response status to be 200');
+client.assert(response.body.data.addItem.productName === 'Test Product', 'Expected product name to be "Test Product"');
+client.assert(response.body.data.addItem.inStock === 100, 'Expected inStock value to be 100');
+%}
