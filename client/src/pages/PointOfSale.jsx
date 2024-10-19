@@ -7,7 +7,7 @@ import ItemScreen from '../components/ItemScreen';
 import Totals from '../components/Totals';
 import WarningMessage from '../components/WarningMessage';
 
-const PointOfSale = () {
+const PointOfSale = () => {
     return (
         <div className="pos">
             <div className="warning-text">
@@ -27,4 +27,6 @@ const PointOfSale = () {
             </div>
         </div>
     );
-};
+}
+
+export default PointOfSale;

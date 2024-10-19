@@ -6,6 +6,7 @@ import App from "./App.jsx";
 import Home from "./pages/Home";
 import NoMatch from "./pages/NoMatch";
 import Enterprise from "./pages/Enterprise";
+import InventoryDashboard from "./pages/InventoryDashboard.jsx";
 
 // Set up routes
 const router = createBrowserRouter([
@@ -19,6 +20,8 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       { path: "/enterprise", element: <Enterprise /> },
+      { path: "/enterprise/pos", element: <PointOfSale /> },
+      { path: "enterprise/inventory", element: <InventoryDashboard /> }
     ],
   },
 ]);
