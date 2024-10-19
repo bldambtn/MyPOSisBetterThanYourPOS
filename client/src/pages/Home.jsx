@@ -6,9 +6,7 @@ import { Link } from 'react-router-dom';
 const Home = () => {
   return (
     <div className="container">
-      <h1>Welcome to the Home Page</h1>
       <p>Hello World!</p>
-      <TitleBanner />
       <div className="button-container">
         <Link to="/enterprise">
           <button className="enterprise-button">Enterprise</button>

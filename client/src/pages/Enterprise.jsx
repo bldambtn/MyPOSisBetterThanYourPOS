@@ -7,7 +7,7 @@ import TitleBanner from "../components/TitleBanner";
 const Enterprise = () => {
   return (
     <div className="container">
-      <TitleBanner />
+
       <h1>Dashboard</h1>
       <LoginSignupModal />
     </div>

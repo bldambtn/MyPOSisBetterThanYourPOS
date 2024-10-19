@@ -8,6 +8,7 @@ import {
 import { setContext } from '@apollo/client/link/context';
 
 import { StoreProvider } from './utils/GlobalState';
+import TitleBanner from './components/TitleBanner';
 
 const httpLink = createHttpLink({
   uri: '/graphql',
@@ -33,6 +34,7 @@ const client = new ApolloClient({
 function App() {
   return (
     <ApolloProvider client={client}>
+        <TitleBanner />
         
         <Outlet />
     </ApolloProvider>
