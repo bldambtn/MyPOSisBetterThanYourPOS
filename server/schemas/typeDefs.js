@@ -73,7 +73,6 @@ const typeDefs = gql`
       password: String
     ): User
     login(email: String!, password: String!): Auth
-    addItem(
     addInventory(
       upc: String
       plu: String!
