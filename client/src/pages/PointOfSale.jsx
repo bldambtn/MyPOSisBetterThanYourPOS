@@ -19,8 +19,12 @@ const PointOfSale = () {
             <div className="totals">
                 <Totals />
             </div>
-            <ActionButtons />
-            <EntryField />
+            <div className="action-buttons">
+                <ActionButtons />
+            </div>
+            <div className="entry-field">
+                <EntryField />
+            </div>
         </div>
     );
 };
