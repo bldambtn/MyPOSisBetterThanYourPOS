@@ -1,4 +1,5 @@
-// models/index.js
 const User = require('./user');
+const Item = require('./item');
+const Inventory = require('./inventory');
 
-module.exports = { User };
+module.exports = { User, Item, Inventory };
