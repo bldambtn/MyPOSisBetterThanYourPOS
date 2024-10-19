@@ -5,6 +5,8 @@ const typeDefs = gql`
     hello: String
     getItems: [Item]
     user: User # 'user' query
+     getInventories: [Inventory] # Query to fetch all inventories
+    getInventory(id: ID!): Inventory # Query to fetch a specific inventory by ID
   }
 
   type Item {
