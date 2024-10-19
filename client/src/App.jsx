@@ -1,5 +1,6 @@
 import { Outlet, BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useEffect, useState } from "react"; // Import useEffect and useState
+// import Enterprise from './pages/Enterprise';
 
 import {
   ApolloClient,
@@ -12,10 +13,10 @@ import { setContext } from '@apollo/client/link/context';
 import { StoreProvider } from "./utils/GlobalState";
 
 import TitleBanner from './components/TitleBanner';
-import Home from './pages/Home'; // Import the home page
-import InventoryDashboard from './pages/InventoryDashboard'; // Import the new Inventory Dashboard page
-import Signup from './pages/Signup'; // Example of another page
-import NoMatch from './pages/NoMatch'; // Example of a 404 page
+// import Home from './pages/Home'; 
+// import InventoryDashboard from './pages/InventoryDashboard';
+// import Signup from './pages/Signup'; 
+// import NoMatch from './pages/NoMatch';
 
 
 const httpLink = createHttpLink({
@@ -77,21 +78,21 @@ function App() {
     <ApolloProvider client={client}>
         <TitleBanner />
         
-      <Router>
+      {/* <Router> */}
         <StoreProvider>
-          <Routes>
-            <Route path="/enterprise" element={<Enterprise />} /> {/* Home Page */}
-            <Route path="/inventory" element={<InventoryDashboard />} /> {/* Inventory Dashboard */}
-            <Route path="/signup" element={<Signup />} /> {/* Signup Page */}
-            <Route path="*" element={<NoMatch />} /> {/* 404 Page */}
-          </Routes>
+          {/* <Routes>
+            <Route path="/enterprise" element={<Enterprise />} /> 
+            <Route path="/inventory" element={<InventoryDashboard />} /> 
+            <Route path="/signup" element={<Signup />} /> 
+            <Route path="*" element={<NoMatch />} /> 
+          </Routes> */}
          <Outlet />
         {/* Add your install button somewhere in your app */}
         {deferredPrompt && (
           <button onClick={handleInstallClick}>Install App</button>
         )}
         </StoreProvider>
-      </Router>
+      {/* </Router> */}
     </ApolloProvider>
   );
 }
