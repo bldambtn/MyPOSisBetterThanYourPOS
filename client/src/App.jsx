@@ -1,5 +1,5 @@
-import { Outlet, BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { useEffect, useState } from "react"; // Import useEffect and useState
+import { Outlet, useLocation, BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useEffect, useState } from "react";
 // import Enterprise from './pages/Enterprise';
 
 import {
@@ -18,6 +18,9 @@ import TitleBanner from './components/TitleBanner';
 // import Signup from './pages/Signup'; 
 // import NoMatch from './pages/NoMatch';
 
+//Required for chat window, socket.io
+import ChatWindow from './components/ChatWindow';
+import Auth from './utils/auth';
 
 const httpLink = createHttpLink({
   uri: "/graphql",
@@ -43,6 +46,7 @@ const client = new ApolloClient({
 
 function App() {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const location = useLocation();
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (event) => {
@@ -74,24 +78,38 @@ function App() {
     }
   };
 
+  // Required for socket.io to work
+  const shouldShowChat = () => {
+    const isHomePage = location.pathname === "/";
+    const isEnterprisePage = location.pathname.startsWith("/enterprise");
+    const isLoggedIn = Auth.loggedIn();
+
+    // Show chat only on non-home pages and on the enterprise page when logged in
+    return (
+      !isHomePage && (!isEnterprisePage || (isEnterprisePage && isLoggedIn))
+    );
+  };
+
   return (
     <ApolloProvider client={client}>
-        <TitleBanner />
-        
+      <TitleBanner />
+
       {/* <Router> */}
-        <StoreProvider>
-          {/* <Routes>
+      <StoreProvider>
+        {/* <Routes>
             <Route path="/enterprise" element={<Enterprise />} /> 
             <Route path="/inventory" element={<InventoryDashboard />} /> 
             <Route path="/signup" element={<Signup />} /> 
             <Route path="*" element={<NoMatch />} /> 
           </Routes> */}
-         <Outlet />
+        <Outlet />
         {/* Add your install button somewhere in your app */}
         {deferredPrompt && (
           <button onClick={handleInstallClick}>Install App</button>
         )}
-        </StoreProvider>
+        {/* Conditionally render the ChatWindow */}
+        {shouldShowChat() && <ChatWindow />} {/* Only show if conditions met */}
+      </StoreProvider>
       {/* </Router> */}
     </ApolloProvider>
   );
