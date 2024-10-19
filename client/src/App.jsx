@@ -11,16 +11,12 @@ import {
 import { setContext } from '@apollo/client/link/context';
 import { StoreProvider } from "./utils/GlobalState";
 
-import { StoreProvider } from './utils/GlobalState';
-<<<<<<< HEAD
 import TitleBanner from './components/TitleBanner';
-=======
 import Home from './pages/Home'; // Import the home page
 import InventoryDashboard from './pages/InventoryDashboard'; // Import the new Inventory Dashboard page
 import Signup from './pages/Signup'; // Example of another page
 import NoMatch from './pages/NoMatch'; // Example of a 404 page
 
->>>>>>> 09d358f5ecbcaba2907aca4590b0e61cf1586dc7
 
 const httpLink = createHttpLink({
   uri: "/graphql",
@@ -79,15 +75,12 @@ function App() {
 
   return (
     <ApolloProvider client={client}>
-<<<<<<< HEAD
         <TitleBanner />
         
-        <Outlet />
-=======
       <Router>
         <StoreProvider>
           <Routes>
-            <Route path="/" element={<Home />} /> {/* Home Page */}
+            <Route path="/enterprise" element={<Enterprise />} /> {/* Home Page */}
             <Route path="/inventory" element={<InventoryDashboard />} /> {/* Inventory Dashboard */}
             <Route path="/signup" element={<Signup />} /> {/* Signup Page */}
             <Route path="*" element={<NoMatch />} /> {/* 404 Page */}
@@ -99,7 +92,6 @@ function App() {
         )}
         </StoreProvider>
       </Router>
->>>>>>> 09d358f5ecbcaba2907aca4590b0e61cf1586dc7
     </ApolloProvider>
   );
 }
