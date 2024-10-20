@@ -8,13 +8,16 @@ const Enterprise = () => {
     <div className="container">
       <h1>Dashboard</h1>
       <LoginSignupModal />
-      
+
       <div className="mt-4">
         <Link to="/enterprise/inventory" className="btn btn-primary mr-2">
           Go to Inventory
         </Link>
-        <Link to="/enterprise/pos" className="btn btn-secondary">
+        <Link to="/enterprise/pos" className="btn btn-secondary mr-2">
           Go to Point of Sale
+        </Link>
+        <Link to="/enterprise/reports" className="btn btn-info">
+          View Sales Reports
         </Link>
       </div>
     </div>

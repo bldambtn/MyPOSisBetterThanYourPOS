@@ -1,4 +1,4 @@
-const { Item, User, Inventory } = require("../models");
+const { Item, User, Inventory, SalesReport } = require("../models");
 const { AuthenticationError } = require("apollo-server-express");
 const { signToken } = require("../utils/auth");
 
@@ -15,10 +15,8 @@ const resolvers = {
     },
     user: async (parent, args, context) => {
       if (context.user) {
-        const user = await User.findById(context.user._id);
-        return user;
+        return await User.findById(context.user._id);
       }
-
       throw new AuthenticationError("Not authenticated");
     },
     getInventories: async () => {
@@ -35,6 +33,39 @@ const resolvers = {
       } catch (err) {
         console.error("❌ Error fetching inventory:", err);
         return null;
+      }
+    },
+    getSalesReports: async (parent, { dateRange, product, category }) => {
+      try {
+        // Set up filtering conditions
+        const filter = {};
+    
+        if (dateRange) {
+          const today = new Date();
+          if (dateRange === "daily") {
+            filter.date = { $gte: new Date(today.setHours(0, 0, 0, 0)) };
+          } else if (dateRange === "weekly") {
+            filter.date = { $gte: new Date(today.setDate(today.getDate() - 7)) };
+          } else if (dateRange === "monthly") {
+            filter.date = { $gte: new Date(today.setMonth(today.getMonth() - 1)) };
+          }
+        }
+    
+        if (product) {
+          filter.product = product;
+        }
+    
+        if (category) {
+          filter.category = category;
+        }
+    
+        console.log('Filter being used:', filter); // Log the filter being used for debugging
+        const reports = await SalesReport.find(filter);
+        console.log('Fetched reports:', reports); // Log the fetched reports for debugging
+        return reports;
+      } catch (err) {
+        console.error("❌ Error fetching sales reports:", err);
+        return [];
       }
     },
   },
