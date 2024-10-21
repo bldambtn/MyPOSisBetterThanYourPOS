@@ -8,6 +8,7 @@ import NoMatch from "./pages/NoMatch";
 import Enterprise from "./pages/Enterprise";
 import InventoryDashboard from "./pages/InventoryDashboard.jsx";
 import PointOfSale from "./pages/PointOfSale.jsx";
+import Notifications from "./pages/Notifications";
 
 // Set up routes
 const router = createBrowserRouter([
@@ -22,7 +23,8 @@ const router = createBrowserRouter([
       },
       { path: "/enterprise", element: <Enterprise /> },
       { path: "/enterprise/pos", element: <PointOfSale /> },
-      { path: "enterprise/inventory", element: <InventoryDashboard /> }
+      { path: "enterprise/inventory", element: <InventoryDashboard /> },
+      { path: "/enterprise/notifications", element: <Notifications /> }
     ],
   },
 ]);
