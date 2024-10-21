@@ -18,9 +18,8 @@ const ItemScreen = () => {
           <ul>
             {products.map((product, index) => (
               <li key={index}>
-                <h3>{product.name}</h3>
-                <p>{product.description}</p>
-                <p>Price: ${product.price}</p>
+                <h3>{product.productName}</h3>
+                <p>Price: ${product.salePrice}</p>
               </li>
             ))}
           </ul>
@@ -29,3 +28,5 @@ const ItemScreen = () => {
     </div>
   );
 };
+
+export default ItemScreen;

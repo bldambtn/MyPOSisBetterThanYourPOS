@@ -30,7 +30,7 @@ export const QUERY_INVENTORY = gql`
 `;
 
 // POS search for item
-const SEARCH_PRODUCT_QUERY = gql`
+export const SEARCH_PRODUCT_QUERY = gql`
   query SearchProduct($plu: String!) {
     product(plu: $plu) {
       id
