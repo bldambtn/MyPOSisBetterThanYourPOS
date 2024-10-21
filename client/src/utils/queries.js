@@ -28,3 +28,14 @@ export const QUERY_INVENTORY = gql`
     }
   }
 `;
+
+// POS search for item
+export const SEARCH_PRODUCT_QUERY = gql`
+  query SearchProduct($plu: String!) {
+    product(plu: $plu) {
+      id
+      productName
+      salePrice
+    }
+  }
+`;
