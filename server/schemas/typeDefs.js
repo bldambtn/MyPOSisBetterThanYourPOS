@@ -5,8 +5,9 @@ const typeDefs = gql`
     hello: String
     getItems: [Item]
     user: User # 'user' query
-     getInventories: [Inventory] # Query to fetch all inventories
+    getInventories: [Inventory] # Query to fetch all inventories
     getInventory(id: ID!): Inventory # Query to fetch a specific inventory by ID
+    getSalesReports(dateRange: String, product: String, category: String): [SalesReport] 
   }
 
   type Item {
@@ -48,6 +49,14 @@ const typeDefs = gql`
     coo: String
     companyOfOrigin: String
     company: User
+  }
+
+    type SalesReport {
+    date: String
+    product: String
+    category: String
+    quantitySold: Int
+    totalRevenue: Float
   }
 
   type Auth {

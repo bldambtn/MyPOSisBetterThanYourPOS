@@ -90,27 +90,17 @@ function App() {
     );
   };
 
-  return (
+ return (
     <ApolloProvider client={client}>
       <TitleBanner />
-
-      {/* <Router> */}
       <StoreProvider>
-        {/* <Routes>
-            <Route path="/enterprise" element={<Enterprise />} /> 
-            <Route path="/inventory" element={<InventoryDashboard />} /> 
-            <Route path="/signup" element={<Signup />} /> 
-            <Route path="*" element={<NoMatch />} /> 
-          </Routes> */}
-        <Outlet />
-        {/* Add your install button somewhere in your app */}
+        <Outlet /> {/* Render the nested routes */}
         {deferredPrompt && (
           <button onClick={handleInstallClick}>Install App</button>
         )}
-        {/* Conditionally render the ChatWindow */}
-        {shouldShowChat() && <ChatWindow />} {/* Only show if conditions met */}
+        {/* Optional: Remove or comment out the ChatWindow if it's not needed */}
+         {shouldShowChat() && <ChatWindow />}
       </StoreProvider>
-      {/* </Router> */}
     </ApolloProvider>
   );
 }
