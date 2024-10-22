@@ -60,7 +60,7 @@ const SalesReports = () => {
           rowData={data.getSalesReports}
           columnDefs={columnDefs}
           pagination={true}
-          paginationPageSize={10}
+          paginationPageSize={20}
           domLayout="autoHeight"
         />
       </div>

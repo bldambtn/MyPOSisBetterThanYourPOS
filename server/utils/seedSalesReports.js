@@ -3,9 +3,7 @@ const mongoose = require('mongoose');
 const SalesReport = require('../models/SalesReports'); 
 
 // Connect to your MongoDB database
-mongoose.connect('mongodb://localhost:27017/Cluster1', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
+mongoose.connect('mongodb://localhost:27017/myDatabase', {
 });
 
 const seedData = [
