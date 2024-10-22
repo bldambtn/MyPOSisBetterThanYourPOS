@@ -30,14 +30,14 @@ const ItemScreen = () => {
               <li key={index}>
                 <h3>{product.productName}</h3>
                 <p>Price: ${product.salePrice}</p>
-                <p>Quantity: {product.quantity}</p> {/* Display the quantity */}
+                <p>Quantity: {product.quantity}</p>
               </li>
             ))}
           </ul>
         </div>
       )}
       <div className="totals">
-        <Totals onProductFound={handleProductFound} />
+        <Totals products={products} />
       </div>
       <div className="entry-field">
         <EntryField onProductFound={handleProductFound} />
@@ -45,3 +45,5 @@ const ItemScreen = () => {
     </div>
   );
 };
+
+export default ItemScreen;

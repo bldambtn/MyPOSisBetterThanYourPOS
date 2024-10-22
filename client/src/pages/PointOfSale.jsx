@@ -19,9 +19,6 @@ const PointOfSale = () => {
             {/*
             <div className="action-buttons">
                 <ActionButtons />
-            </div>
-            <div className="entry-field">
-                <EntryField />
             </div>*/}
         </div>
     );
