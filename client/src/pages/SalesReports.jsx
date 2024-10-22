@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 import { GET_SALES_REPORTS } from '../components/queries';
 import { AgGridReact } from 'ag-grid-react';
-import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS
-import 'ag-grid-community/styles/ag-theme-alpine.css'; // Optional theme
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-alpine.css';
 
 const SalesReports = () => {
-  const [dateRange, setDateRange] = useState('daily');
+  const [dateRange, setDateRange] = useState('');
   const [product, setProduct] = useState('');
   const [category, setCategory] = useState('');
 
@@ -14,12 +14,24 @@ const SalesReports = () => {
     variables: { dateRange, product, category },
   });
 
+  useEffect(() => {
+    if (data) {
+      console.log("Fetched sales reports:", data.getSalesReports);
+    }
+  }, [data]);
+
   const columnDefs = [
     { headerName: 'Date', field: 'date', sortable: true, filter: true },
     { headerName: 'Product', field: 'product', sortable: true, filter: true },
     { headerName: 'Category', field: 'category', sortable: true, filter: true },
     { headerName: 'Quantity Sold', field: 'quantitySold', sortable: true, filter: true },
-    { headerName: 'Total Revenue', field: 'totalRevenue', sortable: true, filter: true, valueFormatter: (params) => `$${params.value.toFixed(2)}` },
+    {
+      headerName: 'Total Revenue',
+      field: 'totalRevenue',
+      sortable: true,
+      filter: true,
+      valueFormatter: (params) => `$${params.value.toFixed(2)}`,
+    },
   ];
 
   if (loading) return <div>Loading...</div>;
@@ -29,9 +41,9 @@ const SalesReports = () => {
     <div className="container mt-4">
       <h2>Sales Reports</h2>
       <div className="mb-3">
-        {/* Filters for date range, product, and category */}
         <label>Date Range:</label>
         <select value={dateRange} onChange={(e) => setDateRange(e.target.value)}>
+          <option value="">All</option>
           <option value="daily">Daily</option>
           <option value="weekly">Weekly</option>
           <option value="monthly">Monthly</option>
@@ -54,10 +66,9 @@ const SalesReports = () => {
         />
       </div>
 
-      {/* AG Grid to display sales report data */}
       <div className="ag-theme-alpine" style={{ height: 400, width: '100%' }}>
         <AgGridReact
-          rowData={data.getSalesReports}
+          rowData={data?.getSalesReports || []}
           columnDefs={columnDefs}
           pagination={true}
           paginationPageSize={20}
