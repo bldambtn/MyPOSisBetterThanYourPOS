@@ -47,9 +47,11 @@ const resolvers = {
 
     getSalesReports: async (parent, { dateRange, product, category }) => {
       try {
+        // Comment out or log the filters
         const filter = {};
-
-        // Apply date filtering based on the provided range
+    
+        // Uncomment below if you want to apply the filters later
+        
         if (dateRange) {
           const today = new Date();
           if (dateRange === "daily") {
@@ -60,28 +62,26 @@ const resolvers = {
             filter.date = { $gte: new Date(today.setMonth(today.getMonth() - 1)) };
           }
         }
-
-        // Apply product and category filters if provided
+    
         if (product) {
           filter.product = product;
         }
-
+    
         if (category) {
           filter.category = category;
         }
-
-        console.log('Filter being used:', filter); // Log the filter for debugging
+        
+    
+        console.log('Filter being used:', filter); // Log the filter being used for debugging
         const reports = await SalesReport.find(filter);
         console.log('Fetched reports:', reports); // Log the fetched reports for debugging
-
         return reports;
       } catch (err) {
         console.error("❌ Error fetching sales reports:", err);
-        throw new Error("Failed to fetch sales reports.");
+        return [];
       }
     },
   },
-
   Mutation: {
     addUser: async (parent, { firstName, lastName, username, organization, email, password }) => {
       try {
