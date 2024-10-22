@@ -9,23 +9,23 @@ const EntryField = ({ onProductFound }) => {
     const handleKeyPress = async (event) => {
         if (event.key === 'Enter') {
             try {
-                // Check if the input ends with 'X'
-                const quantityMatch = plu.match(/^(\d+)X$/);
+                // Check if the input ends with '*'
+                const quantityMatch = plu.match(/^(\d+)\*$/);
                 let quantity = 1; // Default quantity
 
                 if (quantityMatch) {
                     quantity = parseInt(quantityMatch[1], 10); // Extract the quantity
-                    const pluWithoutX = plu.slice(0, -1 * quantityMatch[0].length); // Get the PLU without 'X'
+                    const pluWithoutAsterisk = plu.slice(0, -1 * quantityMatch[0].length); // Get the PLU without '*'
                     
                     const { data } = await client.query({
                         query: SEARCH_PRODUCT_QUERY,
-                        variables: { plu: pluWithoutX },
+                        variables: { plu: pluWithoutAsterisk },
                     });
                     
                     // Pass the found product and quantity to the parent component
                     onProductFound({ ...data.product, quantity });
                 } else {
-                    // If no 'X' is present, just search with the PLU
+                    // If no '*' is present, just search with the PLU
                     const { data } = await client.query({
                         query: SEARCH_PRODUCT_QUERY,
                         variables: { plu },
@@ -49,7 +49,7 @@ const EntryField = ({ onProductFound }) => {
             value={plu}
             onChange={(e) => setPlu(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Enter PLU (e.g., 2X for quantity 2)"
+            placeholder="Enter PLU (e.g., 2* for quantity 2)"
         />
     );
 };
