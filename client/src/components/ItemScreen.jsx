@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import EntryField from './EntryField'; // Make sure to import your EntryField component
+import Totals from './Totals'; // Make sure to import your Totals component
 
 const ItemScreen = () => {
   const [products, setProducts] = useState([]);
@@ -11,10 +12,9 @@ const ItemScreen = () => {
 
   return (
     <div>
-      <EntryField onProductFound={handleProductFound} />
       {products.length > 0 && (
         <div>
-          <h2>Items for Sale:</h2>
+          <h2>Items:</h2>
           <ul>
             {products.map((product, index) => (
               <li key={index}>
@@ -25,6 +25,12 @@ const ItemScreen = () => {
           </ul>
         </div>
       )}
+      <div className="totals">
+        <Totals onProductFound={handleProductFound} />
+      </div>
+      <div className="entry-field">
+        <EntryField onProductFound={handleProductFound} />
+      </div>
     </div>
   );
 };
