@@ -18,9 +18,9 @@ const httpServer = http.createServer(app);
 // Attach Socket.io to the HTTP server
 const io = new Server(httpServer, {
   cors: {
-    origin: "http://localhost:3000", // Allow requests from your frontend
+    origin: "http://localhost:3000", // Adjust based on your frontend origin
     methods: ["GET", "POST"],
-    credentials: true, // Include credentials if necessary (e.g., cookies)
+    credentials: true,
   },
 });
 
@@ -83,3 +83,4 @@ const startApolloServer = async () => {
 
 // Call the function to start the server
 startApolloServer();
+// comment
