@@ -1,13 +1,23 @@
 import React, { useState } from 'react';
-import EntryField from './EntryField'; // Make sure to import your EntryField component
-import Totals from './Totals'; // Make sure to import your Totals component
+import EntryField from './EntryField';
+import Totals from './Totals'; 
 
 const ItemScreen = () => {
   const [products, setProducts] = useState([]);
 
   const handleProductFound = (foundProduct) => {
-    // Add the found product to the array
-    setProducts((prevProducts) => [...prevProducts, foundProduct]);
+    // Check if the product already exists in the array
+    const existingProductIndex = products.findIndex(product => product.productName === foundProduct.productName);
+
+    if (existingProductIndex !== -1) {
+      // If it exists, update the quantity
+      const updatedProducts = [...products];
+      updatedProducts[existingProductIndex].quantity += foundProduct.quantity;
+      setProducts(updatedProducts);
+    } else {
+      // If it doesn't exist, add the new product
+      setProducts((prevProducts) => [...prevProducts, foundProduct]);
+    }
   };
 
   return (
@@ -20,6 +30,7 @@ const ItemScreen = () => {
               <li key={index}>
                 <h3>{product.productName}</h3>
                 <p>Price: ${product.salePrice}</p>
+                <p>Quantity: {product.quantity}</p> {/* Display the quantity */}
               </li>
             ))}
           </ul>
@@ -34,5 +45,3 @@ const ItemScreen = () => {
     </div>
   );
 };
-
-export default ItemScreen;
