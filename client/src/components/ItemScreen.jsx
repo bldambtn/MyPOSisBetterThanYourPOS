@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
-import EntryField from './EntryField'; // Make sure to import your EntryField component
+import EntryField from './EntryField';
 
 const ItemScreen = () => {
   const [products, setProducts] = useState([]);
 
   const handleProductFound = (foundProduct) => {
-    // Add the found product to the array
-    setProducts((prevProducts) => [...prevProducts, foundProduct]);
+    setProducts((prevProducts) => {
+      if (prevProducts.some(product => product.plu === foundProduct.plu)) {
+        return prevProducts;
+      }
+      return [...prevProducts, foundProduct];
+    });
   };
 
   return (
@@ -19,7 +23,9 @@ const ItemScreen = () => {
             {products.map((product, index) => (
               <li key={index}>
                 <h3>{product.productName}</h3>
-                <p>Price: ${product.salePrice}</p>
+                <p>Price: ${product.salePrice.toFixed(2)}</p>
+                <p>PLU: {product.plu}</p>
+                <p>Stock: {product.inStock}</p>
               </li>
             ))}
           </ul>

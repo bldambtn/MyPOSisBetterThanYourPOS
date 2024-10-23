@@ -1,4 +1,7 @@
-const itemSchema = new Schema({
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
+
+const inventorySchema = new Schema({
   upc: {
     type: String,
     unique: true,
@@ -49,3 +52,5 @@ const itemSchema = new Schema({
     required: true
   }
 });
+
+module.exports = mongoose.model('Inventory', inventorySchema);
