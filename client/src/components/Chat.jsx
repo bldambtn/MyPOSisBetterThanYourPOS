@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react";
-import io from "socket.io-client";
-
-const socket = io("http://localhost:3001"); // Adjust this URL if needed
+import { useState, useEffect } from "react";
+import socket from "../utils/socket"; // Use the shared socket connection
 
 function Chat() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const [recipientId, setRecipientId] = useState(""); // For selecting recipient
 
   useEffect(() => {
     // Listen for messages from the server
@@ -13,39 +12,45 @@ function Chat() {
       setMessages((prevMessages) => [...prevMessages, messageData]);
     });
 
-    // Clean up the listener when the component unmounts
     return () => {
       socket.off("chat message");
     };
   }, []);
 
   const sendMessage = () => {
-    if (message.trim()) {
-      // Emit message to the server
-      socket.emit("chat message", message);
-      setMessage(""); // Clear input after sending
-    }
-  };
+    const messageData = {
+      from: "currentUserId", // Replace with actual user ID
+      to: recipientId,
+      text: message,
+    };
 
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      sendMessage();
-    }
+    socket.emit("chat message", messageData);
+    setMessage(""); // Clear input after sending
   };
 
   return (
     <div>
       <ul>
         {messages.map((msg, index) => (
-          <li key={index}>{msg}</li>
+          <li key={index}>
+            {msg.text} <br />
+            <small>{new Date().toLocaleString()}</small>
+          </li>
         ))}
       </ul>
       <input
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         placeholder="Type a message"
-        onKeyPress={handleKeyPress} // Handle enter key for sending message
       />
+      <select
+        value={recipientId}
+        onChange={(e) => setRecipientId(e.target.value)}
+      >
+        <option value="">Select a user</option>
+        <option value="userId2">User 2</option>
+        <option value="userId3">User 3</option>
+      </select>
       <button onClick={sendMessage}>Send</button>
     </div>
   );

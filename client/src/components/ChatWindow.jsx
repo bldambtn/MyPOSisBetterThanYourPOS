@@ -17,7 +17,7 @@ function ChatWindow() {
           width: "100%",
         }}
       >
-        {isOpen ? "Minimize" : "Chat"}
+        Chat {/* Changed from Minimize */}
       </button>
 
       {isOpen && (
@@ -26,11 +26,14 @@ function ChatWindow() {
             border: "1px solid black",
             padding: "10px",
             background: "white",
-            height: "300px", // Set height for chat window
-            overflowY: "auto", // Allow scroll for messages
+            height: "300px",
+            display: "flex",
+            flexDirection: "column",
           }}
         >
-          <Chat /> {/* Renders the Chat component */}
+          <div style={{ flexGrow: 1, overflowY: "auto" }}>
+            <Chat /> {/* Renders the Chat component */}
+          </div>
         </div>
       )}
     </div>

@@ -1,5 +1,3 @@
-// client/src/utils/queries.js
-
 import { gql } from '@apollo/client';
 
 // Existing query for user
@@ -16,11 +14,11 @@ export const QUERY_USER = gql`
   }
 `;
 
-// New query for inventory
-export const QUERY_INVENTORY = gql`
-  query getInventory {
-    inventory {
-      _id
+
+export const QUERY_ITEMS = gql`
+  query getItems {
+    items {
+      id
       upc
       productName
       inStock
@@ -29,7 +27,7 @@ export const QUERY_INVENTORY = gql`
   }
 `;
 
-// POS search for item
+
 export const SEARCH_PRODUCT_QUERY = gql`
   query SearchProduct($plu: String!) {
     inventory(plu: $plu) {
