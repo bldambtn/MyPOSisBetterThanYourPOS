@@ -24,6 +24,9 @@ const io = new Server(httpServer, {
   },
 });
 
+// Store missed messages for offline users
+const missedMessages = {};
+
 // Initialize Apollo Server with GraphQL schema
 const server = new ApolloServer({
   typeDefs,
@@ -55,19 +58,39 @@ const startApolloServer = async () => {
 
   // Handle Socket.io connections and events
   io.on("connection", (socket) => {
-    console.log(`🔌 User connected: ${socket.id}`);
+    const userId = socket.handshake.query.userId;
+    console.log(`🔌 User connected: ${socket.id}, User ID: ${userId}`);
 
-    // Example: Listen for incoming chat messages
+    // Send missed messages to the user upon reconnect
+    if (missedMessages[userId]) {
+      socket.emit("missed messages", missedMessages[userId]);
+      delete missedMessages[userId]; // Clear once delivered
+    }
+
+    // Listen for incoming chat messages
     socket.on("chat message", (messageData) => {
+      const recipientId = messageData.to; // Assuming recipient ID is in messageData
+
       console.log("Message received: ", messageData);
 
-      // Broadcast message to all clients except the sender
-      socket.broadcast.emit("chat message", messageData);
+      // Check if the recipient is online
+      if (!io.sockets.sockets.get(recipientId)) {
+        // Store the message for offline users
+        if (!missedMessages[recipientId]) {
+          missedMessages[recipientId] = [];
+        }
+        missedMessages[recipientId].push(messageData);
+        console.log(`Message stored for offline recipient: ${recipientId}`);
+      } else {
+        // If recipient is online, send the message directly
+        io.to(recipientId).emit("chat message", messageData);
+        console.log(`Message delivered to online recipient: ${recipientId}`);
+      }
     });
 
-    // Handle user disconnection
+    // Handle user disconnecting
     socket.on("disconnect", () => {
-      console.log("🔌 User disconnected");
+      console.log(`🔌 User disconnected: ${userId}`);
     });
   });
 
@@ -83,4 +106,3 @@ const startApolloServer = async () => {
 
 // Call the function to start the server
 startApolloServer();
-// comment
