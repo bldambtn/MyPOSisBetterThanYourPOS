@@ -1,11 +1,9 @@
-const mongoose = require('mongoose');
-const { Schema } = mongoose;
-
 const inventorySchema = new Schema({
   upc: {
     type: String,
     unique: true,
-    sparse: true 
+    sparse: true,
+    index: true // Index for better query performance
   },
   plu: {
     type: String,
@@ -16,7 +14,8 @@ const inventorySchema = new Schema({
   productName: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
+    index: true // Add index
   },
   weightPerItem: {
     type: Number,
@@ -24,7 +23,8 @@ const inventorySchema = new Schema({
   },
   salePrice: {
     type: Number,
-    default: 0
+    default: 0,
+    index: true // Add index
   },
   vendorPrice: {
     type: Number,
@@ -32,7 +32,8 @@ const inventorySchema = new Schema({
   },
   inStock: {
     type: Number,
-    default: 0
+    default: 0,
+    index: true // Add index
   },
   coo: {
     type: String,
@@ -40,7 +41,7 @@ const inventorySchema = new Schema({
   },
   companyOfOrigin: {
     type: String,
-    trim: true 
+    trim: true
   },
   company: {
     type: Schema.Types.ObjectId,
@@ -48,8 +49,3 @@ const inventorySchema = new Schema({
     required: true
   }
 });
-
-// Create the Inventory model
-const Inventory = mongoose.model('Inventory', inventorySchema);
-
-module.exports = Inventory;
