@@ -1,5 +1,6 @@
 import { gql } from '@apollo/client';
 
+// Query for getting sales reports
 export const GET_SALES_REPORTS = gql`
   query getSalesReports($dateRange: String, $product: String, $category: String) {
     getSalesReports(dateRange: $dateRange, product: $product, category: $category) {
@@ -12,7 +13,7 @@ export const GET_SALES_REPORTS = gql`
   }
 `;
 
-// Existing query for user
+// Query for fetching the current user
 export const QUERY_USER = gql`
   {
     user {
@@ -26,10 +27,10 @@ export const QUERY_USER = gql`
   }
 `;
 
-// New query for inventory
-export const QUERY_INVENTORY = gql`
-  query getInventory {
-    inventory {
+// Query for fetching all inventories
+export const QUERY_INVENTORIES = gql`
+  query getInventories {
+    getInventories {
       _id
       upc
       productName
@@ -39,11 +40,11 @@ export const QUERY_INVENTORY = gql`
   }
 `;
 
-// POS search for item
+// Query for searching a product by PLU
 export const SEARCH_PRODUCT_QUERY = gql`
   query SearchProduct($plu: String!) {
-    product(plu: $plu) {
-      id
+    SearchProduct(plu: $plu) {
+      _id
       productName
       salePrice
     }

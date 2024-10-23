@@ -1,19 +1,24 @@
-import React, { useEffect, useState } from 'react';
+
+import React, { useEffect, useState, useCallback } from 'react';
 import { useQuery } from '@apollo/client';
-import { QUERY_INVENTORY } from '../utils/queries'; // Updated to inventory
+import { QUERY_INVENTORIES } from '../components/queries';
+import { AgGridReact } from 'ag-grid-react';
+import { useQuery } from '@apollo/client';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-alpine.css';
+import BackButton from '../components/BackButton';
 
 const InventoryDashboard = () => {
-  const { loading, data } = useQuery(QUERY_INVENTORY); // Updated to inventory
+  const { loading, data } = useQuery(QUERY_INVENTORIES);
   const [inventory, setInventory] = useState([]);
   const [filteredInventory, setFilteredInventory] = useState([]);
 
-  // State variables for filters
   const [upcFilter, setUpcFilter] = useState('');
   const [productNameFilter, setProductNameFilter] = useState('');
   const [inStockFilter, setInStockFilter] = useState('');
   const [salePriceFilter, setSalePriceFilter] = useState('');
 
-  // When data is fetched, set both inventory and filteredInventory
+
   useEffect(() => {
     if (data) {
       setInventory(data.inventory); // Updated to inventory
@@ -29,6 +34,7 @@ const InventoryDashboard = () => {
   // Function to filter the table based on input values
   const handleFilterChange = () => {
     let filtered = inventory; // Updated to inventory
+
 
     if (upcFilter) {
       filtered = filtered.filter(item =>
@@ -53,14 +59,23 @@ const InventoryDashboard = () => {
         String(item.salePrice).includes(salePriceFilter)
       );
     }
+    setFilteredItems(filtered);
+  }, [upcFilter, productNameFilter, inStockFilter, salePriceFilter, items]);
 
-    setFilteredInventory(filtered);
-  };
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  const columnDefs = [
+    { headerName: 'UPC', field: 'upc', sortable: true, filter: true },
+    { headerName: 'Product Name', field: 'productName', sortable: true, filter: true },
+    { headerName: 'In Stock', field: 'inStock', sortable: true, filter: true },
+    { headerName: 'Sale Price', field: 'salePrice', sortable: true, filter: true },
+  ];
 
   return (
-    <div>
+    <div className="ag-theme-alpine" style={{ height: '500px', width: '100%' }}>
       <h1>Inventory Dashboard</h1>
-
       <div>
         <h3>Filter Items</h3>
         <div>
@@ -68,10 +83,7 @@ const InventoryDashboard = () => {
           <input
             type="text"
             value={upcFilter}
-            onChange={e => {
-              setUpcFilter(e.target.value);
-              handleFilterChange();  // Trigger filter update
-            }}
+            onChange={e => setUpcFilter(e.target.value)}
             placeholder="Filter by UPC"
           />
         </div>
@@ -80,10 +92,7 @@ const InventoryDashboard = () => {
           <input
             type="text"
             value={productNameFilter}
-            onChange={e => {
-              setProductNameFilter(e.target.value);
-              handleFilterChange();  // Trigger filter update
-            }}
+            onChange={e => setProductNameFilter(e.target.value)}
             placeholder="Filter by Product Name"
           />
         </div>
@@ -92,10 +101,7 @@ const InventoryDashboard = () => {
           <input
             type="text"
             value={inStockFilter}
-            onChange={e => {
-              setInStockFilter(e.target.value);
-              handleFilterChange();  // Trigger filter update
-            }}
+            onChange={e => setInStockFilter(e.target.value)}
             placeholder="Filter by In Stock"
           />
         </div>
@@ -104,39 +110,22 @@ const InventoryDashboard = () => {
           <input
             type="text"
             value={salePriceFilter}
-            onChange={e => {
-              setSalePriceFilter(e.target.value);
-              handleFilterChange();  // Trigger filter update
-            }}
+            onChange={e => setSalePriceFilter(e.target.value)}
             placeholder="Filter by Sale Price"
           />
         </div>
+        <button onClick={handleFilterChange} style={{ marginTop: '10px', padding: '10px', cursor: 'pointer' }}>
+          Apply Filters
+        </button>
       </div>
 
-      <table>
-        <thead>
-          <tr>
-            <th>UPC</th>
-            <th>Product Name</th>
-            <th>In Stock</th>
-            <th>Sale Price</th>
-            <th>Vendor Price</th>
-            <th>Company of Origin</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredInventory.map(item => (
-            <tr key={item._id}>
-              <td>{item.upc}</td>
-              <td>{item.productName}</td>
-              <td>{item.inStock}</td>
-              <td>{item.salePrice.toFixed(2)}</td> 
-              <td>{item.vendorPrice.toFixed(2)}</td>
-              <td>{item.companyOfOrigin}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <AgGridReact
+        rowData={filteredItems}
+        columnDefs={columnDefs}
+        pagination={true}
+        paginationPageSize={10}
+      />
+      <BackButton to="/enterprise" />
     </div>
   );
 };
