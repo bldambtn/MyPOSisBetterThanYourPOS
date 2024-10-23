@@ -1,46 +1,51 @@
-const mongoose = require('mongoose');
-
-const itemSchema = new mongoose.Schema({
+const itemSchema = new Schema({
   upc: {
     type: String,
     unique: true,
+    sparse: true,
+    index: true // Index for better query performance
   },
   plu: {
     type: String,
     required: true,
     unique: true,
+    trim: true
   },
   productName: {
     type: String,
     required: true,
+    trim: true,
+    index: true // Add index
   },
   weightPerItem: {
     type: Number,
-    default: 0,
+    default: 0
   },
   salePrice: {
     type: Number,
     default: 0,
+    index: true // Add index
   },
   vendorPrice: {
     type: Number,
-    default: 0,
+    default: 0
   },
   inStock: {
     type: Number,
     default: 0,
+    index: true // Add index
   },
   coo: {
     type: String,
-    required: true,
+    trim: true
+  },
+  companyOfOrigin: {
+    type: String,
+    trim: true
   },
   company: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Company',
-    required: true,
-  },
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  }
 });
-
-const Item = mongoose.model('Item', itemSchema);
-
-module.exports = Item;
