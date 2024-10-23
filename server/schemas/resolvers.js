@@ -1,4 +1,4 @@
-const { Item, User, SalesReport } = require("../models");
+const { Inventory, User, SalesReport } = require("../models");
 const { AuthenticationError } = require("apollo-server-express");
 const { signToken } = require("../utils/auth");
 
@@ -6,10 +6,10 @@ const resolvers = {
   Query: {
     hello: () => "Hello, World!",
 
-    // Fetch all items
-    getItems: async () => {
+    // Fetch all items in the inventory
+    getInventory: async () => {
       try {
-        return await Item.find();
+        return await Inventory.find();
       } catch (err) {
         console.error("❌ Error fetching items:", err);
         throw new Error("Failed to fetch items.");
@@ -31,7 +31,7 @@ const resolvers = {
     // Fetch a single item by ID
     getItem: async (parent, { id }) => {
       try {
-        return await Item.findById(id);
+        return await Inventory.findById(id);
       } catch (err) {
         console.error("❌ Error fetching item:", err);
         throw new Error("Failed to fetch item.");
@@ -113,7 +113,7 @@ const resolvers = {
 
     addItem: async (parent, { upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin, company }) => {
       try {
-        const newItem = await Item.create({ upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin, company });
+        const newItem = await Inventory.create({ upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin, company });
         return newItem;
       } catch (err) {
         console.error("❌ Error adding item:", err);
@@ -123,7 +123,7 @@ const resolvers = {
 
     updateItem: async (parent, { id, upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin }) => {
       try {
-        const updatedItem = await Item.findByIdAndUpdate(
+        const updatedItem = await Inventory.findByIdAndUpdate(
           id,
           { upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin },
           { new: true }
@@ -137,7 +137,7 @@ const resolvers = {
 
     deleteItem: async (parent, { id }) => {
       try {
-        const deletedItem = await Item.findByIdAndDelete(id);
+        const deletedItem = await Inventory.findByIdAndDelete(id);
         return deletedItem;
       } catch (err) {
         console.error("❌ Error deleting item:", err);
