@@ -1,4 +1,4 @@
-const { Item, User, Inventory, SalesReport } = require("../models");
+const { Item, User, SalesReport } = require("../models");
 const { AuthenticationError } = require("apollo-server-express");
 const { signToken } = require("../utils/auth");
 
@@ -27,31 +27,19 @@ const resolvers = {
       throw new AuthenticationError("Not authenticated");
     },
 
-    getInventories: async () => {
+    getItem: async (parent, { id }) => {
       try {
-        return await Inventory.find().populate('company');
+        return await Item.findById(id);
       } catch (err) {
-        console.error("❌ Error fetching inventories:", err);
-        throw new Error("Failed to fetch inventories.");
-      }
-    },
-
-    getInventory: async (parent, { id }) => {
-      try {
-        return await Inventory.findById(id).populate('company');
-      } catch (err) {
-        console.error("❌ Error fetching inventory:", err);
-        throw new Error("Failed to fetch inventory.");
+        console.error("❌ Error fetching item:", err);
+        throw new Error("Failed to fetch item.");
       }
     },
 
     getSalesReports: async (parent, { dateRange, product, category }) => {
       try {
-        // Comment out or log the filters
         const filter = {};
-    
-        // Uncomment below if you want to apply the filters later
-        
+        // Apply filters
         if (dateRange) {
           const today = new Date();
           if (dateRange === "daily") {
@@ -62,19 +50,16 @@ const resolvers = {
             filter.date = { $gte: new Date(today.setMonth(today.getMonth() - 1)) };
           }
         }
-    
         if (product) {
           filter.product = product;
         }
-    
         if (category) {
           filter.category = category;
         }
-        
-    
-        console.log('Filter being used:', filter); // Log the filter being used for debugging
+
+        console.log('Filter being used:', filter); // Log the filter for debugging
         const reports = await SalesReport.find(filter);
-        console.log('Fetched reports:', reports); // Log the fetched reports for debugging
+        console.log('Fetched reports:', reports); // Log fetched reports for debugging
         return reports;
       } catch (err) {
         console.error("❌ Error fetching sales reports:", err);
@@ -82,6 +67,7 @@ const resolvers = {
       }
     },
   },
+
   Mutation: {
     addUser: async (parent, { firstName, lastName, username, organization, email, password }) => {
       try {
@@ -114,40 +100,14 @@ const resolvers = {
       }
     },
 
-    addInventory: async (parent, { upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin, company }) => {
+    addItem: async (parent, { upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin, company }) => {
       try {
-        const newInventory = await Inventory.create({ upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin, company });
-        return newInventory;
+        const newItem = await Item.create({ upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin, company });
+        return newItem;
       } catch (err) {
-        console.error("❌ Error adding inventory:", err);
-        throw new Error("Failed to add inventory.");
+        console.error("❌ Error adding item:", err);
+        throw new Error("Failed to add item.");
       }
     },
 
-    updateInventory: async (parent, { id, upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin }) => {
-      try {
-        const updatedInventory = await Inventory.findByIdAndUpdate(
-          id,
-          { upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin },
-          { new: true }
-        );
-        return updatedInventory;
-      } catch (err) {
-        console.error("❌ Error updating inventory:", err);
-        throw new Error("Failed to update inventory.");
-      }
-    },
-
-    deleteInventory: async (parent, { id }) => {
-      try {
-        const deletedInventory = await Inventory.findByIdAndDelete(id);
-        return deletedInventory;
-      } catch (err) {
-        console.error("❌ Error deleting inventory:", err);
-        throw new Error("Failed to delete inventory.");
-      }
-    },
-  },
-};
-
-module.exports = resolvers;
+    updateItem: async (parent, { id, upc, plu, pro
