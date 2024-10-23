@@ -4,6 +4,8 @@ import { GET_SALES_REPORTS } from '../components/queries';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
+import BackButton from '../components/BackButton';
+
 
 const SalesReports = () => {
   const [dateRange, setDateRange] = useState('');
@@ -75,6 +77,7 @@ const SalesReports = () => {
           domLayout="autoHeight"
         />
       </div>
+      <BackButton to="/enterprise" />
     </div>
   );
 };

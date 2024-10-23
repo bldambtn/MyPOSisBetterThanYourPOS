@@ -10,21 +10,22 @@ import ItemScreen from '../components/ItemScreen';
 const PointOfSale = () => {
     return (
         <div className="pos">
-            {/*<div className="warning-text">
+            <div className="warning-text">
                 <WarningMessage />
-            </div>*/}
+            </div>
             <div className="item-screen">
                 <ItemScreen />
             </div>
-            {/*<div className="totals">
-                <Totals />
+            <div className="totals">
+             <Totals />
             </div>
             <div className="action-buttons">
-                <ActionButtons />
+            <ActionButtons />
             </div>
             <div className="entry-field">
-                <EntryField />
-            </div>*/}
+            <EntryField />
+            </div>
+
         </div>
     );
 }
