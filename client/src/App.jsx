@@ -56,7 +56,7 @@ function App() {
   const handleInstallClick = () => {
     if (deferredPrompt) {
       deferredPrompt.prompt();
-      deferredPrompt.userChoice.then((choiceResult) => {
+      deferredPrompt.userChoice.then(() => {
         setDeferredPrompt(null);
       });
     }
@@ -79,9 +79,8 @@ function App() {
         {deferredPrompt && (
           <button onClick={handleInstallClick}>Install App</button>
         )}
-        {shouldShowChat() && <ChatWindow />}{" "}
-        {/* Chat window displayed on every page */}
-        <Notifications /> {/* Notifications section */}
+        {shouldShowChat() && <ChatWindow />}
+        <Notifications />
       </StoreProvider>
     </ApolloProvider>
   );
