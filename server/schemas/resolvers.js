@@ -35,15 +35,6 @@ const resolvers = {
         throw new Error("Failed to fetch inventory.");
       }
     },
-
-    SearchProduct: async (_, { plu }) => {
-      try {
-        return await Inventory.findOne({ plu }).populate('company');
-      } catch (err) {
-        console.error("❌ Error fetching product:", err);
-        throw new Error("Failed to fetch product.");
-      }
-    },
     SearchProduct: async (_, { plu }) => {
       try {
         return await Inventory.findOne({plu: plu}).populate('company');
@@ -52,7 +43,39 @@ const resolvers = {
         throw new Error("Failed to fetch inventories.");
       }
     },
+    getSalesReports: async (parent, { dateRange, product, category }) => {
+      try {
+        const filter = {};
+
+        // Apply filters based on dateRange, product, or category
+        if (dateRange) {
+          const today = new Date();
+          if (dateRange === "daily") {
+            filter.date = { $gte: new Date(today.setHours(0, 0, 0, 0)) };
+          } else if (dateRange === "weekly") {
+            filter.date = { $gte: new Date(today.setDate(today.getDate() - 7)) };
+          } else if (dateRange === "monthly") {
+            filter.date = { $gte: new Date(today.setMonth(today.getMonth() - 1)) };
+          }
+        }
+
+        if (product) {
+          filter.product = product;
+        }
+
+        if (category) {
+          filter.category = category;
+        }
+
+        const reports = await SalesReport.find(filter);
+        return reports;
+      } catch (err) {
+        console.error("❌ Error fetching sales reports:", err);
+        throw new Error("Failed to fetch sales reports.");
+      }
+    },
   },
+  
   Mutation: {
     addUser: async (parent, { firstName, lastName, username, organization, email, password }) => {
       try {
