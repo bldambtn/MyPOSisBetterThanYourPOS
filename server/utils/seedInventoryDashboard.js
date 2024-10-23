@@ -71,3 +71,7 @@ async function seedInventory() {
 }
 
 seedInventory();
+
+//NOTICE
+//How to Run the Seed Script:
+//node server/utils/seedInventoryDashboard.js
