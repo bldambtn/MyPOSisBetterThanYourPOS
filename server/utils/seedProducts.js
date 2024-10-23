@@ -1,14 +1,17 @@
 // scripts/seedSalesReports.js
 const mongoose = require('mongoose');
-const Inventory = require('../models/Inventory'); 
+const Inventory = require('../models/inventory'); 
+const User = require('../models/user');
 
 // Connect to your MongoDB database
 mongoose.connect('mongodb://localhost:27017/myDatabase', {
 });
 
+
+
 const seedData = [
   {
-    upc: '',
+    upc: '1',
     plu: '4046',
     productName: 'Sm Avocado',
     weightPerItem: 0.2,
@@ -19,7 +22,7 @@ const seedData = [
     company: 'Jeremy Co',
   },
   {
-    upc: '',
+    upc: '2',
     plu: '4225',
     productName: 'Lg Avocado',
     weightPerItem: 0.4,

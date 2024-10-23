@@ -81,7 +81,25 @@ const resolvers = {
         return [];
       }
     },
+
+    SearchProduct: async (_, { plu }) => {
+      try {
+        const product = await Inventory.findOne({ where: { plu } });
+        if (!product) {
+          console.log("No product found for PLU:", plu);
+        }
+        return product;
+      } catch (error) {
+        console.error("Error fetching product:", error);
+        throw new Error("Failed to fetch product");
+      }
+    },
+
   },
+
+  
+
+
   Mutation: {
     addUser: async (parent, { firstName, lastName, username, organization, email, password }) => {
       try {

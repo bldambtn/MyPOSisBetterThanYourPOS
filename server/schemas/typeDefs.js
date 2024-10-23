@@ -7,7 +7,16 @@ const typeDefs = gql`
     user: User # 'user' query
     getInventories: [Inventory] # Query to fetch all inventories
     getInventory(id: ID!): Inventory # Query to fetch a specific inventory by ID
-    getSalesReports(dateRange: String, product: String, category: String): [SalesReport] 
+    getSalesReports(dateRange: String, product: String, category: String): [SalesReport]
+    SearchProduct(plu: String!): Inventory
+  }
+
+  query SearchProduct($plu: String!) {
+    product(plu: $plu) {
+      id
+      productName
+      salePrice
+    }
   }
 
   type Item {
