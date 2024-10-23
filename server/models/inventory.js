@@ -7,59 +7,57 @@ const inventorySchema = new Schema({
     unique: true,
     sparse: true,
     index: true, // Index for better query performance
-    description: "Universal Product Code (UPC), must be unique"
+    minlength: 12,  // Typically UPCs are 12 digits long
+    maxlength: 12
   },
   plu: {
     type: String,
     required: true,
     unique: true,
     trim: true,
-    description: "Price Look-Up code (PLU), must be unique"
+    minlength: 4,  // PLUs are generally 4 to 5 digits
+    maxlength: 5
   },
   productName: {
     type: String,
     required: true,
     trim: true,
-    index: true, // Add index for faster search
-    description: "Name of the product"
+    index: true // Add index for faster search
   },
   weightPerItem: {
     type: Number,
     default: 0,
-    description: "Weight of the product per item (default 0)"
+    min: 0,  // Ensure weight is non-negative
   },
   salePrice: {
     type: Number,
     default: 0,
     index: true, // Index for filtering by price
-    description: "Sale price of the product"
+    min: 0,  // Ensure price is non-negative
   },
   vendorPrice: {
     type: Number,
     default: 0,
-    description: "Vendor price of the product"
+    min: 0,  // Ensure vendor price is non-negative
   },
   inStock: {
     type: Number,
     default: 0,
     index: true, // Index for filtering by stock
-    description: "Number of items in stock"
+    min: 0,  // Ensure inStock is non-negative
   },
   coo: {
     type: String,
-    trim: true,
-    description: "Country of origin (COO) code"
+    trim: true
   },
   companyOfOrigin: {
     type: String,
-    trim: true,
-    description: "Full name of the company of origin"
+    trim: true
   },
   company: {
     type: Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
-    description: "Reference to the associated company (User)"
+    required: true
   }
 }, {
   timestamps: true // Automatically adds `createdAt` and `updatedAt` timestamps
