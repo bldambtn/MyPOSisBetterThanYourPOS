@@ -2,11 +2,11 @@
 
 import React, { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
-import { QUERY_INVENTORY } from '../utils/queries';
+import { QUERY_ITEMS } from '../utils/queries'; // Updated to items
 
 const InventoryDashboard = () => {
-  const { loading, data } = useQuery(QUERY_INVENTORY);
-  const [inventoryItems, setInventoryItems] = useState([]);
+  const { loading, data } = useQuery(QUERY_ITEMS); // Updated to items
+  const [items, setItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
 
   // State variables for filters
@@ -15,11 +15,11 @@ const InventoryDashboard = () => {
   const [inStockFilter, setInStockFilter] = useState('');
   const [salePriceFilter, setSalePriceFilter] = useState('');
 
-  // When data is fetched, set both inventoryItems and filteredItems
+  // When data is fetched, set both items and filteredItems
   useEffect(() => {
     if (data) {
-      setInventoryItems(data.inventory);
-      setFilteredItems(data.inventory);  // Initialize filteredItems with all items
+      setItems(data.items); // Updated to items
+      setFilteredItems(data.items);  // Initialize filtered Items with all items
     }
   }, [data]);
 
@@ -30,30 +30,26 @@ const InventoryDashboard = () => {
 
   // Function to filter the table based on input values
   const handleFilterChange = () => {
-    let filtered = inventoryItems;
+    let filtered = items; // Updated to items
 
-    // Filter by UPC
     if (upcFilter) {
       filtered = filtered.filter(item =>
         item.upc.toLowerCase().includes(upcFilter.toLowerCase())
       );
     }
 
-    // Filter by Product Name
     if (productNameFilter) {
       filtered = filtered.filter(item =>
         item.productName.toLowerCase().includes(productNameFilter.toLowerCase())
       );
     }
 
-    // Filter by In Stock
     if (inStockFilter) {
       filtered = filtered.filter(item =>
         String(item.inStock).includes(inStockFilter)
       );
     }
 
-    // Filter by Sale Price
     if (salePriceFilter) {
       filtered = filtered.filter(item =>
         String(item.salePrice).includes(salePriceFilter)
