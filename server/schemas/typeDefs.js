@@ -11,14 +11,6 @@ const typeDefs = gql`
     SearchProduct(plu: String!): Inventory
   }
 
-  query SearchProduct($plu: String!) {
-    product(plu: $plu) {
-      id
-      productName
-      salePrice
-    }
-  }
-
   type Item {
     id: ID!
     upc: String

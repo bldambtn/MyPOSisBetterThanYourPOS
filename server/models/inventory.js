@@ -41,7 +41,7 @@ const inventorySchema = new Schema({
     trim: true 
   },
   company: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
   }
