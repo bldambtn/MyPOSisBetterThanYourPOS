@@ -21,7 +21,7 @@ const Enterprise = () => {
 
       <div className="mt-4">
         <Link to="/enterprise/inventory" className="btn btn-primary mr-2">
-          Go to Inventory
+          Go to Inventory Dashboard
         </Link>
         <Link to="/enterprise/pos" className="btn btn-secondary mr-2">
           Go to Point of Sale
