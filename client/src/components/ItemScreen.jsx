@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import EntryField from './EntryField';
+
 import Totals from './Totals'; 
+
 
 const ItemScreen = () => {
   const [products, setProducts] = useState([]);
 
   const handleProductFound = (foundProduct) => {
+
     // Check if the product already exists in the array
     const existingProductIndex = products.findIndex(product => product.productName === foundProduct.productName);
 

@@ -1,13 +1,11 @@
-// client/src/pages/InventoryDashboard.jsx
-
 import React, { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
-import { QUERY_ITEMS } from '../utils/queries'; // Updated to items
+import { QUERY_INVENTORY } from '../utils/queries'; // Updated to inventory
 
 const InventoryDashboard = () => {
-  const { loading, data } = useQuery(QUERY_ITEMS); // Updated to items
-  const [items, setItems] = useState([]);
-  const [filteredItems, setFilteredItems] = useState([]);
+  const { loading, data } = useQuery(QUERY_INVENTORY); // Updated to inventory
+  const [inventory, setInventory] = useState([]);
+  const [filteredInventory, setFilteredInventory] = useState([]);
 
   // State variables for filters
   const [upcFilter, setUpcFilter] = useState('');
@@ -15,11 +13,11 @@ const InventoryDashboard = () => {
   const [inStockFilter, setInStockFilter] = useState('');
   const [salePriceFilter, setSalePriceFilter] = useState('');
 
-  // When data is fetched, set both items and filteredItems
+  // When data is fetched, set both inventory and filteredInventory
   useEffect(() => {
     if (data) {
-      setItems(data.items); // Updated to items
-      setFilteredItems(data.items);  // Initialize filtered Items with all items
+      setInventory(data.inventory); // Updated to inventory
+      setFilteredInventory(data.inventory);  // Initialize filtered inventory with all items
     }
   }, [data]);
 
@@ -30,7 +28,7 @@ const InventoryDashboard = () => {
 
   // Function to filter the table based on input values
   const handleFilterChange = () => {
-    let filtered = items; // Updated to items
+    let filtered = inventory; // Updated to inventory
 
     if (upcFilter) {
       filtered = filtered.filter(item =>
@@ -56,7 +54,7 @@ const InventoryDashboard = () => {
       );
     }
 
-    setFilteredItems(filtered);
+    setFilteredInventory(filtered);
   };
 
   return (
@@ -122,15 +120,19 @@ const InventoryDashboard = () => {
             <th>Product Name</th>
             <th>In Stock</th>
             <th>Sale Price</th>
+            <th>Vendor Price</th>
+            <th>Company of Origin</th>
           </tr>
         </thead>
         <tbody>
-          {filteredItems.map(item => (
+          {filteredInventory.map(item => (
             <tr key={item._id}>
               <td>{item.upc}</td>
               <td>{item.productName}</td>
               <td>{item.inStock}</td>
-              <td>{item.salePrice}</td>
+              <td>{item.salePrice.toFixed(2)}</td> 
+              <td>{item.vendorPrice.toFixed(2)}</td>
+              <td>{item.companyOfOrigin}</td>
             </tr>
           ))}
         </tbody>
