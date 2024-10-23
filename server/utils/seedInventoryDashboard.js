@@ -1,13 +1,13 @@
 // server/utils/seedInventoryDashboard.js
 
 const mongoose = require('mongoose');
-const Inventory = require('../models/inventory');
+const Item = require('../models/item'); // Updated to tiem
 
 // MongoDB connection string
-const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/inventoryDB'; //
+const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/inventoryDB';
 
-// Sample inventory data to be inserted
-const inventorySeed = [
+// Sample item data to be inserted
+const itemSeed = [
   {
     upc: '123456789',
     plu: 'A123',
@@ -47,7 +47,7 @@ const inventorySeed = [
 ];
 
 // Function to seed the database
-async function seedInventory() {
+async function seedItems() {
   try {
     await mongoose.connect(mongoURI, {
       useNewUrlParser: true,
@@ -55,23 +55,23 @@ async function seedInventory() {
     });
     console.log('MongoDB connected');
 
-    await Inventory.deleteMany({});
-    console.log('Existing inventory data cleared');
+    await Item.deleteMany({}); // Updated to items
+    console.log('Existing item data cleared');
 
-    await Inventory.insertMany(inventorySeed);
-    console.log('Sample inventory data inserted successfully');
+    await Item.insertMany(itemSeed); // Updated to items
+    console.log('Sample item data inserted successfully');
 
     // Close the database connection
     mongoose.connection.close();
     console.log('MongoDB connection closed');
   } catch (error) {
-    console.error('Error seeding inventory data:', error);
+    console.error('Error seeding item data:', error);
     mongoose.connection.close();
   }
 }
 
-seedInventory();
+seedItems(); // Updated function name
 
 //NOTICE
-//How to Run the Seed Script:
-//node server/utils/seedInventoryDashboard.js
+// How to Run the Seed Script:
+// node server/utils/seedInventoryDashboard.js
