@@ -6,6 +6,16 @@ const resolvers = {
   Query: {
     hello: () => "Hello, World!",
 
+    getInventory: async () => {
+      try {
+        return await Inventory.find();
+      } catch (err) {
+        console.error("❌ Error fetching inventory:", err);
+        throw new Error("Failed to fetch inventory.");
+      }
+    },
+
+
     user: async (parent, args, context) => {
       if (context.user) {
         try {
@@ -18,7 +28,8 @@ const resolvers = {
       throw new AuthenticationError("Not authenticated");
     },
 
-    getInventories: async () => {
+    // Fetch a single inventory item by ID
+    getInventoryItem: async (parent, { id }) => {
       try {
         return await Inventory.find().populate('company');
       } catch (err) {
@@ -127,12 +138,14 @@ const resolvers = {
         );
         return updatedInventory;
       } catch (err) {
+
         console.error("❌ Error updating inventory:", err);
         throw new Error("Failed to update inventory.");
       }
     },
 
     deleteInventory: async (parent, { id }) => {
+
       try {
         const deletedInventory = await Inventory.findByIdAndDelete(id);
         return deletedInventory;

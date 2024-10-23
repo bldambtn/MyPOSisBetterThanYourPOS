@@ -1,29 +1,40 @@
+
 import React, { useEffect, useState, useCallback } from 'react';
 import { useQuery } from '@apollo/client';
 import { QUERY_INVENTORIES } from '../components/queries';
 import { AgGridReact } from 'ag-grid-react';
+import { useQuery } from '@apollo/client';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import BackButton from '../components/BackButton';
 
 const InventoryDashboard = () => {
   const { loading, data } = useQuery(QUERY_INVENTORIES);
-  const [items, setItems] = useState([]);
-  const [filteredItems, setFilteredItems] = useState([]);
+  const [inventory, setInventory] = useState([]);
+  const [filteredInventory, setFilteredInventory] = useState([]);
+
   const [upcFilter, setUpcFilter] = useState('');
   const [productNameFilter, setProductNameFilter] = useState('');
   const [inStockFilter, setInStockFilter] = useState('');
   const [salePriceFilter, setSalePriceFilter] = useState('');
 
+
   useEffect(() => {
-    if (data && data.getInventories) {
-      setItems(data.getInventories);
-      setFilteredItems(data.getInventories);
+    if (data) {
+      setInventory(data.inventory); // Updated to inventory
+      setFilteredInventory(data.inventory);  // Initialize filtered inventory with all items
     }
   }, [data]);
 
-  const handleFilterChange = useCallback(() => {
-    let filtered = items;
+  // Show loading state while data is being fetched
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  // Function to filter the table based on input values
+  const handleFilterChange = () => {
+    let filtered = inventory; // Updated to inventory
+
 
     if (upcFilter) {
       filtered = filtered.filter(item =>
@@ -48,7 +59,6 @@ const InventoryDashboard = () => {
         String(item.salePrice).includes(salePriceFilter)
       );
     }
-
     setFilteredItems(filtered);
   }, [upcFilter, productNameFilter, inStockFilter, salePriceFilter, items]);
 

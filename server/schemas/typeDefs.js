@@ -10,6 +10,7 @@ const typeDefs = gql`
     getSalesReports(dateRange: String, product: String, category: String): [SalesReport]
   }
 
+
   type Inventory {
     _id: ID!
     upc: String
@@ -60,8 +61,18 @@ const typeDefs = gql`
       email: String!
       password: String!
     ): Auth
-    login(email: String!, password: String!): Auth
 
+    updateUser(
+      firstName: String
+      lastName: String
+      username: String
+      organization: String
+      email: String
+      password: String
+    ): User
+
+    login(email: String!, password: String!): Auth
+   
     addInventory(
       upc: String
       plu: String!
@@ -71,11 +82,12 @@ const typeDefs = gql`
       vendorPrice: Float
       inStock: Int
       coo: String
-      companyOfOrigin: String
-      company: ID!
-    ): Inventory
-
+      
     updateInventory(
+      companyOfOrigin: String  # Updated field to match your schema
+      company: ID!
+    ): Inventory  
+
       id: ID!
       upc: String
       plu: String
@@ -87,8 +99,8 @@ const typeDefs = gql`
       coo: String
       companyOfOrigin: String
     ): Inventory
-
     deleteInventory(id: ID!): Inventory
+
   }
 `;
 
