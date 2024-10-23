@@ -6,6 +6,7 @@ const resolvers = {
   Query: {
     hello: () => "Hello, World!",
 
+    // Fetch all items
     getItems: async () => {
       try {
         return await Item.find();
@@ -27,6 +28,7 @@ const resolvers = {
       throw new AuthenticationError("Not authenticated");
     },
 
+    // Fetch a single item by ID
     getItem: async (parent, { id }) => {
       try {
         return await Item.findById(id);
@@ -110,4 +112,30 @@ const resolvers = {
       }
     },
 
-    updateItem: async (parent, { id, upc, plu, pro
+    updateItem: async (parent, { id, upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin }) => {
+      try {
+        const updatedItem = await Item.findByIdAndUpdate(
+          id,
+          { upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin },
+          { new: true }
+        );
+        return updatedItem;
+      } catch (err) {
+        console.error("❌ Error updating item:", err);
+        throw new Error("Failed to update item.");
+      }
+    },
+
+    deleteItem: async (parent, { id }) => {
+      try {
+        const deletedItem = await Item.findByIdAndDelete(id);
+        return deletedItem;
+      } catch (err) {
+        console.error("❌ Error deleting item:", err);
+        throw new Error("Failed to delete item.");
+      }
+    },
+  },
+};
+
+module.exports = resolvers;
