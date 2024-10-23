@@ -1,37 +1,46 @@
-import React from "react";
+import { useEffect, useState } from "react";
+import socket from "../utils/socket"; // Use the shared socket
 
-const Notifications = () => {
+function Notifications() {
+  const [previousChats, setPreviousChats] = useState([]);
+  const [missedChats, setMissedChats] = useState([]);
+
+  useEffect(() => {
+    socket.on("previous messages", (messages) => {
+      setPreviousChats(messages);
+    });
+
+    socket.on("missed messages", (messages) => {
+      setMissedChats(messages);
+    });
+
+    return () => {
+      socket.off("previous messages");
+      socket.off("missed messages");
+    };
+  }, []);
+
   return (
-    <div className="container">
-      <h1>Notifications</h1>
-      <div>
-        {/* You can separate different sections */}
-        <section>
-          <h2>Previous Chats</h2>
-          <ul>
-            {/* Placeholder for previous chats */}
-            <li>No previous chats</li>
-          </ul>
-        </section>
+    <div>
+      <h2>Previous Chats</h2>
+      <ul>
+        {previousChats.map((msg, index) => (
+          <li key={index}>
+            From: {msg.from}, To: {msg.to}, Message: {msg.text}
+          </li>
+        ))}
+      </ul>
 
-        <section>
-          <h2>Missed Chats</h2>
-          <ul>
-            {/* Placeholder for missed chats */}
-            <li>No missed chats</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Report Alerts</h2>
-          <ul>
-            {/* Placeholder for report alerts */}
-            <li>No report alerts</li>
-          </ul>
-        </section>
-      </div>
+      <h2>Missed Chats</h2>
+      <ul>
+        {missedChats.map((msg, index) => (
+          <li key={index}>
+            From: {msg.from}, To: {msg.to}, Message: {msg.text}
+          </li>
+        ))}
+      </ul>
     </div>
   );
-};
+}
 
 export default Notifications;

@@ -4,10 +4,9 @@ const typeDefs = gql`
   type Query {
     hello: String
     getItems: [Item]
-    user: User # 'user' query
-    getInventories: [Inventory] # Query to fetch all inventories
-    getInventory(id: ID!): Inventory # Query to fetch a specific inventory by ID
-    getSalesReports(dateRange: String, product: String, category: String): [SalesReport] 
+    user: User
+    getItem(id: ID!): Item
+    getSalesReports(dateRange: String, product: String, category: String): [SalesReport]
   }
 
   type Item {
@@ -37,21 +36,7 @@ const typeDefs = gql`
     email: String
   }
 
-    type Inventory {
-    _id: ID
-    upc: String
-    plu: String!
-    productName: String!
-    weightPerItem: Float
-    salePrice: Float
-    vendorPrice: Float
-    inStock: Int
-    coo: String
-    companyOfOrigin: String
-    company: User
-  }
-
-    type SalesReport {
+  type SalesReport {
     date: String
     product: String
     category: String
@@ -82,7 +67,8 @@ const typeDefs = gql`
       password: String
     ): User
     login(email: String!, password: String!): Auth
-    addInventory(
+    
+    addItem(
       upc: String
       plu: String!
       productName: String!
@@ -92,9 +78,9 @@ const typeDefs = gql`
       inStock: Int
       coo: String!
       company: ID!
-      companyOfOrigin: String
-    ): Inventory
-    updateInventory(
+    ): Item
+
+    updateItem(
       id: ID!
       upc: String
       plu: String
@@ -104,10 +90,9 @@ const typeDefs = gql`
       vendorPrice: Float
       inStock: Int
       coo: String
-      companyOfOrigin: String
-    ): Inventory
-    deleteInventory(id: ID!): Inventory
+    ): Item
 
+    deleteItem(id: ID!): Item
   }
 `;
 
