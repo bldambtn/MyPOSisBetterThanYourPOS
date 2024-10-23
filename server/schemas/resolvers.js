@@ -1,4 +1,4 @@
-const { Item, User, SalesReport } = require("../models");
+const { Inventory, User, SalesReport } = require("../models");
 const { AuthenticationError } = require("apollo-server-express");
 const { signToken } = require("../utils/auth");
 
@@ -6,13 +6,12 @@ const resolvers = {
   Query: {
     hello: () => "Hello, World!",
 
-    // Fetch all items
-    getItems: async () => {
+    getInventory: async () => {
       try {
-        return await Item.find();
+        return await Inventory.find();
       } catch (err) {
-        console.error("❌ Error fetching items:", err);
-        throw new Error("Failed to fetch items.");
+        console.error("❌ Error fetching inventory:", err);
+        throw new Error("Failed to fetch inventory.");
       }
     },
 
@@ -28,13 +27,13 @@ const resolvers = {
       throw new AuthenticationError("Not authenticated");
     },
 
-    // Fetch a single item by ID
-    getItem: async (parent, { id }) => {
+    // Fetch a single inventory item by ID
+    getInventoryItem: async (parent, { id }) => {
       try {
-        return await Item.findById(id);
+        return await Inventory.findById(id);
       } catch (err) {
-        console.error("❌ Error fetching item:", err);
-        throw new Error("Failed to fetch item.");
+        console.error("❌ Error fetching inventory item:", err);
+        throw new Error("Failed to fetch inventory item.");
       }
     },
 
@@ -102,37 +101,37 @@ const resolvers = {
       }
     },
 
-    addItem: async (parent, { upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin, company }) => {
+    addInventoryItem: async (parent, { upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin, company }) => { 
       try {
-        const newItem = await Item.create({ upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin, company });
+        const newItem = await Inventory.create({ upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin, company });
         return newItem;
       } catch (err) {
-        console.error("❌ Error adding item:", err);
-        throw new Error("Failed to add item.");
+        console.error("❌ Error adding inventory item:", err);
+        throw new Error("Failed to add inventory item.");
       }
     },
 
-    updateItem: async (parent, { id, upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin }) => {
+    updateInventoryItem: async (parent, { id, upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin }) => { // Updated from Item to Inventory
       try {
-        const updatedItem = await Item.findByIdAndUpdate(
+        const updatedItem = await Inventory.findByIdAndUpdate(
           id,
           { upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin },
           { new: true }
         );
         return updatedItem;
       } catch (err) {
-        console.error("❌ Error updating item:", err);
-        throw new Error("Failed to update item.");
+        console.error("❌ Error updating inventory item:", err);
+        throw new Error("Failed to update inventory item.");
       }
     },
 
-    deleteItem: async (parent, { id }) => {
+    deleteInventoryItem: async (parent, { id }) => {
       try {
-        const deletedItem = await Item.findByIdAndDelete(id);
+        const deletedItem = await Inventory.findByIdAndDelete(id);
         return deletedItem;
       } catch (err) {
-        console.error("❌ Error deleting item:", err);
-        throw new Error("Failed to delete item.");
+        console.error("❌ Error deleting inventory item:", err);
+        throw new Error("Failed to delete inventory item.");
       }
     },
   },
