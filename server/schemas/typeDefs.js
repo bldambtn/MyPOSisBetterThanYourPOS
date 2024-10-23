@@ -4,9 +4,11 @@ const typeDefs = gql`
   type Query {
     hello: String
     getItems: [Item]
-    user: User
-    getItem(id: ID!): Item
+    user: User # 'user' query
+    getInventories: [Inventory] # Query to fetch all inventories
+    getInventory(id: ID!): Inventory # Query to fetch a specific inventory by ID
     getSalesReports(dateRange: String, product: String, category: String): [SalesReport]
+    SearchProduct(plu: String!): Inventory
   }
 
   type Item {

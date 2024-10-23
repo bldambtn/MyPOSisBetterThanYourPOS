@@ -68,6 +68,15 @@ const resolvers = {
         return [];
       }
     },
+
+    SearchProduct: async (_, { plu }) => {
+      try {
+        return await Inventory.findOne({plu: plu}).populate('company');
+      } catch (err) {
+        console.error("❌ Error fetching inventories:", err);
+        throw new Error("Failed to fetch inventories.");
+      }
+    },
   },
 
   Mutation: {
