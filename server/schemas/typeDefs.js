@@ -3,10 +3,13 @@ const { gql } = require("apollo-server-express");
 const typeDefs = gql`
   type Query {
     hello: String
+
     getInventory: [Inventory] 
     user: User
+    getInventories: [Inventory] # Query to fetch all inventories
     getInventoryItem(id: ID!): Inventory 
     getSalesReports(dateRange: String, product: String, category: String): [SalesReport]
+    SearchProduct(plu: String!): Inventory
   }
 
   type Inventory { 
