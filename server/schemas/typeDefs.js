@@ -3,13 +3,13 @@ const { gql } = require("apollo-server-express");
 const typeDefs = gql`
   type Query {
     hello: String
-    getItems: [Item]
+    getInventory: [Inventory] 
     user: User
-    getItem(id: ID!): Item
+    getInventoryItem(id: ID!): Inventory 
     getSalesReports(dateRange: String, product: String, category: String): [SalesReport]
   }
 
-  type Item {
+  type Inventory { 
     id: ID!
     upc: String
     plu: String!
@@ -18,7 +18,8 @@ const typeDefs = gql`
     salePrice: Float
     vendorPrice: Float
     inStock: Int
-    coo: String!
+    coo: String
+    companyOfOrigin: String  # Updated field to match your schema
     company: Company!
   }
 
@@ -58,6 +59,7 @@ const typeDefs = gql`
       email: String!
       password: String!
     ): Auth
+
     updateUser(
       firstName: String
       lastName: String
@@ -66,9 +68,10 @@ const typeDefs = gql`
       email: String
       password: String
     ): User
+
     login(email: String!, password: String!): Auth
-    
-    addItem(
+
+    addInventoryItem( 
       upc: String
       plu: String!
       productName: String!
@@ -76,11 +79,12 @@ const typeDefs = gql`
       salePrice: Float
       vendorPrice: Float
       inStock: Int
-      coo: String!
+      coo: String
+      companyOfOrigin: String  # Updated field to match your schema
       company: ID!
-    ): Item
+    ): Inventory  
 
-    updateItem(
+    updateInventoryItem( 
       id: ID!
       upc: String
       plu: String
@@ -90,9 +94,10 @@ const typeDefs = gql`
       vendorPrice: Float
       inStock: Int
       coo: String
-    ): Item
+      companyOfOrigin: String
+    ): Inventory 
 
-    deleteItem(id: ID!): Item
+    deleteInventoryItem(id: ID!): Inventory 
   }
 `;
 
