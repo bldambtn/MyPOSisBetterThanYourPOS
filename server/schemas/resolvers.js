@@ -6,16 +6,6 @@ const resolvers = {
   Query: {
     hello: () => "Hello, World!",
 
-    // Fetch all items in the inventory
-    getInventory: async () => {
-      try {
-        return await Inventory.find();
-      } catch (err) {
-        console.error("❌ Error fetching items:", err);
-        throw new Error("Failed to fetch items.");
-      }
-    },
-
     user: async (parent, args, context) => {
       if (context.user) {
         try {
@@ -28,47 +18,32 @@ const resolvers = {
       throw new AuthenticationError("Not authenticated");
     },
 
-    // Fetch a single item by ID
-    getItem: async (parent, { id }) => {
+    getInventories: async () => {
       try {
-        return await Inventory.findById(id);
+        return await Inventory.find().populate('company');
       } catch (err) {
-        console.error("❌ Error fetching item:", err);
-        throw new Error("Failed to fetch item.");
+        console.error("❌ Error fetching inventories:", err);
+        throw new Error("Failed to fetch inventories.");
       }
     },
 
-    getSalesReports: async (parent, { dateRange, product, category }) => {
+    getInventory: async (parent, { id }) => {
       try {
-        const filter = {};
-        // Apply filters
-        if (dateRange) {
-          const today = new Date();
-          if (dateRange === "daily") {
-            filter.date = { $gte: new Date(today.setHours(0, 0, 0, 0)) };
-          } else if (dateRange === "weekly") {
-            filter.date = { $gte: new Date(today.setDate(today.getDate() - 7)) };
-          } else if (dateRange === "monthly") {
-            filter.date = { $gte: new Date(today.setMonth(today.getMonth() - 1)) };
-          }
-        }
-        if (product) {
-          filter.product = product;
-        }
-        if (category) {
-          filter.category = category;
-        }
-
-        console.log('Filter being used:', filter); // Log the filter for debugging
-        const reports = await SalesReport.find(filter);
-        console.log('Fetched reports:', reports); // Log fetched reports for debugging
-        return reports;
+        return await Inventory.findById(id).populate('company');
       } catch (err) {
-        console.error("❌ Error fetching sales reports:", err);
-        return [];
+        console.error("❌ Error fetching inventory:", err);
+        throw new Error("Failed to fetch inventory.");
       }
     },
 
+    SearchProduct: async (_, { plu }) => {
+      try {
+        return await Inventory.findOne({ plu }).populate('company');
+      } catch (err) {
+        console.error("❌ Error fetching product:", err);
+        throw new Error("Failed to fetch product.");
+      }
+    },
     SearchProduct: async (_, { plu }) => {
       try {
         return await Inventory.findOne({plu: plu}).populate('company');
@@ -78,7 +53,6 @@ const resolvers = {
       }
     },
   },
-
   Mutation: {
     addUser: async (parent, { firstName, lastName, username, organization, email, password }) => {
       try {
@@ -111,37 +85,37 @@ const resolvers = {
       }
     },
 
-    addItem: async (parent, { upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin, company }) => {
+    addInventory: async (parent, { upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin, company }) => {
       try {
-        const newItem = await Inventory.create({ upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin, company });
-        return newItem;
+        const newInventory = await Inventory.create({ upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin, company });
+        return newInventory;
       } catch (err) {
-        console.error("❌ Error adding item:", err);
-        throw new Error("Failed to add item.");
+        console.error("❌ Error adding inventory:", err);
+        throw new Error("Failed to add inventory.");
       }
     },
 
-    updateItem: async (parent, { id, upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin }) => {
+    updateInventory: async (parent, { id, upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin }) => {
       try {
-        const updatedItem = await Inventory.findByIdAndUpdate(
+        const updatedInventory = await Inventory.findByIdAndUpdate(
           id,
           { upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin },
           { new: true }
         );
-        return updatedItem;
+        return updatedInventory;
       } catch (err) {
-        console.error("❌ Error updating item:", err);
-        throw new Error("Failed to update item.");
+        console.error("❌ Error updating inventory:", err);
+        throw new Error("Failed to update inventory.");
       }
     },
 
-    deleteItem: async (parent, { id }) => {
+    deleteInventory: async (parent, { id }) => {
       try {
-        const deletedItem = await Inventory.findByIdAndDelete(id);
-        return deletedItem;
+        const deletedInventory = await Inventory.findByIdAndDelete(id);
+        return deletedInventory;
       } catch (err) {
-        console.error("❌ Error deleting item:", err);
-        throw new Error("Failed to delete item.");
+        console.error("❌ Error deleting inventory:", err);
+        throw new Error("Failed to delete inventory.");
       }
     },
   },

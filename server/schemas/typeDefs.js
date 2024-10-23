@@ -3,16 +3,15 @@ const { gql } = require("apollo-server-express");
 const typeDefs = gql`
   type Query {
     hello: String
-    getItems: [Item]
-    user: User # 'user' query
+    user: User
     getInventories: [Inventory] # Query to fetch all inventories
     getInventory(id: ID!): Inventory # Query to fetch a specific inventory by ID
+    SearchProduct(plu: String!): Inventory # Query to search product by PLU
     getSalesReports(dateRange: String, product: String, category: String): [SalesReport]
-    SearchProduct(plu: String!): Inventory
   }
 
-  type Item {
-    id: ID!
+  type Inventory {
+    _id: ID!
     upc: String
     plu: String!
     productName: String!
@@ -20,12 +19,13 @@ const typeDefs = gql`
     salePrice: Float
     vendorPrice: Float
     inStock: Int
-    coo: String!
-    company: Company!
+    coo: String
+    companyOfOrigin: String
+    company: Company
   }
 
   type Company {
-    id: ID!
+    _id: ID!
     name: String!
   }
 
@@ -60,17 +60,9 @@ const typeDefs = gql`
       email: String!
       password: String!
     ): Auth
-    updateUser(
-      firstName: String
-      lastName: String
-      username: String
-      organization: String
-      email: String
-      password: String
-    ): User
     login(email: String!, password: String!): Auth
-    
-    addItem(
+
+    addInventory(
       upc: String
       plu: String!
       productName: String!
@@ -78,11 +70,12 @@ const typeDefs = gql`
       salePrice: Float
       vendorPrice: Float
       inStock: Int
-      coo: String!
+      coo: String
+      companyOfOrigin: String
       company: ID!
-    ): Item
+    ): Inventory
 
-    updateItem(
+    updateInventory(
       id: ID!
       upc: String
       plu: String
@@ -92,9 +85,10 @@ const typeDefs = gql`
       vendorPrice: Float
       inStock: Int
       coo: String
-    ): Item
+      companyOfOrigin: String
+    ): Inventory
 
-    deleteItem(id: ID!): Item
+    deleteInventory(id: ID!): Inventory
   }
 `;
 
