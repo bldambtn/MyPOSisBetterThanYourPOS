@@ -16,15 +16,15 @@ const PointOfSale = () => {
             <div className="item-screen">
                 <ItemScreen />
             </div>
-            {/*<div className="totals">
-                <Totals />
+            <div className="totals">
+             <Totals />
             </div>
             <div className="action-buttons">
-                <ActionButtons />
+            <ActionButtons />
             </div>
             <div className="entry-field">
-                <EntryField />
-            </div>*/}
+            <EntryField />
+            </div>
         </div>
     );
 }
