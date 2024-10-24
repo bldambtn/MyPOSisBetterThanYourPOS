@@ -1,26 +1,47 @@
 import { useEffect, useState } from "react";
-import io from "socket.io-client";
-
-// Ensure you are connecting to the correct port for the Socket.io server
-const socket = io("http://localhost:3001");
+import socket from "../utils/socket"; // Use the shared socket
 
 function Notifications() {
   const [missedMessages, setMissedMessages] = useState([]);
+  const [previousChats, setPreviousChats] = useState([]);
 
   useEffect(() => {
+    // Listen for previous messages from the server
+    socket.on("previous messages", (messages) => {
+      setPreviousChats(messages);
+    });
+
     // Listen for missed messages from the server
     socket.on("missed messages", (missed) => {
       setMissedMessages(missed);
     });
+
+    // Cleanup event listeners when the component unmounts
+    return () => {
+      socket.off("previous messages");
+      socket.off("missed messages");
+    };
   }, []);
 
   return (
     <div>
+      <h2>Previous Chats</h2>
+      <ul>
+        {previousChats.map((msg, index) => (
+          <li key={index}>
+            From: {msg.from}, To: {msg.to}, Message: {msg.text}
+            <br />
+            <small>{new Date(msg.timestamp).toLocaleString()}</small>
+          </li>
+        ))}
+      </ul>
+
+      <h2>Missed Chats</h2>
       <ul>
         {missedMessages.map((msg, index) => (
           <li key={index}>
-            From: {msg.from}, To: {msg.to} <br />
-            Message: {msg.text} <br />
+            From: {msg.from}, To: {msg.to}, Message: {msg.text}
+            <br />
             <small>{new Date(msg.timestamp).toLocaleString()}</small>
           </li>
         ))}
