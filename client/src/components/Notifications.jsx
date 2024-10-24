@@ -1,53 +1,51 @@
 import { useEffect, useState } from "react";
 import socket from "../utils/socket"; // Use the shared socket
 
-function Notifications() {
-  const [missedMessages, setMissedMessages] = useState([]);
-  const [previousChats, setPreviousChats] = useState([]);
+function Notifications({ onNewNotification }) {
+  const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    // Listen for previous messages from the server
-    socket.on("previous messages", (messages) => {
-      setPreviousChats(messages);
+    // Listen for incoming chat notifications
+    socket.on("chat message", (messageData) => {
+      const newNotification = {
+        type: "chat",
+        content: `New message from ${messageData.from}`,
+        timestamp: new Date(),
+      };
+
+      // Trigger callback when a new notification is received
+      handleNewNotification(newNotification);
     });
 
-    // Listen for missed messages from the server
-    socket.on("missed messages", (missed) => {
-      setMissedMessages(missed);
+    // Listen for report notifications or other events (example)
+    socket.on("new report", (reportData) => {
+      const newNotification = {
+        type: "report",
+        content: `New report generated: ${reportData.title}`,
+        timestamp: new Date(),
+      };
+
+      handleNewNotification(newNotification);
     });
 
-    // Cleanup event listeners when the component unmounts
     return () => {
-      socket.off("previous messages");
-      socket.off("missed messages");
+      // Clean up socket listeners when component unmounts
+      socket.off("chat message");
+      socket.off("new report");
     };
   }, []);
 
-  return (
-    <div>
-      <h2>Previous Chats</h2>
-      <ul>
-        {previousChats.map((msg, index) => (
-          <li key={index}>
-            From: {msg.from}, To: {msg.to}, Message: {msg.text}
-            <br />
-            <small>{new Date(msg.timestamp).toLocaleString()}</small>
-          </li>
-        ))}
-      </ul>
+  const handleNewNotification = (notification) => {
+    setNotifications((prevNotifications) => [
+      ...prevNotifications,
+      notification,
+    ]);
+    if (onNewNotification) {
+      onNewNotification(notification); // Propagate the new notification if a callback is provided
+    }
+  };
 
-      <h2>Missed Chats</h2>
-      <ul>
-        {missedMessages.map((msg, index) => (
-          <li key={index}>
-            From: {msg.from}, To: {msg.to}, Message: {msg.text}
-            <br />
-            <small>{new Date(msg.timestamp).toLocaleString()}</small>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
+  return null; // No UI rendering
 }
 
 export default Notifications;

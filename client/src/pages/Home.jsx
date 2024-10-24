@@ -1,7 +1,7 @@
 import { useEffect, useState, React } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link } from "react-router-dom";
-
+import "../index.css"; // Import the CSS file for custom styling
 
 const Home = () => {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
@@ -37,37 +37,45 @@ const Home = () => {
   };
 
   return (
-    <div className="container">
-      <p>Hello World!</p>
-      <div className="button-container">
-        <Link to="/enterprise">
-          <button className="enterprise-button">Enterprise</button>
-        </Link>
-        <button className="marketplace-button" disabled>
-          Marketplace (coming soon)
-        </button>
-        {/* Added the link to Inventory Dashboard */}
-      </div>
+    <div className="homepage">
+      {" "}
+      {/* Apply the 'homepage' class for unique styling */}
+      <div className="container">
+        <h1>Welcome to Superior Supply.io</h1>
+        <p>Your one-stop solution for inventory and sales management.</p>
 
-      {/* Install button: Only shown if the deferred prompt is available */}
-      {deferredPrompt && (
-        <button
-          id="install-button"
-          onClick={handleInstallClick}
-          style={{
-            display: "block",
-            marginTop: "20px",
-            padding: "10px 20px",
-            backgroundColor: "#007bff",
-            color: "#fff",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
-        >
-          Install App
-        </button>
-      )}
+        <div className="button-container">
+          {/* Enterprise Button */}
+          <Link to="/enterprise">
+            <button className="enterprise-button">Enterprise</button>
+          </Link>
+
+          {/* Marketplace Button */}
+          <button className="marketplace-button" disabled>
+            Marketplace (coming soon)
+          </button>
+        </div>
+
+        {/* Install button: Only shown if the deferred prompt is available */}
+        {deferredPrompt && (
+          <button
+            id="install-button"
+            onClick={handleInstallClick}
+            style={{
+              display: "block",
+              marginTop: "20px",
+              padding: "10px 20px",
+              backgroundColor: "#007bff",
+              color: "#fff",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
+            Install App
+          </button>
+        )}
+      </div>
     </div>
   );
 };
