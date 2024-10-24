@@ -3,7 +3,6 @@
 ## Description
 A MERN-stack single-page application that integrates user-focused functionality, using technologies like React, GraphQL, Node.js, Express.js, MongoDB, and JWT for authentication.
 
-
 ## Table of Contents
 
 - [Description](#description)
@@ -15,23 +14,15 @@ A MERN-stack single-page application that integrates user-focused functionality,
 - [Citations](#citations)
 - [License](#license)
 
-
 ## Installation
 1. 
 
-
 ## Usage
-
-
 
 ## Contributing
 
-
-
 ## Tests
 N/A
-
-
 
 ## Questions
 

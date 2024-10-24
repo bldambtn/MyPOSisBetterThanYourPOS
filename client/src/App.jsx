@@ -12,8 +12,10 @@ import { StoreProvider } from "./utils/GlobalState";
 import TitleBanner from "./components/TitleBanner";
 import ChatWindow from "./components/ChatWindow"; // Chat Window component
 import Notifications from "./components/Notifications"; // Notifications component
+import Footer from "./components/Footer"; // Import Footer component
 import Auth from "./utils/auth";
 
+// Apollo Client setup
 const httpLink = createHttpLink({
   uri: "/graphql",
 });
@@ -37,6 +39,7 @@ function App() {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const location = useLocation();
 
+  // PWA installation logic
   useEffect(() => {
     const handleBeforeInstallPrompt = (event) => {
       event.preventDefault();
@@ -62,6 +65,7 @@ function App() {
     }
   };
 
+  // Logic to determine when to show the chat window and notifications
   const shouldShowChat = () => {
     const isHomePage = location.pathname === "/";
     const isEnterprisePage = location.pathname.startsWith("/enterprise");
@@ -71,16 +75,28 @@ function App() {
     );
   };
 
+  const shouldShowNotifications = () => {
+    const isLoggedIn = Auth.loggedIn();
+    return isLoggedIn;
+  };
+
   return (
     <ApolloProvider client={client}>
       <TitleBanner />
       <StoreProvider>
-        <Outlet /> {/* Renders nested routes */}
-        {deferredPrompt && (
-          <button onClick={handleInstallClick}>Install App</button>
-        )}
-        {shouldShowChat() && <ChatWindow />}
-        <Notifications />
+        <div className="app-container">
+          <main>
+            <Outlet /> {/* Renders nested routes */}
+          </main>
+          {deferredPrompt && (
+            <button onClick={handleInstallClick} disabled={!deferredPrompt}>
+              Install App
+            </button>
+          )}
+          {shouldShowChat() && <ChatWindow />}
+          {shouldShowNotifications() && <Notifications />}
+          <Footer /> {/* Footer remains anchored at the bottom */}
+        </div>
       </StoreProvider>
     </ApolloProvider>
   );

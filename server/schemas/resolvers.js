@@ -28,24 +28,6 @@ const resolvers = {
       throw new AuthenticationError("Not authenticated");
     },
 
-    // Fetch a single inventory item by ID
-    getInventoryItem: async (parent, { id }) => {
-      try {
-        return await Inventory.find().populate('company');
-      } catch (err) {
-        console.error("❌ Error fetching inventories:", err);
-        throw new Error("Failed to fetch inventories.");
-      }
-    },
-
-    getInventory: async (parent, { id }) => {
-      try {
-        return await Inventory.findById(id).populate('company');
-      } catch (err) {
-        console.error("❌ Error fetching inventory:", err);
-        throw new Error("Failed to fetch inventory.");
-      }
-    },
     SearchProduct: async (_, { plu }) => {
       try {
         return await Inventory.findOne({plu: plu}).populate('company');

@@ -1,32 +1,51 @@
 import { useEffect, useState } from "react";
-import io from "socket.io-client";
+import socket from "../utils/socket"; // Use the shared socket
 
-// Ensure you are connecting to the correct port for the Socket.io server
-const socket = io("http://localhost:3001");
-
-function Notifications() {
-  const [missedMessages, setMissedMessages] = useState([]);
+function Notifications({ onNewNotification }) {
+  const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    // Listen for missed messages from the server
-    socket.on("missed messages", (missed) => {
-      setMissedMessages(missed);
+    // Listen for incoming chat notifications
+    socket.on("chat message", (messageData) => {
+      const newNotification = {
+        type: "chat",
+        content: `New message from ${messageData.from}`,
+        timestamp: new Date(),
+      };
+
+      // Trigger callback when a new notification is received
+      handleNewNotification(newNotification);
     });
+
+    // Listen for report notifications or other events (example)
+    socket.on("new report", (reportData) => {
+      const newNotification = {
+        type: "report",
+        content: `New report generated: ${reportData.title}`,
+        timestamp: new Date(),
+      };
+
+      handleNewNotification(newNotification);
+    });
+
+    return () => {
+      // Clean up socket listeners when component unmounts
+      socket.off("chat message");
+      socket.off("new report");
+    };
   }, []);
 
-  return (
-    <div>
-      <ul>
-        {missedMessages.map((msg, index) => (
-          <li key={index}>
-            From: {msg.from}, To: {msg.to} <br />
-            Message: {msg.text} <br />
-            <small>{new Date(msg.timestamp).toLocaleString()}</small>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
+  const handleNewNotification = (notification) => {
+    setNotifications((prevNotifications) => [
+      ...prevNotifications,
+      notification,
+    ]);
+    if (onNewNotification) {
+      onNewNotification(notification); // Propagate the new notification if a callback is provided
+    }
+  };
+
+  return null; // No UI rendering
 }
 
 export default Notifications;
