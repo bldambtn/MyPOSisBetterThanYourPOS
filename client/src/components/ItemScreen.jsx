@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import EntryField from './EntryField';
-
 import Totals from './Totals'; 
 
 

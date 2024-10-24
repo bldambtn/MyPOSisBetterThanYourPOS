@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import { useApolloClient } from '@apollo/client';
 import { SEARCH_PRODUCT_QUERY } from '../utils/queries';
 
+// Use "*" for quantity entries, for example "2*4046" and hitting the ENTER key will ring up 2 Sm Avocados
+// Use "-" then the ENTER key to void the most recent item
+// use "---" and the ENTER key to void the entire transaction
+// use "+" and the ENTER key to add to the quantity of the most recently rung up item.
+
 const EntryField = ({ onProductFound }) => {
     const [plu, setPlu] = useState('');
     const client = useApolloClient();
