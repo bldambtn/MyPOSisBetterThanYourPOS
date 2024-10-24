@@ -7,9 +7,12 @@ const typeDefs = gql`
     getInventories: [Inventory] # Query to fetch all inventories
     getInventory(id: ID!): Inventory # Query to fetch a specific inventory by ID
     SearchProduct(plu: String!): Inventory # Query to search product by PLU
-    getSalesReports(dateRange: String, product: String, category: String): [SalesReport]
+    getSalesReports(
+      dateRange: String
+      product: String
+      category: String
+    ): [SalesReport]
   }
-
 
   type Inventory {
     _id: ID!
@@ -72,7 +75,7 @@ const typeDefs = gql`
     ): User
 
     login(email: String!, password: String!): Auth
-   
+
     addInventory(
       upc: String
       plu: String!
@@ -82,12 +85,10 @@ const typeDefs = gql`
       vendorPrice: Float
       inStock: Int
       coo: String
-      
-    updateInventory(
-      companyOfOrigin: String  # Updated field to match your schema
-      company: ID!
-    ): Inventory  
+      companyOfOrigin: String
+    ): Inventory
 
+    updateInventory(
       id: ID!
       upc: String
       plu: String
@@ -98,9 +99,10 @@ const typeDefs = gql`
       inStock: Int
       coo: String
       companyOfOrigin: String
+      company: ID!
     ): Inventory
-    deleteInventory(id: ID!): Inventory
 
+    deleteInventory(id: ID!): Inventory
   }
 `;
 
