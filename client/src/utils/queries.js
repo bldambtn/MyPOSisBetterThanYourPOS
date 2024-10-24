@@ -1,6 +1,27 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
-// Existing query for user
+// Query for getting sales reports
+export const GET_SALES_REPORTS = gql`
+  query getSalesReports(
+    $dateRange: String
+    $product: String
+    $category: String
+  ) {
+    getSalesReports(
+      dateRange: $dateRange
+      product: $product
+      category: $category
+    ) {
+      date
+      product
+      category
+      quantitySold
+      totalRevenue
+    }
+  }
+`;
+
+// Query for fetching the current user
 export const QUERY_USER = gql`
   {
     user {
@@ -14,6 +35,31 @@ export const QUERY_USER = gql`
   }
 `;
 
+// Query for fetching all inventories
+export const QUERY_INVENTORIES = gql`
+  query getInventories {
+    getInventories {
+      _id
+      upc
+      productName
+      inStock
+      salePrice
+    }
+  }
+`;
+
+// Query for searching a product by PLU
+export const SEARCH_PRODUCT_QUERY = gql`
+  query SearchProduct($plu: String!) {
+    SearchProduct(plu: $plu) {
+      _id
+      productName
+      salePrice
+    }
+  }
+`;
+
+// Query for fetching the full inventory with more fields
 export const QUERY_INVENTORY = gql`
   query getInventory {
     inventory {
@@ -25,18 +71,6 @@ export const QUERY_INVENTORY = gql`
       salePrice
       vendorPrice
       companyOfOrigin
-    }
-  }
-`;
-
-export const SEARCH_PRODUCT_QUERY = gql`
-  query SearchProduct($plu: String!) {
-    product(plu: $plu) {
-      _id
-      productName
-      salePrice
-      vendorPrice
-      inStock
     }
   }
 `;
