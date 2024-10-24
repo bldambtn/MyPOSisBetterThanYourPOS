@@ -1,8 +1,6 @@
 import { io } from "socket.io-client";
 
-// Reuse the same socket connection across the app
-const socket = io("http://localhost:3001", {
-  query: { userId: "currentUserId" }, // Use actual user ID dynamically
-});
+// Initialize the socket connection (change the URL if needed)
+const socket = io("http://localhost:3001");
 
 export default socket;

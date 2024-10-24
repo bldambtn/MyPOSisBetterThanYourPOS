@@ -24,22 +24,23 @@ class AuthService {
 
   getToken() {
     // Retrieves the user token from localStorage
-    return localStorage.getInventory("id_token");
+    return localStorage.getItem("id_token"); // Corrected method
   }
 
   login(idToken) {
     // Saves user token to localStorage
-    localStorage.setInventory("id_token", idToken);
+    localStorage.setItem("id_token", idToken); // Corrected method
 
     // window.location.assign("/");
   }
 
   logout() {
     // Clear user token and profile data from localStorage
-    localStorage.removeInventory("id_token");
+    localStorage.removeItem("id_token"); // Corrected method
     // this will reload the page and reset the state of the application
     window.location.assign("/");
   }
 }
 
 export default new AuthService();
+

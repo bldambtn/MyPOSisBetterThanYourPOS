@@ -14,6 +14,7 @@ import ChatWindow from "./components/ChatWindow"; // Chat Window component
 import Notifications from "./components/Notifications"; // Notifications component
 import Auth from "./utils/auth";
 
+// Apollo Client setup
 const httpLink = createHttpLink({
   uri: "/graphql",
 });
@@ -37,6 +38,7 @@ function App() {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const location = useLocation();
 
+  // PWA installation logic
   useEffect(() => {
     const handleBeforeInstallPrompt = (event) => {
       event.preventDefault();
@@ -62,6 +64,7 @@ function App() {
     }
   };
 
+  // Logic to determine when to show the chat window and notifications
   const shouldShowChat = () => {
     const isHomePage = location.pathname === "/";
     const isEnterprisePage = location.pathname.startsWith("/enterprise");
@@ -71,16 +74,23 @@ function App() {
     );
   };
 
+  const shouldShowNotifications = () => {
+    const isLoggedIn = Auth.loggedIn();
+    return isLoggedIn;
+  };
+
   return (
     <ApolloProvider client={client}>
       <TitleBanner />
       <StoreProvider>
         <Outlet /> {/* Renders nested routes */}
         {deferredPrompt && (
-          <button onClick={handleInstallClick}>Install App</button>
+          <button onClick={handleInstallClick} disabled={!deferredPrompt}>
+            Install App
+          </button>
         )}
         {shouldShowChat() && <ChatWindow />}
-        <Notifications />
+        {shouldShowNotifications() && <Notifications />}
       </StoreProvider>
     </ApolloProvider>
   );
