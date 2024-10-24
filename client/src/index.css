@@ -1,0 +1,74 @@
+/* Adds styling to home.jsx */
+.homepage {
+  background-image: url('/icons/homeHero.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 85vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+}
+
+/* Unique styling for buttons on the homepage */
+.homepage .button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.homepage button {
+  background-color: rgba(28, 176, 132, 0.9); 
+  color: white;
+  padding: 15px 30px;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  width: 250px; 
+  margin-bottom: 20px; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
+  border-radius: 8px; 
+  text-align: center;
+  opacity: 0.9; 
+  transition: opacity 0.3s ease, transform 0.3s ease; 
+}
+
+.homepage button:hover {
+  opacity: 1; 
+  transform: translateY(-3px); 
+}
+
+.homepage button:disabled {
+  background-color: rgba(28, 176, 132, 0.5); 
+  cursor: not-allowed; 
+}
+
+.homepage .enterprise-button, .homepage .marketplace-button {
+  width: 250px;
+}
+
+/* Adds styling to TitleBanner.jsx*/
+.title-banner {
+  background-color: rgba(28, 176, 132, 0.9);
+  color: white;
+  text-align: center;
+  padding: 20px;
+  font-size: 2.5rem; 
+  margin: 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Adds styling to Footer.jsx */
+.site-footer {
+  background-color: rgba(28, 176, 132, 0.9);
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.2);
+}
