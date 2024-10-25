@@ -4,13 +4,10 @@ const { Schema } = mongoose;
 const inventorySchema = new Schema({
   upc: {
     type: String,
-    unique: true,
-    sparse: true 
   },
   plu: {
     type: String,
-    required: true,
-    unique: true,
+    require: true,
     trim: true
   },
   productName: {
@@ -43,7 +40,7 @@ const inventorySchema = new Schema({
     trim: true 
   },
   company: {
-    type: Schema.Types.ObjectId,
+    type: String,
     ref: 'User',
     required: true
   }
