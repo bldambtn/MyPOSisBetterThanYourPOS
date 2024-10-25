@@ -2,12 +2,19 @@ import React, { useState } from 'react';
 import { useApolloClient } from '@apollo/client';
 import { SEARCH_PRODUCT_QUERY } from '../utils/queries';
 
-const EntryField = ({ onProductFound }) => {
+const EntryField = ({ onProductFound, onRemoveLastItem }) => {
     const [plu, setPlu] = useState('');
     const client = useApolloClient();
 
     const handleKeyPress = async (event) => {
         if (event.key === 'Enter') {
+            if (plu === '--') {
+                // Call the function to remove the last item
+                onRemoveLastItem();
+                setPlu(''); // Clear the input field
+                return;
+            }
+
             try {
                 // Check if the input matches the quantity format (e.g., 5*4046)
                 const quantityMatch = plu.match(/^(\d+)\*(\d+)$/);
@@ -51,7 +58,7 @@ const EntryField = ({ onProductFound }) => {
             value={plu}
             onChange={(e) => setPlu(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Enter PLU (e.g., 5*4046)"
+            placeholder="Enter PLU"
         />
     );
 };

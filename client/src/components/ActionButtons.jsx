@@ -10,6 +10,11 @@ const ActionButtons = () => {
     if (isPaymentSuccessful) {
       alert(`Payment accepted via ${method}. Proceeding...`);
       
+      // Remove only the 'itemList' from local storage
+      localStorage.removeItem('itemList');
+      
+      // Refresh the page
+      window.location.reload();
     } else {
       alert('Payment was not processed. Please try again.');
     }

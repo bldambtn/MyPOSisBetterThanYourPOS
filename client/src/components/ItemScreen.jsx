@@ -33,6 +33,17 @@ const ItemScreen = () => {
     }
   };
 
+  const handleRemoveLastItem = () => {
+    setProducts((prevProducts) => {
+      if (prevProducts.length > 0) {
+        const updatedProducts = prevProducts.slice(0, -1); // Remove the last item
+        localStorage.setItem('itemList', JSON.stringify(updatedProducts)); // Update local storage
+        return updatedProducts;
+      }
+      return prevProducts; // Return the same array if there are no products
+    });
+  };
+
   return (
     <div>
       {products.length > 0 && (
@@ -53,7 +64,10 @@ const ItemScreen = () => {
         <Totals products={products} />
       </div>
       <div className="entry-field">
-        <EntryField onProductFound={handleProductFound} />
+        <EntryField 
+          onProductFound={handleProductFound} 
+          onRemoveLastItem={handleRemoveLastItem} 
+        />
       </div>
     </div>
   );
