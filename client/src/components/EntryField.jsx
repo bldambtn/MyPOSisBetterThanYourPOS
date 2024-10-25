@@ -2,38 +2,47 @@ import React, { useState } from 'react';
 import { useApolloClient } from '@apollo/client';
 import { SEARCH_PRODUCT_QUERY } from '../utils/queries';
 
-const EntryField = ({ onProductFound }) => {
+const EntryField = ({ onProductFound, onRemoveLastItem }) => {
     const [plu, setPlu] = useState('');
     const client = useApolloClient();
 
     const handleKeyPress = async (event) => {
         if (event.key === 'Enter') {
+            if (plu === '--') {
+                // Call the function to remove the last item
+                onRemoveLastItem();
+                setPlu(''); // Clear the input field
+                return;
+            }
+
             try {
-                // Check if the input ends with '*'
-                const quantityMatch = plu.match(/^(\d+)\*$/);
+                // Check if the input matches the quantity format (e.g., 5*4046)
+                const quantityMatch = plu.match(/^(\d+)\*(\d+)$/);
                 let quantity = 1; // Default quantity
+                let productPlu = plu; // Default PLU
 
                 if (quantityMatch) {
                     quantity = parseInt(quantityMatch[1], 10); // Extract the quantity
-                    const pluWithoutAsterisk = plu.slice(0, -1 * quantityMatch[0].length); // Get the PLU without '*'
-                    
-                    const { data } = await client.query({
-                        query: SEARCH_PRODUCT_QUERY,
-                        variables: { plu: pluWithoutAsterisk },
-                    });
-                    
-                    // Pass the found product and quantity to the parent component
-                    onProductFound({ ...data.product, quantity });
-                } else {
-                    // If no '*' is present, just search with the PLU
-                    const { data } = await client.query({
-                        query: SEARCH_PRODUCT_QUERY,
-                        variables: { plu },
-                    });
-                    
-                    // Pass the found product with default quantity
-                    onProductFound({ ...data.product, quantity });
+                    productPlu = quantityMatch[2]; // Get the PLU without the quantity part
                 }
+
+                // Search for the product using the PLU
+                const { data } = await client.query({
+                    query: SEARCH_PRODUCT_QUERY,
+                    variables: { plu: productPlu },
+                });
+                
+                const productData = data.SearchProduct; // Get the product data
+                
+                // Ensure productName is a string and salePrice is a float
+                const foundProduct = {
+                    productName: String(productData.productName), // Ensure this is a string
+                    salePrice: parseFloat(productData.salePrice), // Convert to float
+                    quantity: quantity // Use the extracted quantity
+                };
+
+                // Pass the found product to the parent component
+                onProductFound(foundProduct);
 
                 // Clear the entry field
                 setPlu('');
@@ -49,7 +58,7 @@ const EntryField = ({ onProductFound }) => {
             value={plu}
             onChange={(e) => setPlu(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Enter PLU (e.g., 2* for quantity 2)"
+            placeholder="Enter PLU"
         />
     );
 };
