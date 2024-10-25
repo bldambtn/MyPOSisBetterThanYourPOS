@@ -37,11 +37,6 @@ const EntryField = ({ onProductFound }) => {
                 // Pass the found product to the parent component
                 onProductFound(foundProduct);
 
-                // Add the found product to local storage
-                const existingProducts = JSON.parse(localStorage.getItem('products')) || [];
-                existingProducts.push(foundProduct);
-                localStorage.setItem('itemList', JSON.stringify(existingProducts));
-
                 // Clear the entry field
                 setPlu('');
             } catch (error) {
