@@ -19,6 +19,7 @@ const ItemScreen = () => {
     } else {
       // If it doesn't exist, add the new product
       setProducts((prevProducts) => [...prevProducts, foundProduct]);
+      
     }
   };
 

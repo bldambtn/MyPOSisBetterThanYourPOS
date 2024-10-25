@@ -17,18 +17,20 @@ const EntryField = ({ onProductFound }) => {
                 // Check if the input ends with '*'
                 const quantityMatch = plu.match(/^(\d+)\*$/);
                 let quantity = 1; // Default quantity
-
+    
+                let productData;
+    
                 if (quantityMatch) {
                     quantity = parseInt(quantityMatch[1], 10); // Extract the quantity
                     const pluWithoutAsterisk = plu.slice(0, -1 * quantityMatch[0].length); // Get the PLU without '*'
-                    
+    
                     const { data } = await client.query({
                         query: SEARCH_PRODUCT_QUERY,
                         variables: { plu: pluWithoutAsterisk },
                     });
                     
-                    // Pass the found product and quantity to the parent component
-                    onProductFound({ ...data.product, quantity });
+                    productData = data.SearchProduct; // Get the product data
+                    
                 } else {
                     // If no '*' is present, just search with the PLU
                     const { data } = await client.query({
@@ -36,10 +38,20 @@ const EntryField = ({ onProductFound }) => {
                         variables: { plu },
                     });
                     
-                    // Pass the found product with default quantity
-                    onProductFound({ ...data.product, quantity });
+                    productData = data.SearchProduct; // Get the product data
+                    console.log(data);
                 }
-
+    
+                // Ensure productName is a string and salePrice is a float
+                const foundProduct = {
+                    productName: String(productData.productName), // Ensure this is a string
+                    salePrice: parseFloat(productData.salePrice), // Convert to float
+                    quantity: quantity // Use the extracted or default quantity
+                };
+    
+                // Pass the found product to the parent component
+                onProductFound(foundProduct);
+    
                 // Clear the entry field
                 setPlu('');
             } catch (error) {
