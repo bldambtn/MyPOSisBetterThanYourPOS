@@ -67,6 +67,16 @@ const resolvers = {
         throw new Error("Failed to fetch sales reports.");
       }
     },
+
+
+    SearchProduct: async (_, { plu }) => {
+      try {
+        return await Inventory.findOne({plu: plu});
+      } catch (err) {
+        console.error("❌ Error fetching items:", err);
+        throw new Error("Failed to fetch items.");
+      }
+    },
   },
   
   Mutation: {
