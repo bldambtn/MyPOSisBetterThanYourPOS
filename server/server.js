@@ -107,7 +107,7 @@ const startApolloServer = async () => {
     });
   });
 
-  mongoose.connect(process.env.MONGO_URI,)
+  mongoose.connect(process.env.MONGODB_URI,)
     .then(() => {
       httpServer.listen(PORT, () => {
         console.log(`API server running on port ${PORT}!`);

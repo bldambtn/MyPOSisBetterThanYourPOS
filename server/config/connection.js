@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 console.log("Connecting to MongoDB URI:", process.env.MONGODB_URI); // Log the URI
 
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/myDatabase', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 });
 
 const db = mongoose.connection;
