@@ -5,17 +5,17 @@ import Auth from "../utils/auth";
 import "../index.css";
 
 const Enterprise = () => {
-  const isLoggedIn = Auth.loggedIn(); // Check if the user is logged in
+  const isLoggedIn = Auth.loggedIn();
   const navigate = useNavigate();
 
   const handleLogout = () => {
     Auth.logout();
-    navigate("/"); // Redirect to the homepage or login page after logout
+    navigate("/");
   };
 
   const handleNotificationsClick = () => {
     if (isLoggedIn) {
-      navigate("/enterprise/notifications"); // Navigate to notifications page
+      navigate("/enterprise/notifications");
     }
   };
 
@@ -34,7 +34,7 @@ const Enterprise = () => {
         )}
       </div>
 
-      <div className="dashboard-container">
+      <div className={`dashboard-container ${!isLoggedIn ? "blur" : ""}`}>
         <Link to="/enterprise/inventory" className="dashboard-button">
           Inventory Dashboard
         </Link>
@@ -46,16 +46,21 @@ const Enterprise = () => {
         </Link>
         <button
           className="dashboard-button notifications-alert"
-          disabled={!isLoggedIn}
           onClick={handleNotificationsClick}
+          disabled={!isLoggedIn}
         >
           Notifications
           {isLoggedIn && <span className="alert-icon">!</span>}
         </button>
       </div>
 
+      {/* Overlay for logged-out users */}
       {!isLoggedIn && (
-        <p className="login-reminder">Please log in to view notifications.</p>
+        <div className="logged-out-overlay">
+          <p className="login-message">
+            Please log in or sign up to view your dashboard
+          </p>
+        </div>
       )}
     </div>
   );
