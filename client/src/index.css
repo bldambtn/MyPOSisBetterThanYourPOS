@@ -28,6 +28,7 @@ body, html {
   padding: 0;
   height: 100%;
   background-color: var(--darkaccent);
+  overflow-x: hidden;
 }
 
 /* Adjust the padding for pages to avoid overlap with the fixed header */
@@ -37,7 +38,7 @@ body, html {
 
 .container {
   padding-top: 80px;
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
   padding-left: 20px;
   padding-right: 20px;
@@ -220,6 +221,7 @@ h1 {
   grid-template-columns: repeat(2, 1fr);
   gap: 30px;
   margin-top: 20px;
+  max-width: 100%;
 }
 
 /* Styling for Dashboard Buttons */
