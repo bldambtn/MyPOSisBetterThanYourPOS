@@ -4,7 +4,7 @@ import { useMutation } from "@apollo/client";
 import { ADD_USER, LOGIN_USER } from "../utils/mutations";
 import Auth from "../utils/auth";
 
-const LoginSignupModal = () => {
+const LoginSignupModal = ({ onLogin }) => {
   const [show, setShow] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
   const [formState, setFormState] = useState({
@@ -16,7 +16,6 @@ const LoginSignupModal = () => {
     organization: ""
   });
 
-  // Mutations
   const [addUser] = useMutation(ADD_USER);
   const [loginUser] = useMutation(LOGIN_USER);
 
@@ -35,6 +34,10 @@ const LoginSignupModal = () => {
 
   const handleSignup = async (event) => {
     event.preventDefault();
+  
+    // Ensure the organization field is defined before using it
+    const organization = formState.organization ? formState.organization.trim().toLowerCase() : "";
+  
     try {
       const mutationResponse = await addUser({
         variables: {
@@ -43,23 +46,25 @@ const LoginSignupModal = () => {
           firstName: formState.firstName,
           lastName: formState.lastName,
           username: formState.username,
-          organization: formState.organization,
+          organization: organization, // Use the modified organization value
         },
       });
   
       const token = mutationResponse.data.addUser.token;
-      const user = mutationResponse.data.addUser.user;
-      
-      console.log('Signup successful!', token, user); 
+      const userId = mutationResponse.data.addUser.user._id;
   
-      alert(`Signup successful! Welcome, ${user.username}! Please log in now.`);
-      setIsLogin(true); 
+      // Save the token and organization in local storage for future use
+      Auth.login(token);
+      localStorage.setItem("userId", userId);
+      localStorage.setItem("organization", organization);
+  
+      console.log("Received User ID after signup:", userId);
+      alert(`Signup successful! Welcome, ${formState.username}! Please log in now.`);
+      setIsLogin(true); // Switch to login view
     } catch (err) {
       console.error('Signup failed:', err);
     }
   };
-  
-
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
@@ -69,14 +74,25 @@ const LoginSignupModal = () => {
           password: formState.password,
         },
       });
+  
       const token = mutationResponse.data.login.token;
-      console.log('Login successful! Token:', token);
+      const userId = mutationResponse.data.login.user._id;
+      const organization = mutationResponse.data.login.user.organization;
+  
+      console.log("Received User ID after login:", userId);
+  
+      // Store the token and user information correctly
       Auth.login(token);
-      handleClose(); 
+      localStorage.setItem("userId", userId);
+      localStorage.setItem("organization", organization); // Save organization
+  
+      onLogin(); // Notify parent component that login was successful
+      handleClose();
     } catch (err) {
-      console.error('Login failed:', err);
+      console.error("Login failed:", err);
     }
   };
+  
 
   return (
     <>

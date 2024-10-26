@@ -136,7 +136,7 @@ const InventoryDashboard = () => {
         rowData={filteredInventory}
         columnDefs={columnDefs}
         pagination={true}
-        paginationPageSize={10}
+        paginationPageSize={20}
       />
 
       {/* Back Button */}

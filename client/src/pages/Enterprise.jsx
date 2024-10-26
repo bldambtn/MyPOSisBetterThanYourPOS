@@ -1,23 +1,36 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import LoginSignupModal from "../components/LoginSignupModal";
+import LogoutButton from "../components/LogoutButton";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link, useNavigate } from "react-router-dom";
 import Auth from '../utils/auth';
+import socket from '../utils/socket'; // Import the default socket
 
 const Enterprise = () => {
-  const isLoggedIn = Auth.loggedIn(); // Check if the user is logged in
   const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(Auth.loggedIn());
+
+  useEffect(() => {
+    const checkAuth = () => setIsLoggedIn(Auth.loggedIn());
+    window.addEventListener('storage', checkAuth);
+    return () => window.removeEventListener('storage', checkAuth);
+  }, []);
+
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+    socket.connect(); // Reconnect the socket if needed
+  };
 
   const handleNotificationsClick = () => {
     if (isLoggedIn) {
-      navigate("/enterprise/notifications"); // Navigate to notifications page
+      navigate("/enterprise/notifications");
     }
   };
 
   return (
     <div className="container">
       <h1>Dashboard</h1>
-      <LoginSignupModal />
+      <LoginSignupModal onLogin={handleLogin} />
 
       <div className="mt-4">
         <Link to="/enterprise/inventory" className="btn btn-primary mr-2">
@@ -31,18 +44,22 @@ const Enterprise = () => {
         </Link>
       </div>
 
-      {/* Notifications Button */}
       <div className="mt-4">
         <button
           className="btn btn-warning"
           disabled={!isLoggedIn}
-          onClick={handleNotificationsClick} // Navigate to notifications
+          onClick={handleNotificationsClick}
         >
           Notifications
         </button>
         {!isLoggedIn && <p>Please log in to view notifications.</p>}
-        {/* Message for logged-out users */}
       </div>
+
+      {isLoggedIn && (
+        <div className="mt-4">
+          <LogoutButton onLogout={() => setIsLoggedIn(false)} />
+        </div>
+      )}
     </div>
   );
 };

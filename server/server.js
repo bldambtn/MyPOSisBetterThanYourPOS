@@ -1,49 +1,39 @@
+require("dotenv").config();
 const express = require("express");
-const http = require("http"); // Import HTTP module to create the server
+const http = require("http");
 const { ApolloServer } = require("@apollo/server");
 const { expressMiddleware } = require("@apollo/server/express4");
-const { Server } = require("socket.io"); // Import Socket.io
+const { Server } = require("socket.io");
 const path = require("path");
-
+const mongoose = require("mongoose");
 const { typeDefs, resolvers } = require("./schemas");
-const db = require("./config/connection");
-const { authMiddleware } = require("./utils/auth"); // Import authMiddleware
+const { authMiddleware } = require("./utils/auth");
+const Message = require("./models/message");
 
 const PORT = process.env.PORT || 3001;
 const app = express();
-
-// Create an HTTP server to attach both Apollo and Socket.io to
 const httpServer = http.createServer(app);
-
-// Attach Socket.io to the HTTP server
 const io = new Server(httpServer, {
   cors: {
-    origin: "http://localhost:3000", // Adjust based on your frontend origin
+    origin: ["http://localhost:3000", "https://www.superiorsupply.io"],
     methods: ["GET", "POST"],
     credentials: true,
   },
 });
 
-// Store missed messages for offline users
-const missedMessages = {};
-
-// Initialize Apollo Server with GraphQL schema
 const server = new ApolloServer({
   typeDefs,
   resolvers,
 });
 
-// Function to start both Apollo and Socket.io
 const startApolloServer = async () => {
   await server.start();
 
-  // Use middlewares for Apollo GraphQL and Express
   app.use(express.urlencoded({ extended: false }));
   app.use(express.json());
 
   if (process.env.NODE_ENV === "production") {
     app.use(express.static(path.join(__dirname, "../client/dist")));
-
     app.get("*", (req, res) => {
       res.sendFile(path.join(__dirname, "../client/dist/index.html"));
     });
@@ -52,57 +42,82 @@ const startApolloServer = async () => {
   app.use(
     "/graphql",
     expressMiddleware(server, {
-      context: authMiddleware, // Use authMiddleware for context
+      context: authMiddleware,
     })
   );
 
-  // Handle Socket.io connections and events
   io.on("connection", (socket) => {
     const userId = socket.handshake.query.userId;
-    console.log(`🔌 User connected: ${socket.id}, User ID: ${userId}`);
-
-    // Send missed messages to the user upon reconnect
-    if (missedMessages[userId]) {
-      socket.emit("missed messages", missedMessages[userId]);
-      delete missedMessages[userId]; // Clear once delivered
+  
+    if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+      console.warn("User ID not provided or is not a valid ObjectId during connection.");
+      return;
     }
-
-    // Listen for incoming chat messages
-    socket.on("chat message", (messageData) => {
-      const recipientId = messageData.to; // Assuming recipient ID is in messageData
-
-      console.log("Message received: ", messageData);
-
-      // Check if the recipient is online
-      if (!io.sockets.sockets.get(recipientId)) {
-        // Store the message for offline users
-        if (!missedMessages[recipientId]) {
-          missedMessages[recipientId] = [];
+  
+    console.log(`🔌 User connected: ${socket.id}, User ID: ${userId}`);
+    socket.join(userId); // Make sure the user joins their own room for messaging.
+  
+    // Fetch and send missed messages from MongoDB
+    Message.find({ to: userId, isDelivered: false })
+      .then((messages) => {
+        if (messages.length > 0) {
+          console.log(`Sending missed messages to User ID: ${userId}`);
+          socket.emit("missed messages", messages);
+          return Message.updateMany({ to: userId, isDelivered: false }, { isDelivered: true });
         }
-        missedMessages[recipientId].push(messageData);
-        console.log(`Message stored for offline recipient: ${recipientId}`);
-      } else {
-        // If recipient is online, send the message directly
-        io.to(recipientId).emit("chat message", messageData);
-        console.log(`Message delivered to online recipient: ${recipientId}`);
+      })
+      .catch((err) => {
+        console.error("❌ Error fetching missed messages:", err);
+      });
+  
+    // Listen for chat messages
+    socket.on("chat message", async (messageData) => {
+      const recipientId = messageData.to;
+  
+      // Validate the recipientId
+      if (!recipientId || !mongoose.Types.ObjectId.isValid(recipientId)) {
+        console.error("Invalid recipient ID:", recipientId);
+        return;
+      }
+  
+      messageData.timestamp = new Date();
+  
+      // Save the message in MongoDB
+      try {
+        const message = new Message({
+          from: userId,
+          to: recipientId,
+          text: messageData.text,
+          timestamp: messageData.timestamp,
+          isDelivered: false,
+        });
+  
+        await message.save();
+        console.log("Message saved:", message);
+  
+        // Emit the message to the intended recipient
+        io.to(recipientId).emit("chat message", message);
+      } catch (err) {
+        console.error("❌ Error saving message:", err);
       }
     });
-
-    // Handle user disconnecting
+  
     socket.on("disconnect", () => {
       console.log(`🔌 User disconnected: ${userId}`);
     });
   });
 
-  // Start the HTTP server with both Apollo and Socket.io
-  db.once("open", () => {
-    httpServer.listen(PORT, () => {
-      console.log(`API server running on port ${PORT}!`);
-      console.log(`Use GraphQL at http://localhost:${PORT}/graphql`);
-      console.log(`Socket.io server running on port ${PORT}!`);
+  mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => {
+      httpServer.listen(PORT, () => {
+        console.log(`API server running on port ${PORT}!`);
+        console.log(`Use GraphQL at http://localhost:${PORT}/graphql`);
+        console.log(`Socket.io server running on port ${PORT}!`);
+      });
+    })
+    .catch((err) => {
+      console.error("Failed to connect to MongoDB:", err);
     });
-  });
 };
 
-// Call the function to start the server
 startApolloServer();

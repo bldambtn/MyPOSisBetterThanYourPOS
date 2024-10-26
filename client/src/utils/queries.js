@@ -74,3 +74,14 @@ export const QUERY_INVENTORY = gql`
     }
   }
 `;
+
+export const GET_USERS_IN_ORGANIZATION = gql`
+  query usersInOrganization($organization: String!) {
+    usersInOrganization(organization: $organization) {
+      _id
+      firstName
+      lastName
+      email
+    }
+  }
+`;
