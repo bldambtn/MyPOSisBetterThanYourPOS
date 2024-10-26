@@ -1,13 +1,17 @@
 import React from "react";
 import LoginSignupModal from "../components/LoginSignupModal";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { Link, useNavigate } from "react-router-dom";
-import Auth from '../utils/auth';
-import '../index.css';
+import Auth from "../utils/auth";
+import "../index.css";
 
 const Enterprise = () => {
   const isLoggedIn = Auth.loggedIn(); // Check if the user is logged in
   const navigate = useNavigate();
+
+  const handleLogout = () => {
+    Auth.logout();
+    navigate("/"); // Redirect to the homepage or login page after logout
+  };
 
   const handleNotificationsClick = () => {
     if (isLoggedIn) {
@@ -16,34 +20,43 @@ const Enterprise = () => {
   };
 
   return (
-    <div className="container">
-      <h1>Dashboard</h1>
-      <LoginSignupModal />
+    <div className="enterprise-page">
+      <h1 className="merriweather-bold">Dashboard</h1>
 
-      <div className="mt-4">
-        <Link to="/enterprise/inventory" className="btn btn-primary mr-2">
-          Go to Inventory Dashboard
-        </Link>
-        <Link to="/enterprise/pos" className="btn btn-secondary mr-2">
-          Go to Point of Sale
-        </Link>
-        <Link to="/enterprise/reports" className="btn btn-info">
-          View Sales Reports
-        </Link>
+      {/* Login/Logout Button in the top-right corner */}
+      <div className="top-right-button">
+        {isLoggedIn ? (
+          <button className="enterprise-button" onClick={handleLogout}>
+            Logout
+          </button>
+        ) : (
+          <LoginSignupModal />
+        )}
       </div>
 
-      {/* Notifications Button */}
-      <div className="mt-4">
+      <div className="dashboard-container">
+        <Link to="/enterprise/inventory" className="dashboard-button">
+          Inventory Dashboard
+        </Link>
+        <Link to="/enterprise/pos" className="dashboard-button">
+          Point of Sale
+        </Link>
+        <Link to="/enterprise/reports" className="dashboard-button">
+          Sales Reports
+        </Link>
         <button
-          className="btn btn-warning"
+          className="dashboard-button notifications-alert"
           disabled={!isLoggedIn}
-          onClick={handleNotificationsClick} // Navigate to notifications
+          onClick={handleNotificationsClick}
         >
           Notifications
+          {isLoggedIn && <span className="alert-icon">!</span>}
         </button>
-        {!isLoggedIn && <p>Please log in to view notifications.</p>}
-        {/* Message for logged-out users */}
       </div>
+
+      {!isLoggedIn && (
+        <p className="login-reminder">Please log in to view notifications.</p>
+      )}
     </div>
   );
 };

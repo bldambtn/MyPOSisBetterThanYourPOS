@@ -116,7 +116,7 @@ button:disabled {
   align-items: center;
   text-align: center;
   min-height: 85vh;
-  padding-top: 80px; /* Adjust for fixed header height if needed */
+  padding-top: 80px;
 }
 
 /* Add background image to .page-content */
@@ -198,34 +198,90 @@ button:disabled {
   color: inherit; 
 }
 
-/* Enterprise Page */
+/* Enterprise Page Styles */
 .enterprise-page {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  min-height: 85vh;
   text-align: center;
+  min-height: 85vh;
+  padding-top: 110px;
 }
 
+h1 {
+  font-size: 2.5rem;
+  color: white;
+  margin-bottom: 40px;
+}
+
+/* Dashboard Container for Button Layout */
 .dashboard-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+  margin-top: 20px;
 }
 
-.notifications-alert {
-  position: relative;
+/* Styling for Dashboard Buttons */
+.dashboard-button {
+  background-color: var(--backgroundcolor);
+  color: white;
+  width: 180px;
+  height: 180px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s ease;
+  cursor: pointer;
 }
 
-.notifications-alert .alert {
+.dashboard-button:hover {
+  background-color: rgba(28, 176, 132, 0.8);
+}
+
+/* Notification Alert Icon */
+.alert-icon {
   position: absolute;
   top: -5px;
   right: -5px;
-  background-color: red;
+  background-color: var(--errorcolor);
   color: white;
-  padding: 5px;
+  font-size: 0.9rem;
+  padding: 5px 8px;
   border-radius: 50%;
+}
+
+/* Position login/signup button in the top-right corner */
+.top-right-button {
+  position: absolute;
+  top: 110px;
+  right: 20px;
+  z-index: 15;
+}
+
+/* Match button style to enterprise button style */
+.top-right-button button,
+.top-right-button .enterprise-button {
+  background-color: var(--backgroundcolor);
+  color: white;
+  padding: 15px 30px;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.top-right-button button:hover {
+  background-color: rgba(28, 176, 132, 0.8);
 }
 
 /* Chat Window Styling */
