@@ -5,6 +5,7 @@ import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import BackButton from "../components/BackButton";
+import AddItemForm from "../components/AddItemForm";
 
 const InventoryDashboard = () => {
   const { loading, data } = useQuery(QUERY_INVENTORIES);
@@ -14,6 +15,7 @@ const InventoryDashboard = () => {
   const [productNameFilter, setProductNameFilter] = useState("");
   const [inStockFilter, setInStockFilter] = useState("");
   const [salePriceFilter, setSalePriceFilter] = useState("");
+  const [showAddItemForm, setShowAddItemForm] = useState(false);
 
   useEffect(() => {
     if (data) {
@@ -47,6 +49,18 @@ const InventoryDashboard = () => {
     setFilteredInventory(filtered);
   };
 
+  const handleAddItemClick = () => {
+    setShowAddItemForm(true);
+  };
+
+  const handleAddItemSubmit = (newItem) => {
+    // Adding the new item to the inventory
+    setInventory([...inventory, newItem]);
+    setFilteredInventory([...filteredInventory, newItem]);
+
+    console.log("New item added:", newItem);
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -71,7 +85,12 @@ const InventoryDashboard = () => {
   return (
     <div className="ag-theme-alpine inventory-dashboard">
       <div className="top-right-button">
-        <button className="button-common add-items-btn">Add Items</button>
+        <button
+          className="button-common add-item-btn"
+          onClick={handleAddItemClick}
+        >
+          Add Item
+        </button>
         <BackButton to="/enterprise"></BackButton>
       </div>
       <h1 className="merriweather-bold">Inventory Dashboard</h1>
@@ -117,6 +136,12 @@ const InventoryDashboard = () => {
           Apply Filters
         </button>
       </div>
+      {showAddItemForm && (
+        <AddItemForm
+          onClose={() => setShowAddItemForm(false)}
+          onSubmit={handleAddItemSubmit}
+        />
+      )}
       <AgGridReact
         rowData={filteredInventory}
         columnDefs={columnDefs}

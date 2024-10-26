@@ -403,7 +403,7 @@ h1 {
 
 .inventory-dashboard .filter-inputs {
   display: flex;
-  justify-content: left; 
+  justify-content: left;
   align-items: center;
   padding: 10px;
   border-radius: 8px;
@@ -421,9 +421,9 @@ h1 {
 /* Filter Label Styling */
 .inventory-dashboard .filter-inputs label {
   font-family: "Merriweather", serif;
-  font-weight: 700; 
-  font-size: 1.2rem; 
-  margin-right: 1%; 
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-right: 1%;
   white-space: nowrap;
 }
 
@@ -483,12 +483,70 @@ h1 {
 }
 
 /* Specific styles for Add Items button */
-.add-items-btn {
+.add-item-btn {
   background-color: var(--acceptcolor) !important;
 }
 
-.add-items-btn:hover {
+.add-item-btn:hover {
   background-color: #1a6e1a;
+}
+
+/* ==============================
+   Add Item Form
+  ============================== */
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  max-width: 90%;
+  position: relative;
+}
+
+/* Add Item Form Styles */
+.add-item-form .add-item-btn {
+  background-color: var(--acceptcolor);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-item-form .add-item-btn:hover {
+  background-color: #1a6e1a; /* Darker shade for hover effect */
+}
+
+.add-item-form .discard-changes-btn {
+  background-color: var(--selectcolor);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-item-form .discard-changes-btn:hover {
+  background-color: #0d3e7e; /* Darker shade for hover effect */
 }
 
 /* ==============================
