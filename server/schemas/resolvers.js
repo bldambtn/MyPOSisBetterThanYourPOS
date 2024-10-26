@@ -15,7 +15,6 @@ const resolvers = {
       }
     },
 
-
     user: async (parent, args, context) => {
       if (context.user) {
         try {
@@ -28,14 +27,24 @@ const resolvers = {
       throw new AuthenticationError("Not authenticated");
     },
 
+    usersInOrganization: async (parent, { organization }) => {
+      try {
+        return await User.find({ organization });
+      } catch (err) {
+        console.error("❌ Error fetching users in organization:", err);
+        throw new Error("Failed to fetch users.");
+      }
+    },
+
     SearchProduct: async (_, { plu }) => {
       try {
-        return await Inventory.findOne({plu: plu}).populate('company');
+        return await Inventory.findOne({ plu });
       } catch (err) {
         console.error("❌ Error fetching inventories:", err);
         throw new Error("Failed to fetch inventories.");
       }
     },
+
     getSalesReports: async (parent, { dateRange, product, category }) => {
       try {
         const filter = {};
@@ -60,8 +69,7 @@ const resolvers = {
           filter.category = category;
         }
 
-        const reports = await SalesReport.find(filter);
-        return reports;
+        return await SalesReport.find(filter);
       } catch (err) {
         console.error("❌ Error fetching sales reports:", err);
         throw new Error("Failed to fetch sales reports.");
@@ -78,11 +86,14 @@ const resolvers = {
       }
     },
   },
-  
+
   Mutation: {
-    addUser: async (parent, { firstName, lastName, username, organization, email, password }) => {
+    addUser: async (parent, args) => {
       try {
-        const user = await User.create({ firstName, lastName, username, organization, email, password });
+        // Normalize the organization field to lowercase and trim any extra spaces
+        args.organization = args.organization.trim().toLowerCase();
+        
+        const user = await User.create(args);
         const token = signToken(user);
         return { token, user };
       } catch (err) {
@@ -92,29 +103,25 @@ const resolvers = {
     },
 
     login: async (parent, { email, password }) => {
-      try {
-        const user = await User.findOne({ email });
-        if (!user) {
-          throw new AuthenticationError("Incorrect credentials");
-        }
+      const user = await User.findOne({ email });
 
-        const correctPw = await user.isCorrectPassword(password);
-        if (!correctPw) {
-          throw new AuthenticationError("Incorrect credentials");
-        }
-
-        const token = signToken(user);
-        return { token, user };
-      } catch (err) {
-        console.error("❌ Error logging in:", err);
-        throw new Error("Login failed.");
+      if (!user) {
+        throw new AuthenticationError('No user found with this email address');
       }
+
+      const correctPw = await user.isCorrectPassword(password);
+
+      if (!correctPw) {
+        throw new AuthenticationError('Incorrect credentials');
+      }
+
+      const token = signToken(user);
+      return { token, user };
     },
 
-    addInventory: async (parent, { upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin, company }) => {
+    addInventory: async (parent, { upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin }) => {
       try {
-        const newInventory = await Inventory.create({ upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin, company });
-        return newInventory;
+        return await Inventory.create({ upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin });
       } catch (err) {
         console.error("❌ Error adding inventory:", err);
         throw new Error("Failed to add inventory.");
@@ -123,24 +130,20 @@ const resolvers = {
 
     updateInventory: async (parent, { id, upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin }) => {
       try {
-        const updatedInventory = await Inventory.findByIdAndUpdate(
+        return await Inventory.findByIdAndUpdate(
           id,
           { upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin },
           { new: true }
         );
-        return updatedInventory;
       } catch (err) {
-
         console.error("❌ Error updating inventory:", err);
         throw new Error("Failed to update inventory.");
       }
     },
 
     deleteInventory: async (parent, { id }) => {
-
       try {
-        const deletedInventory = await Inventory.findByIdAndDelete(id);
-        return deletedInventory;
+        return await Inventory.findByIdAndDelete(id);
       } catch (err) {
         console.error("❌ Error deleting inventory:", err);
         throw new Error("Failed to delete inventory.");

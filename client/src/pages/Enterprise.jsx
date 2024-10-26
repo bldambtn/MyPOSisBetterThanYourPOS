@@ -1,12 +1,25 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import LoginSignupModal from "../components/LoginSignupModal";
 import { Link, useNavigate } from "react-router-dom";
 import Auth from "../utils/auth";
 import "../index.css";
+import socket from '../utils/socket';
 
 const Enterprise = () => {
-  const isLoggedIn = Auth.loggedIn();
+  // const isLoggedIn = Auth.loggedIn();
   const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(Auth.loggedIn());
+
+  useEffect(() => {
+    const checkAuth = () => setIsLoggedIn(Auth.loggedIn());
+    window.addEventListener('storage', checkAuth);
+    return () => window.removeEventListener('storage', checkAuth);
+  }, []);
+
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+    socket.connect(); // Reconnect the socket if needed
+  };
 
   const handleLogout = () => {
     Auth.logout();
@@ -22,7 +35,6 @@ const Enterprise = () => {
   return (
     <div className="enterprise-page">
       <h1 className="merriweather-bold">Dashboard</h1>
-
       {/* Login/Logout Button in the top-right corner */}
       <div className="top-right-button">
         {isLoggedIn ? (
@@ -30,7 +42,7 @@ const Enterprise = () => {
             Logout
           </button>
         ) : (
-          <LoginSignupModal />
+          <LoginSignupModal onLogin={handleLogin}/>
         )}
       </div>
 
