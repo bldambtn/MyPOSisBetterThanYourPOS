@@ -289,6 +289,18 @@ h1 {
   z-index: 10;
 }
 
+/* Update the blur effect for the dashboard */
+.blur {
+  filter: blur(5px);
+  pointer-events: none; /* Prevent interaction */
+}
+
+/* Disabled state for buttons */
+.dashboard-button[disabled] {
+  cursor: not-allowed;
+  background-color: rgba(28, 176, 132, 0.5);
+}
+
 .login-message {
   font-size: 1.5rem;
   font-weight: bold;

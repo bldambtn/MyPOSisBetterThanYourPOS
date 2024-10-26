@@ -35,13 +35,25 @@ const Enterprise = () => {
       </div>
 
       <div className={`dashboard-container ${!isLoggedIn ? "blur" : ""}`}>
-        <Link to="/enterprise/inventory" className="dashboard-button">
+        <Link
+          to="/enterprise/inventory"
+          className="dashboard-button"
+          disabled={!isLoggedIn}
+        >
           Inventory Dashboard
         </Link>
-        <Link to="/enterprise/pos" className="dashboard-button">
+        <Link
+          to="/enterprise/pos"
+          className="dashboard-button"
+          disabled={!isLoggedIn}
+        >
           Point of Sale
         </Link>
-        <Link to="/enterprise/reports" className="dashboard-button">
+        <Link
+          to="/enterprise/reports"
+          className="dashboard-button"
+          disabled={!isLoggedIn}
+        >
           Sales Reports
         </Link>
         <button
