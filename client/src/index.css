@@ -560,29 +560,53 @@ h1 {
   min-height: 85vh;
   text-align: center;
   padding-top: 100px;
+  position: relative;
 }
 
-.pos-page .sales-box {
+.sales-box {
   width: 600px;
   background-color: white;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-top: 20px;
 }
 
-.pos-page .totals {
+.warning-text {
   margin-top: 20px;
+  color: var(--errorcolor);
   font-size: 1.2rem;
 }
 
-.pos-page .payment-buttons {
-  display: flex;
-  justify-content: space-between;
+.action-buttons {
   margin-top: 20px;
 }
 
-.pos-page .payment-buttons button {
-  width: 100px;
+.totals {
+  margin-top: 20px;
+}
+
+.pos-page h1 {
+  font-size: 2.5rem;
+  color: var(--darkaccent);
+  margin-bottom: 20px;
+}
+
+.pos-page h1 {
+  font-size: 2.5rem;
+  color: var(--darkaccent);
+  margin-bottom: 20px;
+}
+
+/* Styling for Totals Section */
+.totals {
+  background-color: var(--darkaccent);
+  color: white;
+  padding: 15px;
+  border-radius: 8px;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 20px;
 }
 
 /* Sales Reports */
