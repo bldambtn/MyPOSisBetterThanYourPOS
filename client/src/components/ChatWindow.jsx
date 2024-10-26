@@ -9,48 +9,26 @@ function ChatWindow() {
   };
 
   return (
-    <div
-      className="chat-window"
-      style={{
-        position: "fixed",
-        bottom: "50px", // Positioned just above the footer
-        right: "20px",
-        width: "300px",
-        borderRadius: "8px 8px 0 0",
-        overflow: "hidden",
-        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-        zIndex: 1000,
-      }}
-    >
-      <div
-        className="chat-header"
-        onClick={toggleChat}
-        style={{
-          padding: "10px",
-          backgroundColor: "#007bff",
-          color: "#fff",
-          fontWeight: "bold",
-          textAlign: "center",
-          cursor: "pointer",
-        }}
-      >
-        Chat {/* Header visible even when minimized */}
+    <div className="chat-window">
+      <div className="chat-header" onClick={toggleChat}>
+        Chat
       </div>
 
       {isOpen && (
-        <div
-          className="chat-content"
-          style={{
-            background: "white",
-            height: "300px",
-            padding: "10px",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <div style={{ flexGrow: 1, overflowY: "auto" }}>
-            <Chat /> {/* Renders the Chat component */}
-          </div>
+        <div className="chat-content">
+          {/* Dropdown for selecting a user */}
+          <select className="chat-dropdown">
+            <option>Select a user</option>
+          </select>
+
+          {/* Text input for entering the message */}
+          <textarea
+            className="chat-textbox"
+            placeholder="Type a message"
+          ></textarea>
+
+          {/* Send button */}
+          <button className="chat-send-button">Send</button>
         </div>
       )}
     </div>

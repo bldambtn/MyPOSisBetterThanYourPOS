@@ -46,19 +46,17 @@ const LoginSignupModal = () => {
           organization: formState.organization,
         },
       });
-  
       const token = mutationResponse.data.addUser.token;
       const user = mutationResponse.data.addUser.user;
-      
-      console.log('Signup successful!', token, user); 
-  
+
+      console.log("Signup successful!", token, user);
       alert(`Signup successful! Welcome, ${user.username}! Please log in now.`);
-      setIsLogin(true); 
+      setIsLogin(true);
+      window.location.reload();
     } catch (err) {
-      console.error('Signup failed:', err);
+      console.error("Signup failed:", err);
     }
   };
-  
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -70,11 +68,12 @@ const LoginSignupModal = () => {
         },
       });
       const token = mutationResponse.data.login.token;
-      console.log('Login successful! Token:', token);
+      console.log("Login successful! Token:", token);
       Auth.login(token);
-      handleClose(); 
+      handleClose();
+      window.location.reload();
     } catch (err) {
-      console.error('Login failed:', err);
+      console.error("Login failed:", err);
     }
   };
 
