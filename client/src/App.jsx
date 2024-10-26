@@ -14,6 +14,7 @@ import ChatWindow from "./components/ChatWindow"; // Chat Window component
 import Notifications from "./components/Notifications"; // Notifications component
 import Footer from "./components/Footer"; // Import Footer component
 import Auth from "./utils/auth";
+import "./index.css";
 
 // Apollo Client setup
 const httpLink = createHttpLink({
@@ -88,14 +89,13 @@ function App() {
           <main>
             <Outlet /> {/* Renders nested routes */}
           </main>
-          {deferredPrompt && (
-            <button onClick={handleInstallClick} disabled={!deferredPrompt}>
-              Install App
-            </button>
-          )}
           {shouldShowChat() && <ChatWindow />}
           {shouldShowNotifications() && <Notifications />}
-          <Footer /> {/* Footer remains anchored at the bottom */}
+          {/* Pass deferredPrompt and handleInstallClick to Footer */}
+          <Footer
+            deferredPrompt={deferredPrompt}
+            handleInstallClick={handleInstallClick}
+          />
         </div>
       </StoreProvider>
     </ApolloProvider>

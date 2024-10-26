@@ -6,7 +6,6 @@ class AuthService {
   }
 
   loggedIn() {
-    // Checks if there is a saved token and it's still valid
     const token = this.getToken();
     return !!token && !this.isTokenExpired(token);
   }
@@ -14,33 +13,24 @@ class AuthService {
   isTokenExpired(token) {
     try {
       const decoded = decode(token);
-      if (decoded.exp < Date.now() / 1000) {
-        return true;
-      } else return false;
+      return decoded.exp < Date.now() / 1000;
     } catch (err) {
       return false;
     }
   }
 
   getToken() {
-    // Retrieves the user token from localStorage
-    return localStorage.getItem("id_token"); // Corrected method
+    return sessionStorage.getItem("id_token");
   }
 
   login(idToken) {
-    // Saves user token to localStorage
-    localStorage.setItem("id_token", idToken); // Corrected method
-
-    // window.location.assign("/");
+    sessionStorage.setItem("id_token", idToken);
   }
 
   logout() {
-    // Clear user token and profile data from localStorage
-    localStorage.removeItem("id_token"); // Corrected method
-    // this will reload the page and reset the state of the application
+    sessionStorage.removeItem("id_token");
     window.location.assign("/");
   }
 }
 
 export default new AuthService();
-
