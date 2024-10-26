@@ -5,7 +5,7 @@
   --selectcolor: #0f52ba;
   --acceptcolor: #228b22;
   --errorcolor: #f40009;
-  --main-font: 'Merriweather', serif;
+  --main-font: "Merriweather", serif;
 }
 
 .merriweather-regular {
@@ -21,7 +21,8 @@
 }
 
 /* Global Styles */
-body, html {
+body,
+html {
   font-family: var(--main-font), serif;
   font-weight: 700;
   margin: 0;
@@ -33,7 +34,7 @@ body, html {
 
 /* Adjust the padding for pages to avoid overlap with the fixed header */
 .page-content {
-  padding-top: 80px; 
+  padding-top: 80px;
 }
 
 .container {
@@ -44,7 +45,10 @@ body, html {
   padding-right: 20px;
 }
 
-h1, h2, h3, p {
+h1,
+h2,
+h3,
+p {
   margin: 0;
   padding: 0;
   color: white;
@@ -98,7 +102,7 @@ button:disabled {
 }
 
 .footer-install-button {
-  background-color: #8C9FA4;
+  background-color: #8c9fa4;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -122,7 +126,7 @@ button:disabled {
 
 /* Add background image to .page-content */
 .homepage .page-content {
-  background-image: url('/icons/homeHero.jpg');
+  background-image: url("/icons/homeHero.jpg");
   background-size: cover;
   background-position: center;
   width: 100%;
@@ -155,7 +159,7 @@ button:disabled {
   border: none;
   font-size: 1.2rem;
   cursor: pointer;
-  width: 250px; 
+  width: 250px;
   margin-bottom: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   border-radius: 8px;
@@ -169,12 +173,12 @@ button:disabled {
 
 /* Styling for marketplace button */
 .homepage .marketplace-button {
-  background-color: rgba(28, 176, 132, 0.6); 
+  background-color: rgba(28, 176, 132, 0.6);
   color: white;
   padding: 15px 30px;
   border: none;
   font-size: 1.2rem;
-  cursor: not-allowed; 
+  cursor: not-allowed;
   width: 250px;
   margin-bottom: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
@@ -183,20 +187,20 @@ button:disabled {
 
 /* Styling for welcome container */
 .welcome-container {
-  color: var(--backgroundcolor); 
+  color: var(--backgroundcolor);
   font-weight: bold;
-  padding: 20px; 
+  padding: 20px;
   text-align: center;
   background-color: rgba(255, 255, 255, 0.8);
   border-radius: 8px;
   box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
-  display: inline-block; 
+  display: inline-block;
   margin-bottom: 20px;
 }
 
 .welcome-container .welcome-text {
-  margin: 0; 
-  color: inherit; 
+  margin: 0;
+  color: inherit;
 }
 
 /* Enterprise Page Styles */
@@ -262,34 +266,13 @@ h1 {
 
 /* Position login/signup button in the top-right corner */
 .top-right-button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   position: absolute;
   top: 110px;
   right: 20px;
   z-index: 15;
-}
-
-/* Match button style to enterprise button style */
-.top-right-button button,
-.top-right-button .enterprise-button {
-  background-color: var(--backgroundcolor);
-  color: white;
-  padding: 15px 30px;
-  border: none;
-  font-size: 1.2rem;
-  cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  border-radius: 8px;
-  transition: background-color 0.3s ease;
-}
-
-.top-right-button button:hover {
-  background-color: rgba(28, 176, 132, 0.8);
-}
-
-/* Blurred background for logged-out overlay */
-.dashboard-container.blur {
-  filter: blur(5px);
-  pointer-events: none; 
 }
 
 /* Overlay styling */
@@ -330,9 +313,9 @@ h1 {
 
 /* Minimized State for Chat Window */
 .chat-window.minimized {
-  max-height: 40px; 
+  max-height: 40px;
   cursor: pointer;
-  overflow: hidden; 
+  overflow: hidden;
   padding: 0;
   text-align: center;
 }
@@ -351,8 +334,8 @@ h1 {
 /* Chat Content Styling */
 .chat-content {
   display: flex;
-  flex-direction: column; /* Stack items vertically */
-  gap: 10px; /* Space between each item */
+  flex-direction: column;
+  gap: 10px;
 }
 
 /* Dropdown Styling */
@@ -367,14 +350,14 @@ h1 {
 
 /* Textbox Styling */
 .chat-textbox {
-  flex-grow: 1; /* Allows it to expand if needed */
+  flex-grow: 1;
   width: 100%;
   height: 130px;
   padding: 2px;
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 4px;
-  resize: none; /* Prevents resizing */
+  resize: none;
 }
 
 /* Send Button Styling */
@@ -393,55 +376,124 @@ h1 {
   background-color: rgba(28, 176, 132, 0.8);
 }
 
-/* Inventory Dashboard */
+/* ==============================
+   Inventory Dashboard Styles
+  ============================== */
+
 .inventory-dashboard {
-  padding-top: 80px; 
+  padding: 130px 20px 20px;
 }
 
-.inventory-dashboard .table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
+.inventory-dashboard h1 {
+  font-size: 2.5rem;
+  color: black;
+  margin-bottom: 20px;
 }
 
-.inventory-dashboard th, .inventory-dashboard td {
-  padding: 10px;
-  border: 1px solid #ccc;
-  text-align: left;
-}
-
-.inventory-dashboard th {
-  background-color: var(--backgroundcolor);
-  color: white;
-  cursor: pointer;
+/* Filter Section */
+/* Filter Inventory Title */
+.filter-inventory-title {
+  font-family: "Merriweather", serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: black;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .inventory-dashboard .filter-inputs {
   display: flex;
-  justify-content: space-between;
+  justify-content: left; 
+  align-items: center;
   padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  flex-wrap: nowrap;
 }
 
-.inventory-dashboard button {
-  width: auto;
-  padding: 5px 10px;
+/* Label and Input Inline Styling */
+.inventory-dashboard .filter-inputs div {
+  display: flex;
+  align-items: center;
+  margin-right: 1%;
 }
 
-.inventory-dashboard .add-item-form {
-  display: none; 
+/* Filter Label Styling */
+.inventory-dashboard .filter-inputs label {
+  font-family: "Merriweather", serif;
+  font-weight: 700; 
+  font-size: 1.2rem; 
+  margin-right: 1%; 
+  white-space: nowrap;
 }
 
-.inventory-dashboard .add-item-popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: white;
-  padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+/* Filter Input Styling */
+.inventory-dashboard .filter-inputs input {
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 180px;
+  margin-left: 1%;
 }
 
-/* Point Of Sale */
+.inventory-dashboard .apply-filters-btn {
+  background-color: var(--backgroundcolor);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.inventory-dashboard .apply-filters-btn:hover {
+  background-color: rgba(28, 176, 132, 0.8);
+}
+
+/* Table Styling */
+.inventory-dashboard.ag-theme-alpine {
+  height: 500px;
+  width: 100%;
+}
+
+.inventory-dashboard .ag-header {
+  background-color: var(--backgroundcolor);
+  color: white;
+}
+
+.inventory-dashboard .ag-cell {
+  color: black;
+}
+
+.inventory-dashboard .ag-header-cell-text {
+  color: white;
+}
+
+/* Common button styles */
+.button-common {
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+/* Specific styles for Add Items button */
+.add-items-btn {
+  background-color: var(--acceptcolor) !important;
+}
+
+.add-items-btn:hover {
+  background-color: #1a6e1a;
+}
+
+/* ==============================
+   Point of Sale Styles
+  ============================== */
 .pos-page {
   display: flex;
   flex-direction: column;
@@ -485,7 +537,8 @@ h1 {
   border-collapse: collapse;
 }
 
-.sales-reports-table th, .sales-reports-table td {
+.sales-reports-table th,
+.sales-reports-table td {
   padding: 10px;
   border: 1px solid #ccc;
 }
@@ -530,7 +583,7 @@ h1 {
 }
 
 .notifications-page .chat-box {
-  display: none; 
+  display: none;
 }
 
 /* NoMatch Page */

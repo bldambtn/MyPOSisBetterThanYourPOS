@@ -1,21 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useQuery } from "@apollo/client"; // Import useQuery only once
-import { QUERY_INVENTORIES } from "../utils/queries"; // Assuming the correct path for the query
+import { useQuery } from "@apollo/client";
+import { QUERY_INVENTORIES } from "../utils/queries";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
-import BackButton from "../components/BackButton"; // Assuming correct path for BackButton component
-import '../index.css';
+import BackButton from "../components/BackButton";
 
 const InventoryDashboard = () => {
-  // Fetching inventory data from GraphQL
   const { loading, data } = useQuery(QUERY_INVENTORIES);
-
-  // State for inventory and filtered inventory
   const [inventory, setInventory] = useState([]);
   const [filteredInventory, setFilteredInventory] = useState([]);
-
-  // State for filter inputs
   const [upcFilter, setUpcFilter] = useState("");
   const [productNameFilter, setProductNameFilter] = useState("");
   const [inStockFilter, setInStockFilter] = useState("");
@@ -23,39 +17,33 @@ const InventoryDashboard = () => {
 
   useEffect(() => {
     if (data) {
-      setInventory(data.getInventories); // Assuming the query returns getInventories
-      setFilteredInventory(data.getInventories); // Initialize filteredInventory with all items
+      setInventory(data.getInventories);
+      setFilteredInventory(data.getInventories);
     }
   }, [data]);
 
-  // Handle the filter changes
   const handleFilterChange = () => {
     let filtered = inventory;
-
     if (upcFilter) {
       filtered = filtered.filter((item) =>
         item.upc.toLowerCase().includes(upcFilter.toLowerCase())
       );
     }
-
     if (productNameFilter) {
       filtered = filtered.filter((item) =>
         item.productName.toLowerCase().includes(productNameFilter.toLowerCase())
       );
     }
-
     if (inStockFilter) {
       filtered = filtered.filter((item) =>
         String(item.inStock).includes(inStockFilter)
       );
     }
-
     if (salePriceFilter) {
       filtered = filtered.filter((item) =>
         String(item.salePrice).includes(salePriceFilter)
       );
     }
-
     setFilteredInventory(filtered);
   };
 
@@ -63,7 +51,6 @@ const InventoryDashboard = () => {
     return <div>Loading...</div>;
   }
 
-  // Column definitions for Ag-Grid
   const columnDefs = [
     { headerName: "UPC", field: "upc", sortable: true, filter: true },
     {
@@ -82,12 +69,14 @@ const InventoryDashboard = () => {
   ];
 
   return (
-    <div className="ag-theme-alpine" style={{ height: "500px", width: "100%" }}>
-      <h1>Inventory Dashboard</h1>
-
-      {/* Filter Section */}
-      <div>
-        <h3>Filter Items</h3>
+    <div className="ag-theme-alpine inventory-dashboard">
+      <div className="top-right-button">
+        <button className="button-common add-items-btn">Add Items</button>
+        <BackButton to="/enterprise"></BackButton>
+      </div>
+      <h1 className="merriweather-bold">Inventory Dashboard</h1>
+      <h2 className="filter-inventory-title">Filter Inventory</h2>{" "}
+      <div className="filter-inputs">
         <div>
           <label>UPC: </label>
           <input
@@ -124,24 +113,16 @@ const InventoryDashboard = () => {
             placeholder="Filter by Sale Price"
           />
         </div>
-        <button
-          onClick={handleFilterChange}
-          style={{ marginTop: "10px", padding: "10px", cursor: "pointer" }}
-        >
+        <button onClick={handleFilterChange} className="apply-filters-btn">
           Apply Filters
         </button>
       </div>
-
-      {/* Ag-Grid Table for displaying inventory */}
       <AgGridReact
         rowData={filteredInventory}
         columnDefs={columnDefs}
         pagination={true}
         paginationPageSize={10}
       />
-
-      {/* Back Button */}
-      <BackButton to="/enterprise" />
     </div>
   );
 };
