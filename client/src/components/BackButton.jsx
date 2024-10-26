@@ -1,12 +1,15 @@
-// client/src/components/BackButton.jsx
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
-const BackButton = ({ to }) => {
+const BackButton = ({ to, label = "Back to Dashboard" }) => {
   const navigate = useNavigate();
   return (
-    <button onClick={() => navigate(to)} style={{ margin: '20px', padding: '10px', cursor: 'pointer' }}>
-      Back to Enterprise
+    <button
+      className="button-common enterprise-button"
+      onClick={() => navigate(to)}
+      aria-label={`Navigate to ${label}`}
+    >
+      {label}
     </button>
   );
 };

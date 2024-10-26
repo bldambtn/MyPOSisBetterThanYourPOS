@@ -49,7 +49,6 @@ const LoginSignupModal = ({ onLogin }) => {
           organization: organization, // Use the modified organization value
         },
       });
-  
       const token = mutationResponse.data.addUser.token;
       const userId = mutationResponse.data.addUser.user._id;
   
@@ -62,7 +61,7 @@ const LoginSignupModal = ({ onLogin }) => {
       alert(`Signup successful! Welcome, ${formState.username}! Please log in now.`);
       setIsLogin(true); // Switch to login view
     } catch (err) {
-      console.error('Signup failed:', err);
+      console.error("Signup failed:", err);
     }
   };
   const handleLogin = async (event) => {
@@ -89,6 +88,7 @@ const LoginSignupModal = ({ onLogin }) => {
       onLogin(); // Notify parent component that login was successful
       handleClose();
     } catch (err) {
+      console.error("Login failed:", err);
       console.error("Login failed:", err);
     }
   };
