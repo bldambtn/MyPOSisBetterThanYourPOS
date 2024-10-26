@@ -46,7 +46,7 @@ const LoginSignupModal = ({ onLogin }) => {
           firstName: formState.firstName,
           lastName: formState.lastName,
           username: formState.username,
-          organization: organization, // Use the modified organization value
+          organization: formState.organization, // Use the modified organization value
         },
       });
       const token = mutationResponse.data.addUser.token;
