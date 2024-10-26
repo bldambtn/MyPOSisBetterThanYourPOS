@@ -5,6 +5,7 @@ import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import BackButton from "../components/BackButton"; // Assuming correct path for BackButton component
+import '../index.css';
 
 const InventoryDashboard = () => {
   // Fetching inventory data from GraphQL

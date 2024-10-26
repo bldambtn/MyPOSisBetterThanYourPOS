@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Notifications from "../components/Notifications";
+import "../index.css";
 
 function NotificationsPage() {
   const [notifications, setNotifications] = useState([]);

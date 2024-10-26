@@ -3,6 +3,7 @@ import LoginSignupModal from "../components/LoginSignupModal";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link, useNavigate } from "react-router-dom";
 import Auth from '../utils/auth';
+import '../index.css';
 
 const Enterprise = () => {
   const isLoggedIn = Auth.loggedIn(); // Check if the user is logged in
