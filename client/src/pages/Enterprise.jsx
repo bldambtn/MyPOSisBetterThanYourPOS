@@ -4,7 +4,8 @@ import LogoutButton from "../components/LogoutButton";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link, useNavigate } from "react-router-dom";
 import Auth from '../utils/auth';
-import socket from '../utils/socket'; // Import the default socket
+import socket from '../utils/socket';
+import "../index.css";
 
 const Enterprise = () => {
   const navigate = useNavigate();
