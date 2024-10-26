@@ -1,18 +1,143 @@
-/* Adds styling to home.jsx */
-.homepage {
-  background-image: url('/icons/homeHero.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  min-height: 85vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+/* Global Stlying Variables */
+:root {
+  --backgroundcolor: #1cb084;
+  --darkaccent: #1f2421;
+  --selectcolor: #0f52ba;
+  --acceptcolor: #228b22;
+  --errorcolor: #f40009;
+  --main-font: "Merriweather", serif;
+}
+
+.merriweather-regular {
+  font-family: "Merriweather", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.merriweather-bold {
+  font-family: "Merriweather", serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* Global Styles */
+body,
+html {
+  font-family: var(--main-font), serif;
+  font-weight: 700;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: var(--darkaccent);
+  overflow-x: hidden;
+}
+
+/* Adjust the padding for pages to avoid overlap with the fixed header */
+.page-content {
+  padding-top: 80px;
+}
+
+.container {
+  padding-top: 80px;
+  max-width: 100%;
+  margin: 0 auto;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+  padding: 0;
   color: white;
 }
 
-/* Unique styling for buttons on the homepage */
+button {
+  background-color: var(--backgroundcolor);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: var(--darkaccent);
+}
+
+button:disabled {
+  background-color: rgba(28, 176, 132, 0.5);
+  cursor: not-allowed;
+}
+
+/* Title Banner */
+.title-banner {
+  background-color: var(--backgroundcolor);
+  color: white;
+  text-align: center;
+  padding: 20px;
+  font-size: 2.5rem;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+
+/* Footer */
+.site-footer {
+  background-color: var(--backgroundcolor);
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 10;
+}
+
+.footer-install-button {
+  background-color: #8c9fa4;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  position: absolute;
+  right: 20px;
+  bottom: 10px;
+  font-size: 0.9rem;
+}
+
+/* Remove background-image from .homepage */
+.homepage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-height: 85vh;
+  padding-top: 80px;
+}
+
+/* Add background image to .page-content */
+.homepage .page-content {
+  background-image: url("/icons/homeHero.jpg");
+  background-size: cover;
+  background-position: center;
+  width: 100%;
+  min-height: 85vh;
+  padding: 40px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .homepage .button-container {
   display: flex;
   flex-direction: column;
@@ -21,54 +146,569 @@
 }
 
 .homepage button {
-  background-color: rgba(28, 176, 132, 0.9); 
+  width: 250px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Styling for enterprise button */
+.homepage .enterprise-button {
+  background-color: var(--backgroundcolor);
   color: white;
   padding: 15px 30px;
   border: none;
   font-size: 1.2rem;
   cursor: pointer;
-  width: 250px; 
-  margin-bottom: 20px; 
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
-  border-radius: 8px; 
-  text-align: center;
-  opacity: 0.9; 
-  transition: opacity 0.3s ease, transform 0.3s ease; 
-}
-
-.homepage button:hover {
-  opacity: 1; 
-  transform: translateY(-3px); 
-}
-
-.homepage button:disabled {
-  background-color: rgba(28, 176, 132, 0.5); 
-  cursor: not-allowed; 
-}
-
-.homepage .enterprise-button, .homepage .marketplace-button {
   width: 250px;
-}
-
-/* Adds styling to TitleBanner.jsx*/
-.title-banner {
-  background-color: rgba(28, 176, 132, 0.9);
-  color: white;
-  text-align: center;
-  padding: 20px;
-  font-size: 2.5rem; 
-  margin: 0;
+  margin-bottom: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
 }
 
-/* Adds styling to Footer.jsx */
-.site-footer {
-  background-color: rgba(28, 176, 132, 0.9);
+/* Hover effect for enterprise button */
+.homepage .enterprise-button:hover {
+  background-color: rgba(28, 176, 132, 0.8);
+}
+
+/* Styling for marketplace button */
+.homepage .marketplace-button {
+  background-color: rgba(28, 176, 132, 0.6);
   color: white;
+  padding: 15px 30px;
+  border: none;
+  font-size: 1.2rem;
+  cursor: not-allowed;
+  width: 250px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+}
+
+/* Styling for welcome container */
+.welcome-container {
+  color: var(--backgroundcolor);
+  font-weight: bold;
+  padding: 20px;
   text-align: center;
-  padding: 20px 0;
-  position: relative;
-  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+  display: inline-block;
+  margin-bottom: 20px;
+}
+
+.welcome-container .welcome-text {
+  margin: 0;
+  color: inherit;
+}
+
+/* Enterprise Page Styles */
+.enterprise-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-height: 85vh;
+  padding-top: 110px;
+}
+
+h1 {
+  font-size: 2.5rem;
+  color: white;
+  margin-bottom: 40px;
+}
+
+/* Dashboard Container for Button Layout */
+.dashboard-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+  margin-top: 20px;
+  max-width: 100%;
+}
+
+/* Styling for Dashboard Buttons */
+.dashboard-button {
+  background-color: var(--backgroundcolor);
+  color: white;
+  width: 180px;
+  height: 180px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.dashboard-button:hover {
+  background-color: rgba(28, 176, 132, 0.8);
+}
+
+/* Notification Alert Icon */
+.alert-icon {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: var(--errorcolor);
+  color: white;
+  font-size: 0.9rem;
+  padding: 5px 8px;
+  border-radius: 50%;
+}
+
+/* Position login/signup button in the top-right corner */
+.top-right-button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: absolute;
+  top: 110px;
+  right: 20px;
+  z-index: 15;
+}
+
+/* Overlay styling */
+.logged-out-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(31, 36, 33, 0.8);
+  padding: 40px;
+  border-radius: 8px;
+  text-align: center;
+  color: white;
+  z-index: 10;
+}
+
+/* Update the blur effect for the dashboard */
+.blur {
+  filter: blur(5px);
+  pointer-events: none; /* Prevent interaction */
+}
+
+/* Disabled state for buttons */
+.dashboard-button[disabled] {
+  cursor: not-allowed;
+  background-color: rgba(28, 176, 132, 0.5);
+}
+
+.login-message {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+}
+
+/* Chat Window Styling */
+.chat-window {
+  position: fixed;
+  bottom: 60px;
+  right: 20px;
+  background-color: white;
+  width: 300px;
+  max-height: 300px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px 8px 0 0;
+  overflow-y: auto;
+  z-index: 1000;
+  padding: 10px;
+  transition: max-height 0.3s ease;
+}
+
+/* Minimized State for Chat Window */
+.chat-window.minimized {
+  max-height: 40px;
+  cursor: pointer;
+  overflow: hidden;
+  padding: 0;
+  text-align: center;
+}
+
+/* Header for Chat Window */
+.chat-header {
+  background-color: var(--backgroundcolor);
+  color: white;
+  padding: 10px;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 8px 8px 0 0;
+  cursor: pointer;
+}
+
+/* Chat Content Styling */
+.chat-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Dropdown Styling */
+.chat-dropdown {
   width: 100%;
-  box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.2);
+  margin-top: 6px;
+  padding: 2px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Textbox Styling */
+.chat-textbox {
+  flex-grow: 1;
+  width: 100%;
+  height: 130px;
+  padding: 2px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: none;
+}
+
+/* Send Button Styling */
+.chat-send-button {
+  background-color: var(--backgroundcolor);
+  color: white;
+  border: none;
+  padding: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.chat-send-button:hover {
+  background-color: rgba(28, 176, 132, 0.8);
+}
+
+/* ==============================
+   Inventory Dashboard Styles
+  ============================== */
+
+.inventory-dashboard {
+  padding: 130px 20px 20px;
+}
+
+.inventory-dashboard h1 {
+  font-size: 2.5rem;
+  color: black;
+  margin-bottom: 20px;
+}
+
+/* Filter Section */
+/* Filter Inventory Title */
+.filter-inventory-title {
+  font-family: "Merriweather", serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: black;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.inventory-dashboard .filter-inputs {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  flex-wrap: nowrap;
+}
+
+/* Label and Input Inline Styling */
+.inventory-dashboard .filter-inputs div {
+  display: flex;
+  align-items: center;
+  margin-right: 1%;
+}
+
+/* Filter Label Styling */
+.inventory-dashboard .filter-inputs label {
+  font-family: "Merriweather", serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-right: 1%;
+  white-space: nowrap;
+}
+
+/* Filter Input Styling */
+.inventory-dashboard .filter-inputs input {
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 180px;
+  margin-left: 1%;
+}
+
+.inventory-dashboard .apply-filters-btn {
+  background-color: var(--backgroundcolor);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.inventory-dashboard .apply-filters-btn:hover {
+  background-color: rgba(28, 176, 132, 0.8);
+}
+
+/* Table Styling */
+.inventory-dashboard.ag-theme-alpine {
+  height: 500px;
+  width: 100%;
+}
+
+.inventory-dashboard .ag-header {
+  background-color: var(--backgroundcolor);
+  color: white;
+}
+
+.inventory-dashboard .ag-cell {
+  color: black;
+}
+
+.inventory-dashboard .ag-header-cell-text {
+  color: white;
+}
+
+/* Common button styles */
+.button-common {
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+/* Specific styles for Add Items button */
+.add-item-btn {
+  background-color: var(--acceptcolor) !important;
+}
+
+.add-item-btn:hover {
+  background-color: #1a6e1a;
+}
+
+/* ==============================
+   Add Item Form
+  ============================== */
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  max-width: 90%;
+  position: relative;
+}
+
+/* Add Item Form Styles */
+.add-item-form .add-item-btn {
+  background-color: var(--acceptcolor);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-item-form .add-item-btn:hover {
+  background-color: #1a6e1a; /* Darker shade for hover effect */
+}
+
+.add-item-form .discard-changes-btn {
+  background-color: var(--selectcolor);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-item-form .discard-changes-btn:hover {
+  background-color: #0d3e7e; /* Darker shade for hover effect */
+}
+
+/* ==============================
+   Point of Sale Styles
+  ============================== */
+.pos-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 85vh;
+  text-align: center;
+  padding-top: 100px;
+  position: relative;
+}
+
+.sales-box {
+  width: 600px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-top: 20px;
+}
+
+.warning-text {
+  margin-top: 20px;
+  color: var(--errorcolor);
+  font-size: 1.2rem;
+}
+
+.action-buttons {
+  margin-top: 20px;
+}
+
+.totals {
+  margin-top: 20px;
+}
+
+.pos-page h1 {
+  font-size: 2.5rem;
+  color: var(--darkaccent);
+  margin-bottom: 20px;
+}
+
+.pos-page h1 {
+  font-size: 2.5rem;
+  color: var(--darkaccent);
+  margin-bottom: 20px;
+}
+
+/* Styling for Totals Section */
+.totals {
+  background-color: var(--darkaccent);
+  color: white;
+  padding: 15px;
+  border-radius: 8px;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+/* Sales Reports */
+.sales-reports-page {
+  padding-top: 80px;
+}
+
+.sales-reports-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.sales-reports-table th,
+.sales-reports-table td {
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+.sales-reports-table th {
+  background-color: var(--backgroundcolor);
+  color: white;
+  cursor: pointer;
+}
+
+/* Notifications Page */
+.notifications-page {
+  padding-top: 80px;
+  text-align: left;
+}
+
+.notifications-page .alert {
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.notifications-page .alert-low {
+  background-color: yellow;
+}
+
+.notifications-page .alert-out {
+  background-color: red;
+  color: white;
+}
+
+.notifications-page .message {
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: var(--backgroundcolor);
+  color: white;
+  cursor: pointer;
+}
+
+.notifications-page .message:hover {
+  background-color: var(--darkaccent);
+}
+
+.notifications-page .chat-box {
+  display: none;
+}
+
+/* NoMatch Page */
+.nomatch-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 85vh;
+  text-align: center;
+}
+
+.nomatch-page .emoji {
+  font-size: 5rem;
+  margin: 20px 0;
+}
+
+.nomatch-page button {
+  width: 200px;
+}
+
+/* FAQs Page */
+.faqs-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 85vh;
+}
+
+.faqs-page button {
+  width: 300px;
+  margin-bottom: 20px;
 }

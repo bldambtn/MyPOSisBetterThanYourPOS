@@ -4,9 +4,10 @@ const typeDefs = gql`
   type Query {
     hello: String
     user: User
-    getInventories: [Inventory] # Query to fetch all inventories
-    getInventory(id: ID!): Inventory # Query to fetch a specific inventory by ID
-    SearchProduct(plu: String!): Inventory # Query to search product by PLU
+    getInventories: [Inventory]
+    getInventory(id: ID!): Inventory
+    SearchProduct(plu: String!): Inventory
+    usersInOrganization(organization: String!): [User] # Updated query
     getSalesReports(
       dateRange: String
       product: String
@@ -25,12 +26,6 @@ const typeDefs = gql`
     inStock: Int
     coo: String
     companyOfOrigin: String
-    company: Company
-  }
-
-  type Company {
-    _id: ID!
-    name: String!
   }
 
   type User {
@@ -39,6 +34,7 @@ const typeDefs = gql`
     lastName: String
     username: String
     organization: String
+    unixId: Int!
     email: String
   }
 
@@ -51,7 +47,7 @@ const typeDefs = gql`
   }
 
   type Auth {
-    token: ID
+    token: String
     user: User
   }
 
@@ -60,7 +56,7 @@ const typeDefs = gql`
       firstName: String!
       lastName: String!
       username: String!
-      organization: String
+      organization: String! # Use organization as a string
       email: String!
       password: String!
     ): Auth
@@ -99,7 +95,6 @@ const typeDefs = gql`
       inStock: Int
       coo: String
       companyOfOrigin: String
-      company: ID!
     ): Inventory
 
     deleteInventory(id: ID!): Inventory

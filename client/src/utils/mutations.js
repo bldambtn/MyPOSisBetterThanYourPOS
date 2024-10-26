@@ -5,7 +5,7 @@ export const ADD_USER = gql`
     $firstName: String!
     $lastName: String!
     $username: String!
-    $organization: String
+    $organization: String!
     $email: String!
     $password: String!
   ) {
@@ -20,10 +20,10 @@ export const ADD_USER = gql`
       token
       user {
         _id
+        unixId
       }
     }
   }
-    
 `;
 
 export const LOGIN_USER = gql`
@@ -32,7 +32,11 @@ export const LOGIN_USER = gql`
       token
       user {
         _id
+        firstName
+        lastName
         email
+        unixId
+        organization
       }
     }
   }

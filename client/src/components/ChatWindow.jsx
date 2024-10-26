@@ -2,38 +2,33 @@ import { useState } from "react";
 import Chat from "./Chat"; // Importing Chat component
 
 function ChatWindow() {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleChat = () => {
+    setIsOpen(!isOpen);
+  };
 
   return (
-    <div style={{ position: "fixed", bottom: "0", right: "0", width: "300px" }}>
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        style={{
-          padding: "10px",
-          backgroundColor: "#007bff",
-          color: "#fff",
-          border: "none",
-          cursor: "pointer",
-          width: "100%",
-        }}
-      >
-        Chat {/* Changed from Minimize */}
-      </button>
+    <div className="chat-window">
+      <div className="chat-header" onClick={toggleChat}>
+        Chat
+      </div>
 
       {isOpen && (
-        <div
-          style={{
-            border: "1px solid black",
-            padding: "10px",
-            background: "white",
-            height: "300px",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <div style={{ flexGrow: 1, overflowY: "auto" }}>
-            <Chat /> {/* Renders the Chat component */}
-          </div>
+        <div className="chat-content">
+          {/* Dropdown for selecting a user */}
+          <select className="chat-dropdown">
+            <option>Select a user</option>
+          </select>
+
+          {/* Text input for entering the message */}
+          <textarea
+            className="chat-textbox"
+            placeholder="Type a message"
+          ></textarea>
+
+          {/* Send button */}
+          <button className="chat-send-button">Send</button>
         </div>
       )}
     </div>
