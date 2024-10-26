@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import socket from "../utils/socket";
 import Auth from "../utils/auth";
 import "../index.css";
+import Notifications from "../components/Notifications";
+
 
 function NotificationsPage() {
   const [notifications, setNotifications] = useState([]);
