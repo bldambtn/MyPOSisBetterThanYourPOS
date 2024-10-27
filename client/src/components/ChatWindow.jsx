@@ -18,15 +18,14 @@ function ChatWindow() {
   });
 
   const [fetchMessages] = useLazyQuery(GET_MESSAGES, {
-    variables: { userId, recipientId },
     onCompleted: (data) => setMessages(data.messages),
   });
 
-  const [sendMessage] = useMutation(SEND_MESSAGE);
+  const [sendMessageMutation] = useMutation(SEND_MESSAGE);
 
   useEffect(() => {
     if (userId && recipientId) {
-      fetchMessages();
+      fetchMessages({ variables: { userId, recipientId } });
     }
   }, [userId, recipientId, fetchMessages]);
 
@@ -48,12 +47,34 @@ function ChatWindow() {
       return;
     }
 
-    const messageData = { from: userId, to: recipientId, text: message };
-    socket.emit("chat message", messageData);
+    if (!message.trim()) {
+      alert("Cannot send an empty message.");
+      return;
+    }
 
-    await sendMessage({ variables: messageData });
-    setMessages((prevMessages) => [...prevMessages, messageData]);
-    setMessage("");
+    const messageData = {
+      from: userId,
+      to: recipientId,
+      text: message,
+      timestamp: new Date().toISOString(),
+    };
+
+    try {
+      await sendMessageMutation({ variables: { from: userId, to: recipientId, text: message } });
+      socket.emit("chat message", messageData);
+      setMessages((prevMessages) => [...prevMessages, messageData]);
+      setMessage("");
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("userId");
+    localStorage.removeItem("organization");
+    setRecipientId("");
+    setMessages([]);
+    setIsOpen(false);
   };
 
   return (
@@ -64,6 +85,7 @@ function ChatWindow() {
 
       {isOpen && (
         <div className="chat-content">
+          <button onClick={handleLogout}>Logout</button>
           {loading && <p>Loading users...</p>}
           {error && <p>Error loading users</p>}
           {!loading && !error && (

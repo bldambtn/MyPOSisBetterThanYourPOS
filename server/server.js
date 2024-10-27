@@ -15,14 +15,13 @@ const PORT = process.env.PORT || 3001;
 const app = express();
 const httpServer = http.createServer(app);
 
-// Apply CORS middleware to all routes for Express and Socket.io
+// Consolidated CORS options
 const corsOptions = {
   origin: ["http://localhost:3000", "https://www.superiorsupply.io"],
   methods: ["GET", "POST"],
   credentials: true,
 };
 app.use(cors(corsOptions));
-
 const io = new Server(httpServer, { cors: corsOptions });
 
 // Apollo Server setup
@@ -54,12 +53,11 @@ const startApolloServer = async () => {
     })
   );
 
-  // Chat history endpoint
+  // Chat history endpoint with message existence check
   app.get("/api/chat/history/:userId/:recipientId", async (req, res) => {
     try {
       const { userId, recipientId } = req.params;
   
-      // Fetch chat messages between the two users, sorted by timestamp
       const messages = await Message.find({
         $or: [
           { from: userId, to: recipientId },
@@ -67,9 +65,8 @@ const startApolloServer = async () => {
         ],
       }).sort({ timestamp: 1 });
   
-      // Check if messages exist
       if (messages && messages.length > 0) {
-        res.json(messages); // Send back messages if found
+        res.json(messages);
       } else {
         res.status(404).json({ error: "No chat history found between these users." });
       }
@@ -78,6 +75,7 @@ const startApolloServer = async () => {
       res.status(500).json({ error: "Error fetching chat history" });
     }
   });
+
   // Socket.io connection handling
   io.on("connection", (socket) => {
     const userId = socket.handshake.auth.userId;
@@ -85,16 +83,16 @@ const startApolloServer = async () => {
       socket.join(userId);
       console.log(`User connected: Socket ID: ${socket.id}, User ID: ${userId}`);
 
-      // Load message history for the user
       Message.find({ $or: [{ from: userId }, { to: userId }] })
         .sort({ timestamp: 1 })
         .then((history) => {
           socket.emit("load chat history", history);
         });
 
-      // Handle incoming chat message
       socket.on("chat message", async (messageData) => {
         const { from, to, text } = messageData;
+        if (!text.trim()) return; // Validate non-empty text
+
         const newMessage = new Message({
           from,
           to,
@@ -104,12 +102,10 @@ const startApolloServer = async () => {
 
         await newMessage.save();
 
-        // Emit to both sender and recipient
         io.to(to).emit("chat message", newMessage);
         io.to(from).emit("chat message", newMessage);
       });
 
-      // Handle disconnection
       socket.on("disconnect", () => {
         console.log(`User disconnected: ${userId}`);
       });
