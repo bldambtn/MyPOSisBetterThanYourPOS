@@ -24,12 +24,12 @@ const io = new Server(httpServer, {
 
 // Apply CORS middleware to all routes
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: ["http://localhost:3000", "https://www.superiorsupply.io"], // List all allowed origins here
   methods: ["GET", "POST"],
   credentials: true,
 }));
 
-// Initialize Apollo Server
+// Apollo Server setup
 const server = new ApolloServer({
   typeDefs,
   resolvers,
@@ -38,11 +38,9 @@ const server = new ApolloServer({
 const startApolloServer = async () => {
   await server.start();
 
-  // Body parsing middleware
   app.use(express.urlencoded({ extended: false }));
   app.use(express.json());
 
-  // Serve static assets in production
   if (process.env.NODE_ENV === "production") {
     app.use(express.static(path.join(__dirname, "../client/dist")));
     app.get("*", (req, res) => {
@@ -50,7 +48,6 @@ const startApolloServer = async () => {
     });
   }
 
-  // Apply Apollo middleware with auth
   app.use(
     "/graphql",
     expressMiddleware(server, {
@@ -58,7 +55,6 @@ const startApolloServer = async () => {
     })
   );
 
-  // Define route to retrieve chat history between two users
   app.get("/api/chat/history/:userId/:recipientId", async (req, res) => {
     try {
       const { userId, recipientId } = req.params;
@@ -68,7 +64,7 @@ const startApolloServer = async () => {
           { from: recipientId, to: userId },
         ],
       }).sort({ timestamp: 1 }); // Sort by timestamp to load in order
-
+  
       res.json(messages);
     } catch (err) {
       console.error("Error fetching chat history:", err);
@@ -76,21 +72,18 @@ const startApolloServer = async () => {
     }
   });
 
-  // Set up socket.io for chat functionality
   io.on("connection", (socket) => {
     const userId = socket.handshake.auth.userId;
     if (userId) {
       socket.join(userId);
       console.log(`User connected: Socket ID: ${socket.id}, User ID: ${userId}`);
 
-      // Load message history for the user
       Message.find({ $or: [{ from: userId }, { to: userId }] })
         .sort({ timestamp: 1 })
         .then((history) => {
           socket.emit("load chat history", history);
         });
 
-      // Handle incoming chat message
       socket.on("chat message", async (messageData) => {
         const { from, to, text } = messageData;
         const newMessage = new Message({
@@ -102,19 +95,16 @@ const startApolloServer = async () => {
 
         await newMessage.save();
 
-        // Emit to both sender and recipient
         io.to(to).emit("chat message", newMessage);
         io.to(from).emit("chat message", newMessage);
       });
 
-      // Handle disconnection
       socket.on("disconnect", () => {
         console.log(`User disconnected: ${userId}`);
       });
     }
   });
 
-  // Connect to MongoDB
   mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -128,5 +118,4 @@ const startApolloServer = async () => {
   });
 };
 
-// Start Apollo Server
 startApolloServer();
