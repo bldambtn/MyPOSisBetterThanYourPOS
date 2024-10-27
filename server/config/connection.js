@@ -14,7 +14,8 @@ db.on('error', (err) => {
 });
 
 db.once('open', () => {
-  console.log('✅ Connected to MongoDB!');
+  console.log('✅ Connected to MongoDB:', process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/myDatabase');
 });
+
 
 module.exports = db;

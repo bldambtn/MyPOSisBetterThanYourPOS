@@ -8,7 +8,9 @@ const resolvers = {
 
     getInventory: async () => {
       try {
-        return await Inventory.find();
+        const inventories = await Inventory.find().lean();
+        console.log("Fetched inventories:", inventories); // Debugging output
+        return inventories;
       } catch (err) {
         console.error("❌ Error fetching inventory:", err);
         throw new Error("Failed to fetch inventory.");
@@ -36,15 +38,7 @@ const resolvers = {
       }
     },
 
-    SearchProduct: async (_, { plu }) => {
-      try {
-        return await Inventory.findOne({ plu });
-      } catch (err) {
-        console.error("❌ Error fetching inventories:", err);
-        throw new Error("Failed to fetch inventories.");
-      }
-    },
-
+  
     getSalesReports: async (parent, { dateRange, product, category }) => {
       try {
         const filter = {};
@@ -124,7 +118,7 @@ const resolvers = {
       return { token, user };
     },
 
-    addInventory: async (parent, { upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin }) => {
+    addInventory: async (parent, { upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, company }) => {
       try {
         if (!plu || !productName) {
           throw new Error("PLU and Product Name are required fields.");
@@ -139,7 +133,7 @@ const resolvers = {
           vendorPrice,
           inStock,
           coo,
-          companyOfOrigin,
+          company,
         });
 
         return newInventory;
@@ -149,11 +143,11 @@ const resolvers = {
       }
     },
 
-    updateInventory: async (parent, { id, upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin }) => {
+    updateInventory: async (parent, { id, upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, company }) => {
       try {
         return await Inventory.findByIdAndUpdate(
           id,
-          { upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin },
+          { upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, company},
           { new: true }
         );
       } catch (err) {

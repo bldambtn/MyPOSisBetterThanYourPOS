@@ -47,6 +47,7 @@ const inventorySchema = new Schema({
 });
 
 // Create the Inventory model
-const Inventory = mongoose.model('Inventory', inventorySchema);
+const Inventory = mongoose.model('Inventory', inventorySchema, 'inventories'); // third parameter ensures collection name
+
 
 module.exports = Inventory;

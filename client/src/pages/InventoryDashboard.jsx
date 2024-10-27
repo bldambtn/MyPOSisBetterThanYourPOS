@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
-import { QUERY_INVENTORIES } from "../utils/queries";
+import { QUERY_INVENTORY } from "../utils/queries";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
@@ -8,7 +8,7 @@ import BackButton from "../components/BackButton";
 import AddItemForm from "../components/AddItemForm";
 
 const InventoryDashboard = () => {
-  const { loading, data } = useQuery(QUERY_INVENTORIES);
+  const { loading, data } = useQuery(QUERY_INVENTORY);
   const [inventory, setInventory] = useState([]);
   const [filteredInventory, setFilteredInventory] = useState([]);
   const [upcFilter, setUpcFilter] = useState("");
@@ -19,8 +19,8 @@ const InventoryDashboard = () => {
 
   useEffect(() => {
     if (data) {
-      setInventory(data.getInventories);
-      setFilteredInventory(data.getInventories);
+      setInventory(data.getInventory);
+      setFilteredInventory(data.getInventory);
     }
   }, [data]);
 
