@@ -4,6 +4,7 @@ import { Modal, Button, Form, Alert } from "react-bootstrap";
 const AddItemForm = ({ onClose, onSubmit }) => {
   const [formState, setFormState] = useState({
     upc: "",
+    plu: "", 
     productName: "",
     inStock: "",
     salePrice: "",
@@ -25,6 +26,7 @@ const AddItemForm = ({ onClose, onSubmit }) => {
     // Basic validation
     if (
       !formState.upc ||
+      !formState.plu || 
       !formState.productName ||
       !formState.inStock ||
       !formState.salePrice
@@ -38,25 +40,33 @@ const AddItemForm = ({ onClose, onSubmit }) => {
       return;
     }
 
-    // If validation passes, submit the form
-    onSubmit(formState);
+    // Convert string values to numbers where needed
+    const numericFormState = {
+      ...formState,
+      inStock: parseInt(formState.inStock, 10),
+      salePrice: parseFloat(formState.salePrice),
+    };
+
+    onSubmit(numericFormState);
     setFormState({
       upc: "",
+      plu: "", 
       productName: "",
       inStock: "",
       salePrice: "",
     });
-    setErrorMessage(""); // Clear any error messages
+    setErrorMessage(""); 
   };
 
   const handleDiscardChanges = () => {
     setFormState({
       upc: "",
+      plu: "", 
       productName: "",
       inStock: "",
       salePrice: "",
     });
-    setErrorMessage(""); // Clear any error messages
+    setErrorMessage(""); 
   };
 
   return (
@@ -74,6 +84,18 @@ const AddItemForm = ({ onClose, onSubmit }) => {
               placeholder="Enter UPC"
               name="upc"
               value={formState.upc}
+              onChange={handleChange}
+              required
+            />
+          </Form.Group>
+
+          <Form.Group controlId="formPLU" className="mt-3">
+            <Form.Label>PLU</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter PLU"
+              name="plu"
+              value={formState.plu}
               onChange={handleChange}
               required
             />

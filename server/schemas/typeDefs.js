@@ -82,7 +82,7 @@ const typeDefs = gql`
       vendorPrice: Float
       inStock: Int
       coo: String
-      companyOfOrigin: String
+      company: String
     ): Inventory
 
     updateInventory(
@@ -95,7 +95,7 @@ const typeDefs = gql`
       vendorPrice: Float
       inStock: Int
       coo: String
-      companyOfOrigin: String
+      company: String
     ): Inventory
 
     deleteInventory(id: ID!): Inventory
