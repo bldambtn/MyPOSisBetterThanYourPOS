@@ -49,7 +49,6 @@ const resolvers = {
       try {
         const filter = {};
 
-        // Apply filters based on dateRange, product, or category
         if (dateRange) {
           const today = new Date();
           if (dateRange === "daily") {
@@ -75,22 +74,11 @@ const resolvers = {
         throw new Error("Failed to fetch sales reports.");
       }
     },
-
-
-    SearchProduct: async (_, { plu }) => {
-      try {
-        return await Inventory.findOne({plu: plu});
-      } catch (err) {
-        console.error("❌ Error fetching items:", err);
-        throw new Error("Failed to fetch items.");
-      }
-    },
   },
 
   Mutation: {
     addUser: async (parent, args) => {
       try {
-        // Normalize the organization field to lowercase and trim any extra spaces
         args.organization = args.organization.trim().toLowerCase();
         
         const user = await User.create(args);
@@ -106,13 +94,13 @@ const resolvers = {
       const user = await User.findOne({ email });
 
       if (!user) {
-        throw new AuthenticationError('No user found with this email address');
+        throw new AuthenticationError("No user found with this email address");
       }
 
       const correctPw = await user.isCorrectPassword(password);
 
       if (!correctPw) {
-        throw new AuthenticationError('Incorrect credentials');
+        throw new AuthenticationError("Incorrect credentials");
       }
 
       const token = signToken(user);
@@ -121,7 +109,23 @@ const resolvers = {
 
     addInventory: async (parent, { upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin }) => {
       try {
-        return await Inventory.create({ upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin });
+        if (!plu || !productName) {
+          throw new Error("PLU and Product Name are required fields.");
+        }
+
+        const newInventory = await Inventory.create({
+          upc,
+          plu,
+          productName,
+          weightPerItem,
+          salePrice,
+          vendorPrice,
+          inStock,
+          coo,
+          companyOfOrigin,
+        });
+
+        return newInventory;
       } catch (err) {
         console.error("❌ Error adding inventory:", err);
         throw new Error("Failed to add inventory.");

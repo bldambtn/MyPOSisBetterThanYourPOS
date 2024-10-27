@@ -7,7 +7,7 @@ const inventorySchema = new Schema({
   },
   plu: {
     type: String,
-    require: true,
+    required: true,
     trim: true
   },
   productName: {
