@@ -12,7 +12,10 @@
     "server": "cd server && npm run start",
     "client": "cd client && npm start",
     "clean-install": "rm -rf node_modules && npm install && cd server && rm -rf node_modules && npm install && cd ../client && rm -rf node_modules && npm install",
-    "test": "jest"
+    "test": "jest",
+    "lint": "npm run lint-client && npm run lint-server",
+    "lint-client": "cd client && npm run lint",
+    "lint-server": "cd server && eslint . --ext js"
   },
   "keywords": [
     "MERN",
