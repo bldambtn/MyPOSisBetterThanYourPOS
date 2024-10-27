@@ -34,7 +34,7 @@ const typeDefs = gql`
     lastName: String
     username: String
     organization: String
-    unixId: Int!
+    unixId: String 
     email: String
   }
 

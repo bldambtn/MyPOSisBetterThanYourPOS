@@ -1,11 +1,59 @@
-import { useState } from "react";
-import Chat from "./Chat"; // Importing Chat component
+import { useState, useEffect } from "react";
+import Chat from "./Chat";
+import { useQuery } from "@apollo/client";
+import { GET_USERS_IN_ORGANIZATION } from "../utils/queries";
+import socket from "../utils/socket";
 
 function ChatWindow() {
   const [isOpen, setIsOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState([]);
+  const [recipientId, setRecipientId] = useState("");
+  const [userId, setUserId] = useState(localStorage.getItem("userId"));
+  const [organization] = useState(localStorage.getItem("organization"));
 
-  const toggleChat = () => {
-    setIsOpen(!isOpen);
+  useEffect(() => {
+    if (userId) {
+      socket.emit("connect_user", userId);
+    }
+
+    socket.on("chat message", (incomingMessage) => {
+      setMessages((prevMessages) => [...prevMessages, incomingMessage]);
+    });
+
+    socket.on("missed messages", (missedMessages) => {
+      setMessages((prevMessages) => [...prevMessages, ...missedMessages]);
+    });
+
+    return () => {
+      socket.off("chat message");
+      socket.off("missed messages");
+    };
+  }, [userId]);
+
+  const { loading, error, data } = useQuery(GET_USERS_IN_ORGANIZATION, {
+    variables: { organization },
+    skip: !organization,
+  });
+
+  const toggleChat = () => setIsOpen(!isOpen);
+
+  const handleSendMessage = () => {
+    if (!recipientId) {
+      alert("Please select a recipient before sending a message.");
+      return;
+    }
+
+    const messageData = {
+      from: userId,
+      to: recipientId,
+      text: message,
+      timestamp: new Date().toISOString(),
+    };
+
+    socket.emit("chat message", messageData);
+    setMessages((prevMessages) => [...prevMessages, messageData]);
+    setMessage("");
   };
 
   return (
@@ -16,19 +64,39 @@ function ChatWindow() {
 
       {isOpen && (
         <div className="chat-content">
-          {/* Dropdown for selecting a user */}
-          <select className="chat-dropdown">
-            <option>Select a user</option>
-          </select>
+          {loading && <p>Loading users...</p>}
+          {error && <p>Error loading users</p>}
+          {!loading && !error && (
+            <>
+              <select
+                className="chat-dropdown"
+                value={recipientId}
+                onChange={(e) => setRecipientId(e.target.value)}
+              >
+                <option value="">Select a user</option>
+                {data?.usersInOrganization
+                  .filter((user) => user._id !== userId)
+                  .map((user) => (
+                    <option key={user._id} value={user._id}>
+                      {user.firstName} {user.lastName}
+                    </option>
+                  ))}
+              </select>
 
-          {/* Text input for entering the message */}
-          <textarea
-            className="chat-textbox"
-            placeholder="Type a message"
-          ></textarea>
+              <textarea
+                className="chat-textbox"
+                placeholder="Type a message"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+              ></textarea>
 
-          {/* Send button */}
-          <button className="chat-send-button">Send</button>
+              <button className="chat-send-button" onClick={handleSendMessage}>
+                Send
+              </button>
+
+              <Chat messages={messages} users={data?.usersInOrganization || []} />
+            </>
+          )}
         </div>
       )}
     </div>
