@@ -7,7 +7,7 @@ const inventorySchema = new Schema({
   },
   plu: {
     type: String,
-    require: true,
+    required: true,
     trim: true
   },
   productName: {
@@ -47,6 +47,7 @@ const inventorySchema = new Schema({
 });
 
 // Create the Inventory model
-const Inventory = mongoose.model('Inventory', inventorySchema);
+const Inventory = mongoose.model('Inventory', inventorySchema, 'inventories'); // third parameter ensures collection name
+
 
 module.exports = Inventory;

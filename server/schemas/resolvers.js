@@ -8,7 +8,9 @@ const resolvers = {
 
     getInventory: async () => {
       try {
-        return await Inventory.find();
+        const inventories = await Inventory.find().lean();
+        console.log("Fetched inventories:", inventories); // Debugging output
+        return inventories;
       } catch (err) {
         console.error("❌ Error fetching inventory:", err);
         throw new Error("Failed to fetch inventory.");
@@ -36,20 +38,11 @@ const resolvers = {
       }
     },
 
-    SearchProduct: async (_, { plu }) => {
-      try {
-        return await Inventory.findOne({ plu });
-      } catch (err) {
-        console.error("❌ Error fetching inventories:", err);
-        throw new Error("Failed to fetch inventories.");
-      }
-    },
-
+  
     getSalesReports: async (parent, { dateRange, product, category }) => {
       try {
         const filter = {};
 
-        // Apply filters based on dateRange, product, or category
         if (dateRange) {
           const today = new Date();
           if (dateRange === "daily") {
@@ -76,7 +69,6 @@ const resolvers = {
       }
     },
 
-
     SearchProduct: async (_, { plu }) => {
       try {
         return await Inventory.findOne({plu: plu});
@@ -85,14 +77,21 @@ const resolvers = {
         throw new Error("Failed to fetch items.");
       }
     },
+
   },
 
   Mutation: {
     addUser: async (parent, args) => {
       try {
-        // Normalize the organization field to lowercase and trim any extra spaces
         args.organization = args.organization.trim().toLowerCase();
-        
+
+        // Check if the username already exists
+        const existingUser = await User.findOne({ username: args.username });
+        if (existingUser) {
+          throw new Error("Username already exists. Please choose a different one.");
+        }
+
+        // Create the user if no duplicate username is found
         const user = await User.create(args);
         const token = signToken(user);
         return { token, user };
@@ -106,33 +105,49 @@ const resolvers = {
       const user = await User.findOne({ email });
 
       if (!user) {
-        throw new AuthenticationError('No user found with this email address');
+        throw new AuthenticationError("No user found with this email address");
       }
 
       const correctPw = await user.isCorrectPassword(password);
 
       if (!correctPw) {
-        throw new AuthenticationError('Incorrect credentials');
+        throw new AuthenticationError("Incorrect credentials");
       }
 
       const token = signToken(user);
       return { token, user };
     },
 
-    addInventory: async (parent, { upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin }) => {
+    addInventory: async (parent, { upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, company }) => {
       try {
-        return await Inventory.create({ upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin });
+        if (!plu || !productName) {
+          throw new Error("PLU and Product Name are required fields.");
+        }
+
+        const newInventory = await Inventory.create({
+          upc,
+          plu,
+          productName,
+          weightPerItem,
+          salePrice,
+          vendorPrice,
+          inStock,
+          coo,
+          company,
+        });
+
+        return newInventory;
       } catch (err) {
         console.error("❌ Error adding inventory:", err);
         throw new Error("Failed to add inventory.");
       }
     },
 
-    updateInventory: async (parent, { id, upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin }) => {
+    updateInventory: async (parent, { id, upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, company }) => {
       try {
         return await Inventory.findByIdAndUpdate(
           id,
-          { upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, companyOfOrigin },
+          { upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, company},
           { new: true }
         );
       } catch (err) {

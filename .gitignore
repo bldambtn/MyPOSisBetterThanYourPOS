@@ -128,3 +128,9 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# SuperiorSupply.io specific additions
+client/dist/
+server/dist/
+.eslintignore
+.eslintrc.json

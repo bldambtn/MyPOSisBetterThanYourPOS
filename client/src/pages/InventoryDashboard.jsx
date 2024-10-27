@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useQuery } from "@apollo/client";
-import { QUERY_INVENTORIES } from "../utils/queries";
+import { useQuery, useMutation } from "@apollo/client";
+import { QUERY_INVENTORY } from "../utils/queries";
+import { ADD_INVENTORY } from "../utils/mutations";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
@@ -8,7 +9,8 @@ import BackButton from "../components/BackButton";
 import AddItemForm from "../components/AddItemForm";
 
 const InventoryDashboard = () => {
-  const { loading, data } = useQuery(QUERY_INVENTORIES);
+  const { loading, data } = useQuery(QUERY_INVENTORY);
+  const [addInventory] = useMutation(ADD_INVENTORY); // Mutation to add item to DB
   const [inventory, setInventory] = useState([]);
   const [filteredInventory, setFilteredInventory] = useState([]);
   const [upcFilter, setUpcFilter] = useState("");
@@ -19,8 +21,8 @@ const InventoryDashboard = () => {
 
   useEffect(() => {
     if (data) {
-      setInventory(data.getInventories);
-      setFilteredInventory(data.getInventories);
+      setInventory(data.getInventory);
+      setFilteredInventory(data.getInventory);
     }
   }, [data]);
 
@@ -33,7 +35,9 @@ const InventoryDashboard = () => {
     }
     if (productNameFilter) {
       filtered = filtered.filter((item) =>
-        item.productName.toLowerCase().includes(productNameFilter.toLowerCase())
+        item.productName
+          .toLowerCase()
+          .includes(productNameFilter.toLowerCase())
       );
     }
     if (inStockFilter) {
@@ -53,12 +57,21 @@ const InventoryDashboard = () => {
     setShowAddItemForm(true);
   };
 
-  const handleAddItemSubmit = (newItem) => {
-    // Adding the new item to the inventory
-    setInventory([...inventory, newItem]);
-    setFilteredInventory([...filteredInventory, newItem]);
+  const handleAddItemSubmit = async (newItem) => {
+    try {
+      const { data } = await addInventory({
+        variables: newItem,
+      });
+      const addedItem = data.addInventory;
 
-    console.log("New item added:", newItem);
+      setInventory([...inventory, addedItem]);
+      setFilteredInventory([...filteredInventory, addedItem]);
+
+      console.log("New item added to MongoDB:", addedItem);
+      setShowAddItemForm(false);
+    } catch (err) {
+      console.error("Error adding item:", err);
+    }
   };
 
   if (loading) {
@@ -73,7 +86,12 @@ const InventoryDashboard = () => {
       sortable: true,
       filter: true,
     },
-    { headerName: "In Stock", field: "inStock", sortable: true, filter: true },
+    {
+      headerName: "In Stock",
+      field: "inStock",
+      sortable: true,
+      filter: true,
+    },
     {
       headerName: "Sale Price",
       field: "salePrice",

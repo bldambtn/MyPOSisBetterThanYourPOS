@@ -20,6 +20,8 @@ export const ADD_USER = gql`
       token
       user {
         _id
+        firstName
+        lastName
         unixId
       }
     }
@@ -38,6 +40,37 @@ export const LOGIN_USER = gql`
         unixId
         organization
       }
+    }
+  }
+`;
+
+export const ADD_INVENTORY = gql`
+  mutation addInventory(
+    $upc: String
+    $plu: String!
+    $productName: String!
+    $weightPerItem: Float
+    $salePrice: Float
+    $vendorPrice: Float
+    $inStock: Int
+    $coo: String
+    $companyOfOrigin: String
+  ) {
+    addInventory(
+      upc: $upc
+      plu: $plu
+      productName: $productName
+      weightPerItem: $weightPerItem
+      salePrice: $salePrice
+      vendorPrice: $vendorPrice
+      inStock: $inStock
+      coo: $coo
+      companyOfOrigin: $companyOfOrigin
+    ) {
+      _id
+      productName
+      salePrice
+      inStock
     }
   }
 `;
