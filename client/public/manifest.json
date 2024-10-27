@@ -1,7 +1,7 @@
 {
   "name": "SuperiorSupply.io",
-  "short_name": "App",
-  "description": "A description of your app",
+  "short_name": "Supply.io",
+  "description": "Your one-stop solution for inventory and sales management",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
