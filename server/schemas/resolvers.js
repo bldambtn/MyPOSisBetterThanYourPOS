@@ -76,8 +76,8 @@ const resolvers = {
     },
   },
 
-// Commented out to avoid conflicts
-/*
+  // Commented out to avoid conflicts
+  /*
   SearchProduct: async (_, { plu }) => {
     try {
       return await Inventory.findOne({plu: plu});
@@ -86,7 +86,7 @@ const resolvers = {
       throw new Error("Failed to fetch items.");
     }
   },
-*/
+  */
 
   Mutation: {
     addUser: async (parent, args) => {
