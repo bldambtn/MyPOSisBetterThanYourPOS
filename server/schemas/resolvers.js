@@ -74,7 +74,6 @@ const resolvers = {
         throw new Error("Failed to fetch sales reports.");
       }
     },
-  /*
 
     SearchProduct: async (_, { plu }) => {
       try {
@@ -85,7 +84,6 @@ const resolvers = {
       }
     },
 
-  */
   },
 
   Mutation: {
