@@ -9,8 +9,10 @@ function ChatWindow() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [recipientId, setRecipientId] = useState("");
-  const userId = localStorage.getItem("userId");
-  const organization = localStorage.getItem("organization");
+
+  // Retrieve user-specific data from sessionStorage
+  const userId = sessionStorage.getItem("userId");
+  const organization = sessionStorage.getItem("organization");
 
   const { loading, error, data } = useQuery(GET_USERS_IN_ORGANIZATION, {
     variables: { organization },
@@ -18,14 +20,15 @@ function ChatWindow() {
   });
 
   const [fetchMessages] = useLazyQuery(GET_MESSAGES, {
+    variables: { userId, recipientId },
     onCompleted: (data) => setMessages(data.messages),
   });
 
-  const [sendMessageMutation] = useMutation(SEND_MESSAGE);
+  const [sendMessage] = useMutation(SEND_MESSAGE);
 
   useEffect(() => {
     if (userId && recipientId) {
-      fetchMessages({ variables: { userId, recipientId } });
+      fetchMessages();
     }
   }, [userId, recipientId, fetchMessages]);
 
@@ -41,7 +44,7 @@ function ChatWindow() {
 
   const toggleChat = () => setIsOpen(!isOpen);
 
-  const handleSendMessage = async () => {
+  const handleSendMessage = () => {
     if (!recipientId) {
       alert("Please select a recipient before sending a message.");
       return;
@@ -59,22 +62,9 @@ function ChatWindow() {
       timestamp: new Date().toISOString(),
     };
 
-    try {
-      await sendMessageMutation({ variables: { from: userId, to: recipientId, text: message } });
-      socket.emit("chat message", messageData);
-      setMessages((prevMessages) => [...prevMessages, messageData]);
-      setMessage("");
-    } catch (error) {
-      console.error("Error sending message:", error);
-    }
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("userId");
-    localStorage.removeItem("organization");
-    setRecipientId("");
-    setMessages([]);
-    setIsOpen(false);
+    socket.emit("chat message", messageData);
+    setMessages((prevMessages) => [...prevMessages, messageData]);
+    setMessage("");
   };
 
   return (
@@ -85,7 +75,6 @@ function ChatWindow() {
 
       {isOpen && (
         <div className="chat-content">
-          <button onClick={handleLogout}>Logout</button>
           {loading && <p>Loading users...</p>}
           {error && <p>Error loading users</p>}
           {!loading && !error && (

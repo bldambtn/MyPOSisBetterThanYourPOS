@@ -34,10 +34,9 @@ const LoginSignupModal = ({ onLogin }) => {
 
   const handleSignup = async (event) => {
     event.preventDefault();
-  
-    // Ensure the organization field is defined before using it
-    const organization = formState.organization ? formState.organization.trim().toLowerCase() : "";
-  
+
+    const organization = formState.organization.trim().toLowerCase();
+
     try {
       const mutationResponse = await addUser({
         variables: {
@@ -46,17 +45,17 @@ const LoginSignupModal = ({ onLogin }) => {
           firstName: formState.firstName,
           lastName: formState.lastName,
           username: formState.username,
-          organization: formState.organization, // Use the modified organization value
+          organization: organization,
         },
       });
+      
       const token = mutationResponse.data.addUser.token;
       const userId = mutationResponse.data.addUser.user._id;
-  
-      // Save the token and organization in local storage for future use
+
       Auth.login(token);
-      localStorage.setItem("userId", userId);
-      localStorage.setItem("organization", organization);
-  
+      sessionStorage.setItem("userId", userId);
+      sessionStorage.setItem("organization", organization);
+
       console.log("Received User ID after signup:", userId);
       alert(`Signup successful! Welcome, ${formState.username}! Please log in now.`);
       setIsLogin(true); // Switch to login view
@@ -64,6 +63,7 @@ const LoginSignupModal = ({ onLogin }) => {
       console.error("Signup failed:", err);
     }
   };
+
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
@@ -73,26 +73,23 @@ const LoginSignupModal = ({ onLogin }) => {
           password: formState.password,
         },
       });
-  
+      
       const token = mutationResponse.data.login.token;
       const userId = mutationResponse.data.login.user._id;
       const organization = mutationResponse.data.login.user.organization;
-  
+
       console.log("Received User ID after login:", userId);
-  
-      // Store the token and user information correctly
+
       Auth.login(token);
-      localStorage.setItem("userId", userId);
-      localStorage.setItem("organization", organization); // Save organization
-  
-      onLogin(); // Notify parent component that login was successful
+      sessionStorage.setItem("userId", userId);
+      sessionStorage.setItem("organization", organization);
+
+      onLogin();
       handleClose();
     } catch (err) {
       console.error("Login failed:", err);
-      console.error("Login failed:", err);
     }
   };
-  
 
   return (
     <>
