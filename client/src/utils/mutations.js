@@ -54,7 +54,7 @@ export const ADD_INVENTORY = gql`
     $vendorPrice: Float
     $inStock: Int
     $coo: String
-    $companyOfOrigin: String
+    $company: String
   ) {
     addInventory(
       upc: $upc
@@ -65,7 +65,7 @@ export const ADD_INVENTORY = gql`
       vendorPrice: $vendorPrice
       inStock: $inStock
       coo: $coo
-      companyOfOrigin: $companyOfOrigin
+      company: $company
     ) {
       _id
       productName

@@ -10,10 +10,11 @@ import AddItemForm from "../components/AddItemForm";
 
 const InventoryDashboard = () => {
   const { loading, data } = useQuery(QUERY_INVENTORY);
-  const [addInventory] = useMutation(ADD_INVENTORY); // Mutation to add item to DB
+  const [addInventory] = useMutation(ADD_INVENTORY);
   const [inventory, setInventory] = useState([]);
   const [filteredInventory, setFilteredInventory] = useState([]);
   const [upcFilter, setUpcFilter] = useState("");
+  const [pluFilter, setPluFilter] = useState(""); // PLU filter state
   const [productNameFilter, setProductNameFilter] = useState("");
   const [inStockFilter, setInStockFilter] = useState("");
   const [salePriceFilter, setSalePriceFilter] = useState("");
@@ -31,6 +32,11 @@ const InventoryDashboard = () => {
     if (upcFilter) {
       filtered = filtered.filter((item) =>
         item.upc.toLowerCase().includes(upcFilter.toLowerCase())
+      );
+    }
+    if (pluFilter) { // Apply PLU filter
+      filtered = filtered.filter((item) =>
+        item.plu.toLowerCase().includes(pluFilter.toLowerCase())
       );
     }
     if (productNameFilter) {
@@ -80,6 +86,7 @@ const InventoryDashboard = () => {
 
   const columnDefs = [
     { headerName: "UPC", field: "upc", sortable: true, filter: true },
+    { headerName: "PLU", field: "plu", sortable: true, filter: true }, // PLU column added
     {
       headerName: "Product Name",
       field: "productName",
@@ -121,6 +128,15 @@ const InventoryDashboard = () => {
             value={upcFilter}
             onChange={(e) => setUpcFilter(e.target.value)}
             placeholder="Filter by UPC"
+          />
+        </div>
+        <div>
+          <label>PLU: </label> {/* New PLU Filter */}
+          <input
+            type="text"
+            value={pluFilter}
+            onChange={(e) => setPluFilter(e.target.value)}
+            placeholder="Filter by PLU"
           />
         </div>
         <div>
