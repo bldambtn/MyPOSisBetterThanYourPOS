@@ -1,5 +1,6 @@
 require("dotenv").config();
 const express = require("express");
+const cors = require("cors"); 
 const http = require("http");
 const { ApolloServer } = require("@apollo/server");
 const { expressMiddleware } = require("@apollo/server/express4");
@@ -21,6 +22,14 @@ const io = new Server(httpServer, {
   },
 });
 
+// Apply CORS middleware to all routes
+app.use(cors({
+  origin: "http://localhost:3000",
+  methods: ["GET", "POST"],
+  credentials: true,
+}));
+
+// Initialize Apollo Server
 const server = new ApolloServer({
   typeDefs,
   resolvers,
@@ -29,9 +38,11 @@ const server = new ApolloServer({
 const startApolloServer = async () => {
   await server.start();
 
+  // Body parsing middleware
   app.use(express.urlencoded({ extended: false }));
   app.use(express.json());
 
+  // Serve static assets in production
   if (process.env.NODE_ENV === "production") {
     app.use(express.static(path.join(__dirname, "../client/dist")));
     app.get("*", (req, res) => {
@@ -39,6 +50,7 @@ const startApolloServer = async () => {
     });
   }
 
+  // Apply Apollo middleware with auth
   app.use(
     "/graphql",
     expressMiddleware(server, {
@@ -46,78 +58,75 @@ const startApolloServer = async () => {
     })
   );
 
-  io.on("connection", (socket) => {
-    const userId = socket.handshake.query.userId;
-  
-    if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
-      console.warn("User ID not provided or is not a valid ObjectId during connection.");
-      return;
+  // Define route to retrieve chat history between two users
+  app.get("/api/chat/history/:userId/:recipientId", async (req, res) => {
+    try {
+      const { userId, recipientId } = req.params;
+      const messages = await Message.find({
+        $or: [
+          { from: userId, to: recipientId },
+          { from: recipientId, to: userId },
+        ],
+      }).sort({ timestamp: 1 }); // Sort by timestamp to load in order
+
+      res.json(messages);
+    } catch (err) {
+      console.error("Error fetching chat history:", err);
+      res.status(500).json({ error: "Error fetching chat history" });
     }
-  
-    console.log(`🔌 User connected: ${socket.id}, User ID: ${userId}`);
-    socket.join(userId); // Make sure the user joins their own room for messaging.
-  
-    // Fetch and send missed messages from MongoDB
-    Message.find({ to: userId, isDelivered: false })
-      .then((messages) => {
-        if (messages.length > 0) {
-          console.log(`Sending missed messages to User ID: ${userId}`);
-          socket.emit("missed messages", messages);
-          return Message.updateMany({ to: userId, isDelivered: false }, { isDelivered: true });
-        }
-      })
-      .catch((err) => {
-        console.error("❌ Error fetching missed messages:", err);
-      });
-  
-    // Listen for chat messages
-    socket.on("chat message", async (messageData) => {
-      const recipientId = messageData.to;
-  
-      // Validate the recipientId
-      if (!recipientId || !mongoose.Types.ObjectId.isValid(recipientId)) {
-        console.error("Invalid recipient ID:", recipientId);
-        return;
-      }
-  
-      messageData.timestamp = new Date();
-  
-      // Save the message in MongoDB
-      try {
-        const message = new Message({
-          from: userId,
-          to: recipientId,
-          text: messageData.text,
-          timestamp: messageData.timestamp,
-          isDelivered: false,
-        });
-  
-        await message.save();
-        console.log("Message saved:", message);
-  
-        // Emit the message to the intended recipient
-        io.to(recipientId).emit("chat message", message);
-      } catch (err) {
-        console.error("❌ Error saving message:", err);
-      }
-    });
-  
-    socket.on("disconnect", () => {
-      console.log(`🔌 User disconnected: ${userId}`);
-    });
   });
 
-  mongoose.connect(process.env.MONGODB_URI,)
-    .then(() => {
-      httpServer.listen(PORT, () => {
-        console.log(`API server running on port ${PORT}!`);
-        console.log(`Use GraphQL at http://localhost:${PORT}/graphql`);
-        console.log(`Socket.io server running on port ${PORT}!`);
+  // Set up socket.io for chat functionality
+  io.on("connection", (socket) => {
+    const userId = socket.handshake.auth.userId;
+    if (userId) {
+      socket.join(userId);
+      console.log(`User connected: Socket ID: ${socket.id}, User ID: ${userId}`);
+
+      // Load message history for the user
+      Message.find({ $or: [{ from: userId }, { to: userId }] })
+        .sort({ timestamp: 1 })
+        .then((history) => {
+          socket.emit("load chat history", history);
+        });
+
+      // Handle incoming chat message
+      socket.on("chat message", async (messageData) => {
+        const { from, to, text } = messageData;
+        const newMessage = new Message({
+          from,
+          to,
+          text,
+          timestamp: new Date(),
+        });
+
+        await newMessage.save();
+
+        // Emit to both sender and recipient
+        io.to(to).emit("chat message", newMessage);
+        io.to(from).emit("chat message", newMessage);
       });
-    })
-    .catch((err) => {
-      console.error("Failed to connect to MongoDB:", err);
+
+      // Handle disconnection
+      socket.on("disconnect", () => {
+        console.log(`User disconnected: ${userId}`);
+      });
+    }
+  });
+
+  // Connect to MongoDB
+  mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }).then(() => {
+    httpServer.listen(PORT, () => {
+      console.log(`API server running on port ${PORT}!`);
+      console.log(`GraphQL at http://localhost:${PORT}/graphql`);
     });
+  }).catch((err) => {
+    console.error("Failed to connect to MongoDB:", err);
+  });
 };
 
+// Start Apollo Server
 startApolloServer();

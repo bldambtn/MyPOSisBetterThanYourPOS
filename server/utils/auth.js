@@ -6,24 +6,25 @@ const expiration = process.env.JWT_EXPIRATION;
 module.exports = {
   authMiddleware: function ({ req }) {
     let token = req.body.token || req.query.token || req.headers.authorization;
-
+  
     if (req.headers.authorization) {
       token = token.split(" ").pop().trim();
     }
-
+  
     if (!token) {
-      return req;
+      return req; // Allow requests without authentication if that's intended
     }
-
+  
     try {
-      const { data } = jwt.verify(token, secret, { maxAge: expiration });
+      const { data } = jwt.verify(token, process.env.JWT_SECRET || secret, { maxAge: expiration });
       req.user = data;
-    } catch {
+    } catch (err) {
       console.log("Invalid token");
     }
-
+  
     return req;
   },
+  
 
   signToken: function ({ _id, email, company, firstName, lastName, unixId }) {
     const payload = { _id, email, company, firstName, lastName, unixId };

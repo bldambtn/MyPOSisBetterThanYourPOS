@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import Chat from "./Chat";
 import { useQuery } from "@apollo/client";
 import { GET_USERS_IN_ORGANIZATION } from "../utils/queries";
 import socket from "../utils/socket";
@@ -9,27 +8,25 @@ function ChatWindow() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [recipientId, setRecipientId] = useState("");
-  const [userId, setUserId] = useState(localStorage.getItem("userId"));
-  const [organization] = useState(localStorage.getItem("organization"));
+  const userId = localStorage.getItem("userId");
+  const organization = localStorage.getItem("organization");
 
   useEffect(() => {
-    if (userId) {
-      socket.emit("connect_user", userId);
+    async function loadChatHistory() {
+      try {
+        const response = await fetch(`http://localhost:3001/api/chat/history/${userId}/${recipientId}`);
+        const history = await response.json();
+        setMessages(history);
+      } catch (err) {
+        console.error("Error loading chat history:", err);
+      }
     }
-
-    socket.on("chat message", (incomingMessage) => {
-      setMessages((prevMessages) => [...prevMessages, incomingMessage]);
-    });
-
-    socket.on("missed messages", (missedMessages) => {
-      setMessages((prevMessages) => [...prevMessages, ...missedMessages]);
-    });
-
-    return () => {
-      socket.off("chat message");
-      socket.off("missed messages");
-    };
-  }, [userId]);
+  
+    if (userId && recipientId) {
+      loadChatHistory();
+    }
+  }, [userId, recipientId]);
+  
 
   const { loading, error, data } = useQuery(GET_USERS_IN_ORGANIZATION, {
     variables: { organization },
@@ -94,7 +91,16 @@ function ChatWindow() {
                 Send
               </button>
 
-              <Chat messages={messages} users={data?.usersInOrganization || []} />
+              <ul>
+                {messages.map((msg, index) => (
+                  <li key={index}>
+                    <strong>
+                      {data?.usersInOrganization.find(user => user._id === msg.from)?.firstName || 'Unknown'}:
+                    </strong> {msg.text} <br />
+                    <small>{new Date(msg.timestamp).toLocaleString()}</small>
+                  </li>
+                ))}
+              </ul>
             </>
           )}
         </div>
