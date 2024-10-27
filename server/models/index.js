@@ -1,6 +1,6 @@
-const User = require('./User');
-const Inventory = require('./Inventory');
+const User = require('./user');
+const Inventory = require('./inventory');
 const SalesReport = require('./SalesReports');
-const Message = require('./Message'); // Add the Message model here
+const Message = require('./message'); // Add the Message model here
 
 module.exports = { User, Inventory, SalesReport, Message };
