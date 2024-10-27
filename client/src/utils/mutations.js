@@ -41,3 +41,20 @@ export const LOGIN_USER = gql`
     }
   }
 `;
+
+export const SEND_MESSAGE = gql`
+  mutation SendMessage($from: ID!, $to: ID!, $text: String!) {
+    sendMessage(from: $from, to: $to, text: $text) {
+      _id
+      from {
+        _id
+      }
+      to {
+        _id
+      }
+      text
+      timestamp
+      isDelivered
+    }
+  }
+`;

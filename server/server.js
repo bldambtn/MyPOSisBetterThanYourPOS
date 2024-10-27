@@ -58,20 +58,26 @@ const startApolloServer = async () => {
   app.get("/api/chat/history/:userId/:recipientId", async (req, res) => {
     try {
       const { userId, recipientId } = req.params;
+  
+      // Fetch chat messages between the two users, sorted by timestamp
       const messages = await Message.find({
         $or: [
           { from: userId, to: recipientId },
           { from: recipientId, to: userId },
         ],
-      }).sort({ timestamp: 1 }); // Sort by timestamp to load in order
+      }).sort({ timestamp: 1 });
   
-      res.json(messages);
+      // Check if messages exist
+      if (messages && messages.length > 0) {
+        res.json(messages); // Send back messages if found
+      } else {
+        res.status(404).json({ error: "No chat history found between these users." });
+      }
     } catch (err) {
       console.error("Error fetching chat history:", err);
       res.status(500).json({ error: "Error fetching chat history" });
     }
   });
-
   // Socket.io connection handling
   io.on("connection", (socket) => {
     const userId = socket.handshake.auth.userId;

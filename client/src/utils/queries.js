@@ -85,3 +85,22 @@ export const GET_USERS_IN_ORGANIZATION = gql`
     }
   }
 `;
+
+export const GET_MESSAGES = gql`
+  query GetMessages($userId: ID!, $recipientId: ID!) {
+    messages(userId: $userId, recipientId: $recipientId) {
+      _id
+      from {
+        _id
+        firstName
+      }
+      to {
+        _id
+        firstName
+      }
+      text
+      timestamp
+      isDelivered
+    }
+  }
+`;

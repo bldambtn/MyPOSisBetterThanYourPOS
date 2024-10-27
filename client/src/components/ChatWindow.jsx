@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { useQuery } from "@apollo/client";
-import { GET_USERS_IN_ORGANIZATION } from "../utils/queries";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import { GET_USERS_IN_ORGANIZATION, GET_MESSAGES } from "../utils/queries";
+import { SEND_MESSAGE } from "../utils/mutations";
 import socket from "../utils/socket";
 
 function ChatWindow() {
@@ -11,44 +12,46 @@ function ChatWindow() {
   const userId = localStorage.getItem("userId");
   const organization = localStorage.getItem("organization");
 
-  useEffect(() => {
-    async function loadChatHistory() {
-      try {
-        const response = await fetch(`http://localhost:3001/api/chat/history/${userId}/${recipientId}`);
-        const history = await response.json();
-        setMessages(history);
-      } catch (err) {
-        console.error("Error loading chat history:", err);
-      }
-    }
-  
-    if (userId && recipientId) {
-      loadChatHistory();
-    }
-  }, [userId, recipientId]);
-  
-
   const { loading, error, data } = useQuery(GET_USERS_IN_ORGANIZATION, {
     variables: { organization },
     skip: !organization,
   });
 
+  const [fetchMessages] = useLazyQuery(GET_MESSAGES, {
+    variables: { userId, recipientId },
+    onCompleted: (data) => setMessages(data.messages),
+  });
+
+  const [sendMessage] = useMutation(SEND_MESSAGE);
+
+  useEffect(() => {
+    if (userId && recipientId) {
+      fetchMessages();
+    }
+  }, [userId, recipientId, fetchMessages]);
+
+  useEffect(() => {
+    socket.on("chat message", (incomingMessage) => {
+      setMessages((prevMessages) => [...prevMessages, incomingMessage]);
+    });
+
+    return () => {
+      socket.off("chat message");
+    };
+  }, []);
+
   const toggleChat = () => setIsOpen(!isOpen);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!recipientId) {
       alert("Please select a recipient before sending a message.");
       return;
     }
 
-    const messageData = {
-      from: userId,
-      to: recipientId,
-      text: message,
-      timestamp: new Date().toISOString(),
-    };
-
+    const messageData = { from: userId, to: recipientId, text: message };
     socket.emit("chat message", messageData);
+
+    await sendMessage({ variables: messageData });
     setMessages((prevMessages) => [...prevMessages, messageData]);
     setMessage("");
   };

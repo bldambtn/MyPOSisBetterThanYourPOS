@@ -1,4 +1,4 @@
-const { Inventory, User, SalesReport } = require("../models");
+const { Inventory, User, SalesReport, Message } = require("../models");
 const { AuthenticationError } = require("apollo-server-express");
 const { signToken } = require("../utils/auth");
 
@@ -49,7 +49,6 @@ const resolvers = {
       try {
         const filter = {};
 
-        // Apply filters based on dateRange, product, or category
         if (dateRange) {
           const today = new Date();
           if (dateRange === "daily") {
@@ -76,13 +75,17 @@ const resolvers = {
       }
     },
 
-
-    SearchProduct: async (_, { plu }) => {
+    messages: async (_, { userId, recipientId }) => {
       try {
-        return await Inventory.findOne({plu: plu});
+        return await Message.find({
+          $or: [
+            { from: userId, to: recipientId },
+            { from: recipientId, to: userId },
+          ],
+        }).sort({ timestamp: 1 });
       } catch (err) {
-        console.error("❌ Error fetching items:", err);
-        throw new Error("Failed to fetch items.");
+        console.error("❌ Error fetching messages:", err);
+        throw new Error("Failed to fetch messages.");
       }
     },
   },
@@ -90,7 +93,6 @@ const resolvers = {
   Mutation: {
     addUser: async (parent, args) => {
       try {
-        // Normalize the organization field to lowercase and trim any extra spaces
         args.organization = args.organization.trim().toLowerCase();
         
         const user = await User.create(args);
@@ -148,6 +150,19 @@ const resolvers = {
         console.error("❌ Error deleting inventory:", err);
         throw new Error("Failed to delete inventory.");
       }
+    },
+
+    sendMessage: async (_, { from, to, text }) => {
+      const message = new Message({
+        from,
+        to,
+        text,
+        timestamp: new Date(),
+        isDelivered: false,
+      });
+
+      await message.save();
+      return message;
     },
   },
 };

@@ -7,12 +7,9 @@ const typeDefs = gql`
     getInventories: [Inventory]
     getInventory(id: ID!): Inventory
     SearchProduct(plu: String!): Inventory
-    usersInOrganization(organization: String!): [User] # Updated query
-    getSalesReports(
-      dateRange: String
-      product: String
-      category: String
-    ): [SalesReport]
+    usersInOrganization(organization: String!): [User]
+    getSalesReports(dateRange: String, product: String, category: String): [SalesReport]
+    messages(userId: ID!, recipientId: ID!): [Message]
   }
 
   type Inventory {
@@ -46,6 +43,15 @@ const typeDefs = gql`
     totalRevenue: Float
   }
 
+  type Message {
+    _id: ID!
+    from: User!
+    to: User!
+    text: String!
+    timestamp: String!
+    isDelivered: Boolean!
+  }
+
   type Auth {
     token: String
     user: User
@@ -56,7 +62,7 @@ const typeDefs = gql`
       firstName: String!
       lastName: String!
       username: String!
-      organization: String! # Use organization as a string
+      organization: String!
       email: String!
       password: String!
     ): Auth
@@ -98,6 +104,8 @@ const typeDefs = gql`
     ): Inventory
 
     deleteInventory(id: ID!): Inventory
+
+    sendMessage(from: ID!, to: ID!, text: String!): Message
   }
 `;
 

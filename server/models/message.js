@@ -1,15 +1,16 @@
+// models/Message.js
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const messageSchema = new Schema({
   from: {
     type: Schema.Types.ObjectId,
-    ref: "User",  // Reference to the User model
+    ref: "User",
     required: true,
   },
   to: {
     type: Schema.Types.ObjectId,
-    ref: "User",  // Reference to the User model
+    ref: "User",
     required: true,
   },
   text: {
@@ -26,5 +27,7 @@ const messageSchema = new Schema({
   },
 });
 
-const Message = mongoose.model("Message", messageSchema);
+// Check if the model already exists before defining it
+const Message = mongoose.models.Message || mongoose.model("Message", messageSchema);
+
 module.exports = Message;
