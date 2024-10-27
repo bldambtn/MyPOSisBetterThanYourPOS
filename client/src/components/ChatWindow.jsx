@@ -25,6 +25,12 @@ function ChatWindow() {
   const [sendMessage] = useMutation(SEND_MESSAGE);
 
   useEffect(() => {
+    if (data) {
+      console.log("Fetched users in organization:", data.usersInOrganization);
+    }
+  }, [data]);
+
+  useEffect(() => {
     if (userId && recipientId) {
       fetchMessages();
     }
@@ -104,21 +110,22 @@ function ChatWindow() {
               </button>
 
               <ul>
-                {messages.map((msg, index) => (
-                  <li key={index}>
-                    <strong>
-                      {data?.usersInOrganization.find(
-                        (user) => user._id === msg.from
-                      )?.firstName || "Unknown"}
-                      {" "}
-                      {data?.usersInOrganization.find(
-                        (user) => user._id === msg.from
-                      )?.lastName || "Unknown"}:
-                    </strong>{" "}
-                    {msg.text} <br />
-                    <small>{new Date(msg.timestamp).toLocaleString()}</small>
-                  </li>
-                ))}
+                {messages.map((msg, index) => {
+                  const sender = data?.usersInOrganization.find(
+                    (user) => user._id === msg.from
+                  );
+                  const senderName = sender
+                    ? `${sender.firstName || "Unknown"} ${sender.lastName || ""}`.trim()
+                    : "Unknown";
+
+                  return (
+                    <li key={index}>
+                      <strong>{senderName}:</strong> {msg.text}
+                      <br />
+                      <small>{new Date(msg.timestamp).toLocaleString()}</small>
+                    </li>
+                  );
+                })}
               </ul>
             </>
           )}

@@ -6,7 +6,7 @@ const { ApolloServer } = require("@apollo/server");
 const { expressMiddleware } = require("@apollo/server/express4");
 const { Server } = require("socket.io");
 const path = require("path");
-const mongoose = require("mongoose");
+const db = require("./config/connection"); // Import connection
 const { typeDefs, resolvers } = require("./schemas");
 const { authMiddleware } = require("./utils/auth");
 const Message = require("./models/message");
@@ -15,6 +15,7 @@ const PORT = process.env.PORT || 3001;
 const app = express();
 const httpServer = http.createServer(app);
 
+// CORS configuration for Express and Socket.io
 const corsOptions = {
   origin: ["http://localhost:3000", "https://www.superiorsupply.io"],
   methods: ["GET", "POST"],
@@ -24,6 +25,7 @@ app.use(cors(corsOptions));
 
 const io = new Server(httpServer, { cors: corsOptions });
 
+// Initialize Apollo Server
 const server = new ApolloServer({
   typeDefs,
   resolvers,
@@ -49,7 +51,7 @@ const startApolloServer = async () => {
     })
   );
 
-  // Chat history endpoint
+  // Endpoint to fetch chat history
   app.get("/api/chat/history/:userId/:recipientId", async (req, res) => {
     try {
       const { userId, recipientId } = req.params;
@@ -59,7 +61,6 @@ const startApolloServer = async () => {
           { from: recipientId, to: userId },
         ],
       }).sort({ timestamp: 1 });
-
       res.json(messages);
     } catch (err) {
       console.error("Error fetching chat history:", err);
@@ -97,16 +98,11 @@ const startApolloServer = async () => {
     }
   });
 
-  mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  }).then(() => {
+  db.once('open', () => {
     httpServer.listen(PORT, () => {
       console.log(`API server running on port ${PORT}!`);
       console.log(`GraphQL at http://localhost:${PORT}/graphql`);
     });
-  }).catch((err) => {
-    console.error("Failed to connect to MongoDB:", err);
   });
 };
 

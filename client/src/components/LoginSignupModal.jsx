@@ -34,7 +34,6 @@ const LoginSignupModal = ({ onLogin }) => {
 
   const handleSignup = async (event) => {
     event.preventDefault();
-
     const organization = formState.organization.trim().toLowerCase();
 
     try {
@@ -58,7 +57,7 @@ const LoginSignupModal = ({ onLogin }) => {
 
       console.log("Received User ID after signup:", userId);
       alert(`Signup successful! Welcome, ${formState.username}! Please log in now.`);
-      setIsLogin(true); // Switch to login view
+      setIsLogin(true);
     } catch (err) {
       console.error("Signup failed:", err);
     }
