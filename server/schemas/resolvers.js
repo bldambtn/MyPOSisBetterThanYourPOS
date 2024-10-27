@@ -76,23 +76,18 @@ const resolvers = {
     },
   },
 
-  // Commented out to avoid conflicts
-  /*
-  SearchProduct: async (_, { plu }) => {
-    try {
-      return await Inventory.findOne({plu: plu});
-    } catch (err) {
-      console.error("❌ Error fetching items:", err);
-      throw new Error("Failed to fetch items.");
-    }
-  },
-  */
-
   Mutation: {
     addUser: async (parent, args) => {
       try {
         args.organization = args.organization.trim().toLowerCase();
-        
+
+        // Check if the username already exists
+        const existingUser = await User.findOne({ username: args.username });
+        if (existingUser) {
+          throw new Error("Username already exists. Please choose a different one.");
+        }
+
+        // Create the user if no duplicate username is found
         const user = await User.create(args);
         const token = signToken(user);
         return { token, user };
