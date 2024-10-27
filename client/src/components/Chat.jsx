@@ -9,7 +9,10 @@ function Chat({ messages, users }) {
           const sender = users.find((user) => user._id === msg.from);
           return (
             <li key={index}>
-              <strong>{sender ? sender.firstName : "Unknown"}:</strong> {msg.text}
+              <strong>
+                {sender ? `${sender.firstName} ${sender.lastName}` : "Unknown"}:
+              </strong>{" "}
+              {msg.text}
               <br />
               <small>{new Date(msg.timestamp).toLocaleString()}</small>
             </li>

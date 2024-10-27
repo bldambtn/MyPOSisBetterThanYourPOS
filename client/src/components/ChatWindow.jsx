@@ -9,8 +9,6 @@ function ChatWindow() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [recipientId, setRecipientId] = useState("");
-
-  // Retrieve user-specific data from sessionStorage
   const userId = sessionStorage.getItem("userId");
   const organization = sessionStorage.getItem("organization");
 
@@ -109,8 +107,15 @@ function ChatWindow() {
                 {messages.map((msg, index) => (
                   <li key={index}>
                     <strong>
-                      {data?.usersInOrganization.find(user => user._id === msg.from)?.firstName || 'Unknown'}:
-                    </strong> {msg.text} <br />
+                      {data?.usersInOrganization.find(
+                        (user) => user._id === msg.from
+                      )?.firstName || "Unknown"}
+                      {" "}
+                      {data?.usersInOrganization.find(
+                        (user) => user._id === msg.from
+                      )?.lastName || "Unknown"}:
+                    </strong>{" "}
+                    {msg.text} <br />
                     <small>{new Date(msg.timestamp).toLocaleString()}</small>
                   </li>
                 ))}

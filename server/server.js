@@ -15,16 +15,15 @@ const PORT = process.env.PORT || 3001;
 const app = express();
 const httpServer = http.createServer(app);
 
-// Consolidated CORS options
 const corsOptions = {
   origin: ["http://localhost:3000", "https://www.superiorsupply.io"],
   methods: ["GET", "POST"],
   credentials: true,
 };
 app.use(cors(corsOptions));
+
 const io = new Server(httpServer, { cors: corsOptions });
 
-// Apollo Server setup
 const server = new ApolloServer({
   typeDefs,
   resolvers,
@@ -33,11 +32,9 @@ const server = new ApolloServer({
 const startApolloServer = async () => {
   await server.start();
 
-  // Middleware to parse JSON
   app.use(express.urlencoded({ extended: false }));
   app.use(express.json());
 
-  // Serve static files in production
   if (process.env.NODE_ENV === "production") {
     app.use(express.static(path.join(__dirname, "../client/dist")));
     app.get("*", (req, res) => {
@@ -45,7 +42,6 @@ const startApolloServer = async () => {
     });
   }
 
-  // GraphQL endpoint with auth middleware
   app.use(
     "/graphql",
     expressMiddleware(server, {
@@ -53,23 +49,18 @@ const startApolloServer = async () => {
     })
   );
 
-  // Chat history endpoint with message existence check
+  // Chat history endpoint
   app.get("/api/chat/history/:userId/:recipientId", async (req, res) => {
     try {
       const { userId, recipientId } = req.params;
-  
       const messages = await Message.find({
         $or: [
           { from: userId, to: recipientId },
           { from: recipientId, to: userId },
         ],
       }).sort({ timestamp: 1 });
-  
-      if (messages && messages.length > 0) {
-        res.json(messages);
-      } else {
-        res.status(404).json({ error: "No chat history found between these users." });
-      }
+
+      res.json(messages);
     } catch (err) {
       console.error("Error fetching chat history:", err);
       res.status(500).json({ error: "Error fetching chat history" });
@@ -83,15 +74,9 @@ const startApolloServer = async () => {
       socket.join(userId);
       console.log(`User connected: Socket ID: ${socket.id}, User ID: ${userId}`);
 
-      Message.find({ $or: [{ from: userId }, { to: userId }] })
-        .sort({ timestamp: 1 })
-        .then((history) => {
-          socket.emit("load chat history", history);
-        });
-
       socket.on("chat message", async (messageData) => {
         const { from, to, text } = messageData;
-        if (!text.trim()) return; // Validate non-empty text
+        if (!text.trim()) return;
 
         const newMessage = new Message({
           from,
@@ -112,7 +97,6 @@ const startApolloServer = async () => {
     }
   });
 
-  // Connect to MongoDB
   mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
