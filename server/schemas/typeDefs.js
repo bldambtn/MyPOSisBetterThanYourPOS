@@ -1,13 +1,13 @@
+// schemas/typeDefs.js
 const { gql } = require("apollo-server-express");
 
 const typeDefs = gql`
   type Query {
     hello: String
     user: User
-    getInventories: [Inventory]
-    getInventory(id: ID!): Inventory
+    getInventory: [Inventory]
     SearchProduct(plu: String!): Inventory
-    usersInOrganization(organization: String!): [User] # Updated query
+    usersInOrganization(organization: String!): [User]
     getSalesReports(
       dateRange: String
       product: String
@@ -16,39 +16,40 @@ const typeDefs = gql`
   }
 
   type Inventory {
-    _id: ID!
+    _id: ID
     upc: String
-    plu: String!
-    productName: String!
+    plu: String
+    productName: String
     weightPerItem: Float
     salePrice: Float
     vendorPrice: Float
     inStock: Int
     coo: String
-    companyOfOrigin: String
+    company: String
   }
+    
 
   type User {
-    _id: ID
-    firstName: String
-    lastName: String
-    username: String
-    organization: String
+    _id: ID!
+    firstName: String!
+    lastName: String!
+    username: String!
+    organization: String!
     unixId: Int!
-    email: String
+    email: String!
   }
 
   type SalesReport {
-    date: String
-    product: String
-    category: String
-    quantitySold: Int
-    totalRevenue: Float
+    date: String!
+    product: String!
+    category: String!
+    quantitySold: Int!
+    totalRevenue: Float!
   }
 
   type Auth {
-    token: String
-    user: User
+    token: String!
+    user: User!
   }
 
   type Mutation {
@@ -56,7 +57,7 @@ const typeDefs = gql`
       firstName: String!
       lastName: String!
       username: String!
-      organization: String! # Use organization as a string
+      organization: String!
       email: String!
       password: String!
     ): Auth
