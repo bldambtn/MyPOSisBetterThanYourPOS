@@ -4,7 +4,6 @@ const http = require("http");
 const { ApolloServer } = require("@apollo/server");
 const { expressMiddleware } = require("@apollo/server/express4");
 const { Server } = require("socket.io");
-const path = require("path");
 const mongoose = require("mongoose");
 const { typeDefs, resolvers } = require("./schemas");
 const { authMiddleware } = require("./utils/auth");
@@ -32,13 +31,7 @@ const startApolloServer = async () => {
   app.use(express.urlencoded({ extended: false }));
   app.use(express.json());
 
-  if (process.env.NODE_ENV === "production") {
-    app.use(express.static(path.join(__dirname, "../client/dist")));
-    app.get("*", (req, res) => {
-      res.sendFile(path.join(__dirname, "../client/dist/index.html"));
-    });
-  }
-
+  // Middleware for GraphQL with auth context
   app.use(
     "/graphql",
     expressMiddleware(server, {
@@ -46,17 +39,18 @@ const startApolloServer = async () => {
     })
   );
 
+  // Socket.io setup for real-time messaging
   io.on("connection", (socket) => {
     const userId = socket.handshake.query.userId;
-  
+    
     if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
       console.warn("User ID not provided or is not a valid ObjectId during connection.");
       return;
     }
-  
+    
     console.log(`🔌 User connected: ${socket.id}, User ID: ${userId}`);
     socket.join(userId); // Make sure the user joins their own room for messaging.
-  
+    
     // Fetch and send missed messages from MongoDB
     Message.find({ to: userId, isDelivered: false })
       .then((messages) => {
@@ -69,19 +63,19 @@ const startApolloServer = async () => {
       .catch((err) => {
         console.error("❌ Error fetching missed messages:", err);
       });
-  
+    
     // Listen for chat messages
     socket.on("chat message", async (messageData) => {
       const recipientId = messageData.to;
-  
+    
       // Validate the recipientId
       if (!recipientId || !mongoose.Types.ObjectId.isValid(recipientId)) {
         console.error("Invalid recipient ID:", recipientId);
         return;
       }
-  
+    
       messageData.timestamp = new Date();
-  
+    
       // Save the message in MongoDB
       try {
         const message = new Message({
@@ -91,23 +85,24 @@ const startApolloServer = async () => {
           timestamp: messageData.timestamp,
           isDelivered: false,
         });
-  
+    
         await message.save();
         console.log("Message saved:", message);
-  
+    
         // Emit the message to the intended recipient
         io.to(recipientId).emit("chat message", message);
       } catch (err) {
         console.error("❌ Error saving message:", err);
       }
     });
-  
+    
     socket.on("disconnect", () => {
       console.log(`🔌 User disconnected: ${userId}`);
     });
   });
 
-  mongoose.connect(process.env.MONGODB_URI,)
+  // Connect to MongoDB and start the HTTP server
+  mongoose.connect(process.env.MONGODB_URI)
     .then(() => {
       httpServer.listen(PORT, () => {
         console.log(`API server running on port ${PORT}!`);
