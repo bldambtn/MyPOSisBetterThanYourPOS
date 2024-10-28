@@ -679,28 +679,6 @@ h1 {
   margin-top: 20px;
 }
 
-/* Sales Reports */
-.sales-reports-page {
-  padding-top: 80px;
-}
-
-.sales-reports-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.sales-reports-table th,
-.sales-reports-table td {
-  padding: 10px;
-  border: 1px solid #ccc;
-}
-
-.sales-reports-table th {
-  background-color: var(--backgroundcolor);
-  color: white;
-  cursor: pointer;
-}
-
 /* Notifications Page */
 .notifications-page {
   padding-top: 80px;
