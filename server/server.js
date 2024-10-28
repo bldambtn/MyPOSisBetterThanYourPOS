@@ -4,6 +4,7 @@ const http = require("http");
 const { ApolloServer } = require("@apollo/server");
 const { expressMiddleware } = require("@apollo/server/express4");
 const { Server } = require("socket.io");
+const path = require("path");
 const mongoose = require("mongoose");
 const { typeDefs, resolvers } = require("./schemas");
 const { authMiddleware } = require("./utils/auth");
@@ -34,6 +35,15 @@ const startApolloServer = async () => {
   app.use(express.json());
 
   app.get('/', (req, res) => res.send('API is live!')); // Health check endpoint
+
+  
+  if (process.env.NODE_ENV === "production") {
+    app.use(express.static(path.join(__dirname, "../client/dist")));
+
+    app.get("*", (req, res) => {
+      res.sendFile(path.join(__dirname, "../client/dist/index.html"));
+    });
+  }
 
   app.use(
     "/graphql",
