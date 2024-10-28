@@ -16,9 +16,9 @@ const httpServer = http.createServer(app);
 // CORS configuration for Socket.io
 const io = new Server(httpServer, {
   cors: {
-    origin: ["http://localhost:3000", "https://www.superiorsupply.io", "https://your-render-subdomain.onrender.com"],
+    origin: ["http://localhost:3000", "https://www.superiorsupply.io",],
     methods: ["GET", "POST"],
-    credentials: true,
+    credentials: false,
   },
 });
 
