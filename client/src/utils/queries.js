@@ -65,18 +65,14 @@ export const SEARCH_PRODUCT_QUERY = gql`
 
 // Query for fetching the full inventory with more fields
 export const QUERY_INVENTORY = gql`
-  query getInventory {
-    inventory {
-     _id
-    upc
-    plu
-    productName
-    weightPerItem
-    salePrice
-    vendorPrice
-    inStock
-    coo
-    company
+  query GetInventory {
+    getInventory {
+      _id
+      upc
+      plu
+      productName
+      inStock
+      salePrice
     }
   }
 `;
