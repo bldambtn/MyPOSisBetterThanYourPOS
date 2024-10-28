@@ -32,7 +32,6 @@ html {
   overflow-x: hidden;
 }
 
-/* Adjust the padding for pages to avoid overlap with the fixed header */
 .page-content {
   padding-top: 80px;
 }
@@ -75,7 +74,9 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* Title Banner */
+/* ==============================
+   Title Banner Styles
+  ============================== */
 .title-banner {
   background-color: var(--backgroundcolor);
   color: white;
@@ -89,7 +90,9 @@ button:disabled {
   z-index: 10;
 }
 
-/* Footer */
+/* ==============================
+   Footer
+  ============================== */
 .site-footer {
   background-color: var(--backgroundcolor);
   color: white;
@@ -114,7 +117,9 @@ button:disabled {
   font-size: 0.9rem;
 }
 
-/* Remove background-image from .homepage */
+/* ==============================
+   Homepage Page Styles
+  ============================== */
 .homepage {
   display: flex;
   flex-direction: column;
@@ -203,7 +208,9 @@ button:disabled {
   color: inherit;
 }
 
-/* Enterprise Page Styles */
+/* ==============================
+   Enterprise Page Styles
+  ============================== */
 .enterprise-page {
   display: flex;
   flex-direction: column;
@@ -307,7 +314,9 @@ h1 {
   color: white;
 }
 
-/* Chat Window Styling */
+/* ==============================
+  Chat Windown Styling
+  ============================== */
 .chat-window {
   position: fixed;
   bottom: 60px;
@@ -503,11 +512,7 @@ h1 {
   background-color: #1a6e1a;
 }
 
-/* ==============================
-   Add Item Form
-  ============================== */
-
-/* Modal Styles */
+/* Add Item Form */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -675,7 +680,8 @@ h1 {
   text-align: right;
 }
 
-.totals, .entry-field {
+.totals,
+.entry-field {
   margin-top: 20px;
 }
 
@@ -759,3 +765,144 @@ h1 {
   background-color: rgba(28, 176, 132, 0.8);
 }
 
+/* ==============================
+   Responsive Media Queries
+  ============================== */
+
+/* Small devices (max-width: 600px) */
+@media (max-width: 600px) {
+  .title-banner {
+    font-size: 1.5rem;
+    padding: 15px;
+  }
+
+  .top-right-button,
+  .button-common,
+  .enterprise-button {
+    font-size: 0.9rem;
+    position: relative;
+    top: 60px;
+    margin: 0 auto 10px;
+    width: 90%;
+    text-align: center;
+    padding: 10px 0;
+  }
+
+  .page-content {
+    padding-top: 45px; 
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  /* Chat Window Adjustments for Small Screens */
+  .chat-window {
+    width: 60px;
+    height: 60px;
+    bottom: 20px;
+    right: 20px;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 0.9rem;
+    line-height: 60px;
+    box-shadow: none;
+    background-color: var(--backgroundcolor);
+    cursor: pointer;
+  }
+
+  .chat-window::after {
+    content: "Chat";
+    color: white;
+  }
+
+  .homepage button,
+  .dashboard-button,
+  .payment-button {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .payment-buttons {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .sales-box {
+    width: 100%;
+    margin-top: 20px;
+  }
+}
+
+/* Medium devices (max-width: 768px) */
+@media (max-width: 768px) {
+  .title-banner {
+    font-size: 1.8rem;
+    padding: 18px;
+  }
+
+ .return-to-dashboard {
+    font-size: 1rem;
+    top: 65px;
+    position: relative;
+    margin: 0 auto 10px;
+    width: 80%;
+  }
+
+  .page-content {
+    padding-top: 130px; /* Adjust padding for fixed elements */
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .dashboard-container {
+    grid-template-columns: 1fr; /* Stack buttons vertically */
+    gap: 20px;
+  }
+}
+
+/* Large devices (min-width: 768px) */
+@media (min-width: 768px) {
+  .title-banner {
+    font-size: 2.5rem;
+    padding: 20px;
+  }
+
+  .return-to-dashboard {
+    font-size: 1.2rem;
+    top: 80px;
+  }
+
+  .page-content {
+    padding-top: 140px; /* Increase padding for larger screens */
+    padding-left: 50px;
+    padding-right: 50px;
+  }
+
+  .dashboard-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+  }
+}
+
+/* Extra-large devices (min-width: 1200px) */
+@media (min-width: 1200px) {
+  .title-banner {
+    font-size: 3rem;
+    padding: 25px;
+  }
+
+  .return-to-dashboard {
+    font-size: 1.5rem;
+    top: 90px; /* Increase spacing for extra-large screens */
+  }
+
+  .page-content {
+    padding-top: 150px;
+    padding-left: 100px;
+    padding-right: 100px;
+  }
+}
