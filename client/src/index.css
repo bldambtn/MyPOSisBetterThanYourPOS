@@ -727,15 +727,35 @@ h1 {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 85vh;
+  min-height: 100vh;
   text-align: center;
+  background-color: var(--darkaccent);
+  color: white;
+  padding: 20px;
 }
 
-.nomatch-page .emoji {
-  font-size: 5rem;
-  margin: 20px 0;
+.nomatch-page h1 {
+  font-size: 3rem;
+  margin-bottom: 20px;
 }
 
-.nomatch-page button {
-  width: 200px;
+.nomatch-page p {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
 }
+
+.nomatch-page .home-button {
+  background-color: var(--backgroundcolor);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.nomatch-page .home-button:hover {
+  background-color: rgba(28, 176, 132, 0.8);
+}
+
