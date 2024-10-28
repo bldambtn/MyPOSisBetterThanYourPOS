@@ -621,6 +621,64 @@ h1 {
   margin-bottom: 20px;
 }
 
+/* Styling for Payment Section*/
+.payment-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.payment-buttons {
+  display: flex;
+  justify-content: space-between;
+  width: 50%; /* Adjust width as needed */
+  margin-top: 10px;
+}
+
+.payment-button {
+  flex: 1;
+  margin: 0 10px; /* Space between buttons */
+  padding: 10px;
+  background-color: var(--backgroundcolor);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.payment-button:hover {
+  background-color: var(--darkaccent);
+}
+
+/* Sold Items */
+.product-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.product-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+}
+
+.product-details {
+  flex: 2;
+  text-align: left;
+}
+
+.product-price {
+  flex: 1;
+  text-align: right;
+}
+
+.totals, .entry-field {
+  margin-top: 20px;
+}
+
 /* Sales Reports */
 .sales-reports-page {
   padding-top: 80px;
