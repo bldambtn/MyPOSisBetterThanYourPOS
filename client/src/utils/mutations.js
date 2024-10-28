@@ -49,28 +49,57 @@ export const ADD_INVENTORY = gql`
     $upc: String
     $plu: String!
     $productName: String!
-    $weightPerItem: Float
     $salePrice: Float
-    $vendorPrice: Float
     $inStock: Int
-    $coo: String
-    $companyOfOrigin: String
   ) {
     addInventory(
       upc: $upc
       plu: $plu
       productName: $productName
-      weightPerItem: $weightPerItem
       salePrice: $salePrice
-      vendorPrice: $vendorPrice
       inStock: $inStock
-      coo: $coo
-      companyOfOrigin: $companyOfOrigin
     ) {
       _id
       productName
       salePrice
       inStock
+      upc
+      plu
+    }
+  }
+`;
+
+export const UPDATE_INVENTORY = gql`
+  mutation updateInventory(
+    $id: ID
+    $upc: String
+    $plu: String
+    $productName: String
+    $salePrice: Float
+    $inStock: Int
+  ) {
+    updateInventory(
+      id: $id
+      upc: $upc
+      plu: $plu
+      productName: $productName
+      salePrice: $salePrice
+      inStock: $inStock
+    ) {
+      _id
+      productName
+      salePrice
+      inStock
+      upc
+      plu
+    }
+  }
+`;
+
+export const DELETE_INVENTORY = gql`
+  mutation deleteInventory($id: ID!) {
+    deleteInventory(id: $id) {
+      _id
     }
   }
 `;

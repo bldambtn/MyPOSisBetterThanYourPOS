@@ -1,15 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal, Button, Form, Alert } from "react-bootstrap";
 
-const AddItemForm = ({ onClose, onSubmit }) => {
+const AddItemForm = ({ onClose, onSubmit, initialData }) => {
+  // Use initialData if provided (for editing), otherwise use default empty values for adding
   const [formState, setFormState] = useState({
     upc: "",
+    plu: "",
     productName: "",
     inStock: "",
     salePrice: "",
   });
 
   const [errorMessage, setErrorMessage] = useState("");
+
+  // Update formState if initialData changes (e.g., when entering edit mode)
+  useEffect(() => {
+    if (initialData) {
+      setFormState({
+        upc: initialData.upc || "",
+        plu: initialData.plu || "",
+        productName: initialData.productName || "",
+        inStock: initialData.inStock ? String(initialData.inStock) : "",
+        salePrice: initialData.salePrice ? String(initialData.salePrice) : "",
+      });
+    }
+  }, [initialData]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -22,9 +37,9 @@ const AddItemForm = ({ onClose, onSubmit }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    // Basic validation
     if (
       !formState.upc ||
+      !formState.plu ||
       !formState.productName ||
       !formState.inStock ||
       !formState.salePrice
@@ -38,31 +53,38 @@ const AddItemForm = ({ onClose, onSubmit }) => {
       return;
     }
 
-    // If validation passes, submit the form
-    onSubmit(formState);
+    const numericFormState = {
+      ...formState,
+      inStock: parseInt(formState.inStock, 10),
+      salePrice: parseFloat(formState.salePrice),
+    };
+
+    onSubmit(numericFormState);
     setFormState({
       upc: "",
+      plu: "",
       productName: "",
       inStock: "",
       salePrice: "",
     });
-    setErrorMessage(""); // Clear any error messages
+    setErrorMessage("");
   };
 
   const handleDiscardChanges = () => {
     setFormState({
-      upc: "",
-      productName: "",
-      inStock: "",
-      salePrice: "",
+      upc: initialData ? initialData.upc : "",
+      plu: initialData ? initialData.plu : "",
+      productName: initialData ? initialData.productName : "",
+      inStock: initialData ? String(initialData.inStock) : "",
+      salePrice: initialData ? String(initialData.salePrice) : "",
     });
-    setErrorMessage(""); // Clear any error messages
+    setErrorMessage("");
   };
 
   return (
     <Modal show={true} onHide={onClose} className="add-item-form">
       <Modal.Header closeButton>
-        <Modal.Title>Add Item</Modal.Title>
+        <Modal.Title>{initialData ? "Edit Item" : "Add Item"}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
@@ -74,6 +96,18 @@ const AddItemForm = ({ onClose, onSubmit }) => {
               placeholder="Enter UPC"
               name="upc"
               value={formState.upc}
+              onChange={handleChange}
+              required
+            />
+          </Form.Group>
+
+          <Form.Group controlId="formPLU" className="mt-3">
+            <Form.Label>PLU</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter PLU"
+              name="plu"
+              value={formState.plu}
               onChange={handleChange}
               required
             />
@@ -121,7 +155,7 @@ const AddItemForm = ({ onClose, onSubmit }) => {
           Discard Changes
         </Button>
         <Button className="add-item-btn" onClick={handleSubmit}>
-          Add Item
+          {initialData ? "Update Item" : "Add Item"}
         </Button>
       </Modal.Footer>
     </Modal>

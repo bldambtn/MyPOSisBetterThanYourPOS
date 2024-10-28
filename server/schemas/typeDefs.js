@@ -20,12 +20,8 @@ const typeDefs = gql`
     upc: String
     plu: String
     productName: String
-    weightPerItem: Float
     salePrice: Float
-    vendorPrice: Float
     inStock: Int
-    coo: String
-    company: String
   }
     
 
@@ -77,25 +73,17 @@ const typeDefs = gql`
       upc: String
       plu: String!
       productName: String!
-      weightPerItem: Float
       salePrice: Float
-      vendorPrice: Float
       inStock: Int
-      coo: String
-      companyOfOrigin: String
     ): Inventory
 
     updateInventory(
-      id: ID!
+      id: ID
       upc: String
       plu: String
       productName: String
-      weightPerItem: Float
       salePrice: Float
-      vendorPrice: Float
       inStock: Int
-      coo: String
-      companyOfOrigin: String
     ): Inventory
 
     deleteInventory(id: ID!): Inventory

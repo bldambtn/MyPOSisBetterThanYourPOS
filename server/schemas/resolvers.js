@@ -8,9 +8,9 @@ const resolvers = {
 
     getInventory: async () => {
       try {
-        const inventories = await Inventory.find().lean();
-        console.log("Fetched inventories:", inventories); // Debugging output
-        return inventories;
+        const inventory = await Inventory.find().lean();
+        console.log("Fetched inventories:", inventory); // Debugging output
+        return inventory;
       } catch (err) {
         console.error("❌ Error fetching inventory:", err);
         throw new Error("Failed to fetch inventory.");
@@ -145,8 +145,8 @@ const resolvers = {
 
     updateInventory: async (parent, { id, upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, company }) => {
       try {
-        return await Inventory.findByIdAndUpdate(
-          id,
+        return await Inventory.findOneAndUpdate(
+          { plu: plu },
           { upc, plu, productName, weightPerItem, salePrice, vendorPrice, inStock, coo, company},
           { new: true }
         );

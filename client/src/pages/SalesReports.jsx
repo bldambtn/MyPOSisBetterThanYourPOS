@@ -40,35 +40,45 @@ const SalesReports = () => {
   if (error) return <div>Error: {error.message}</div>;
 
   return (
-    <div className="container mt-4">
-      <h2>Sales Reports</h2>
-      <div className="mb-3">
-        <label>Date Range:</label>
-        <select value={dateRange} onChange={(e) => setDateRange(e.target.value)}>
-          <option value="">All</option>
-          <option value="daily">Daily</option>
-          <option value="weekly">Weekly</option>
-          <option value="monthly">Monthly</option>
-        </select>
-
-        <label>Product:</label>
-        <input
-          type="text"
-          value={product}
-          onChange={(e) => setProduct(e.target.value)}
-          placeholder="Enter product name"
-        />
-
-        <label>Category:</label>
-        <input
-          type="text"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          placeholder="Enter category"
-        />
+    <div className="ag-theme-alpine inventory-dashboard">
+      <div className="top-right-button">
+        <BackButton to="/enterprise" />
+      </div>
+      <h1 className="merriweather-bold">Sales Reports</h1>
+      <div className="filter-inputs">
+        <div>
+          <label>Date Range:</label>
+          <select
+            value={dateRange}
+            onChange={(e) => setDateRange(e.target.value)}
+          >
+            <option value="">All</option>
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+          </select>
+        </div>
+        <div>
+          <label>Product:</label>
+          <input
+            type="text"
+            value={product}
+            onChange={(e) => setProduct(e.target.value)}
+            placeholder="Enter product name"
+          />
+        </div>
+        <div>
+          <label>Category:</label>
+          <input
+            type="text"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            placeholder="Enter category"
+          />
+        </div>
       </div>
 
-      <div className="ag-theme-alpine" style={{ height: 400, width: '100%' }}>
+      <div className="ag-theme-alpine" style={{ height: 400, width: "100%" }}>
         <AgGridReact
           rowData={data?.getSalesReports || []}
           columnDefs={columnDefs}
@@ -77,7 +87,6 @@ const SalesReports = () => {
           domLayout="autoHeight"
         />
       </div>
-      <BackButton to="/enterprise" />
     </div>
   );
 };

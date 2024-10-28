@@ -42,7 +42,6 @@ const inventorySchema = new Schema({
   company: {
     type: String,
     ref: 'User',
-    required: true
   }
 });
 
