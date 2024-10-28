@@ -8,7 +8,7 @@ import BackButton from "../components/BackButton";
 
 const PointOfSale = () => {
   return (
-    <div className="page-content pos">
+    <div className="pos-page">
       <div className="top-right-button">
         <BackButton to="/enterprise" />
       </div>

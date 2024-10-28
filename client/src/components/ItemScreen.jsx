@@ -42,14 +42,25 @@ const ItemScreen = () => {
 
   return (
     <div>
-      <div className="entry-field">
-        <EntryField
-          onProductFound={handleProductFound}
-          onRemoveLastItem={handleRemoveLastItem}
-        />
-      </div>
+      {products.length > 0 && (
+        <div>
+          <ul>
+            {products.map((product, index) => (
+              <li key={index} className="product-item">
+                <h5 className="product-details">
+                  {product.productName}, {product.quantity}
+                </h5>
+                <h5 className="product-price">${product.salePrice}</h5>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       <div className="totals">
         <Totals products={products} />
+      </div>
+      <div className="entry-field">
+        <EntryField onProductFound={handleProductFound} />
       </div>
     </div>
   );
