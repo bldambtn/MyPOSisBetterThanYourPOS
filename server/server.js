@@ -12,9 +12,11 @@ const Message = require("./models/message");
 const PORT = process.env.PORT || 3001;
 const app = express();
 const httpServer = http.createServer(app);
+
+// CORS configuration for Socket.io
 const io = new Server(httpServer, {
   cors: {
-    origin: ["http://localhost:3000", "https://www.superiorsupply.io"],
+    origin: ["http://localhost:3000", "https://www.superiorsupply.io", "https://your-render-subdomain.onrender.com"],
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -31,7 +33,8 @@ const startApolloServer = async () => {
   app.use(express.urlencoded({ extended: false }));
   app.use(express.json());
 
-  // Middleware for GraphQL with auth context
+  app.get('/', (req, res) => res.send('API is live!')); // Health check endpoint
+
   app.use(
     "/graphql",
     expressMiddleware(server, {
@@ -39,19 +42,17 @@ const startApolloServer = async () => {
     })
   );
 
-  // Socket.io setup for real-time messaging
   io.on("connection", (socket) => {
     const userId = socket.handshake.query.userId;
     
     if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
-      console.warn("User ID not provided or is not a valid ObjectId during connection.");
+      console.warn("User ID not provided or invalid.");
       return;
     }
     
     console.log(`🔌 User connected: ${socket.id}, User ID: ${userId}`);
-    socket.join(userId); // Make sure the user joins their own room for messaging.
+    socket.join(userId);
     
-    // Fetch and send missed messages from MongoDB
     Message.find({ to: userId, isDelivered: false })
       .then((messages) => {
         if (messages.length > 0) {
@@ -64,11 +65,9 @@ const startApolloServer = async () => {
         console.error("❌ Error fetching missed messages:", err);
       });
     
-    // Listen for chat messages
     socket.on("chat message", async (messageData) => {
       const recipientId = messageData.to;
     
-      // Validate the recipientId
       if (!recipientId || !mongoose.Types.ObjectId.isValid(recipientId)) {
         console.error("Invalid recipient ID:", recipientId);
         return;
@@ -76,7 +75,6 @@ const startApolloServer = async () => {
     
       messageData.timestamp = new Date();
     
-      // Save the message in MongoDB
       try {
         const message = new Message({
           from: userId,
@@ -87,9 +85,6 @@ const startApolloServer = async () => {
         });
     
         await message.save();
-        console.log("Message saved:", message);
-    
-        // Emit the message to the intended recipient
         io.to(recipientId).emit("chat message", message);
       } catch (err) {
         console.error("❌ Error saving message:", err);
@@ -101,13 +96,11 @@ const startApolloServer = async () => {
     });
   });
 
-  // Connect to MongoDB and start the HTTP server
   mongoose.connect(process.env.MONGODB_URI)
     .then(() => {
       httpServer.listen(PORT, () => {
         console.log(`API server running on port ${PORT}!`);
-        console.log(`Use GraphQL at http://localhost:${PORT}/graphql`);
-        console.log(`Socket.io server running on port ${PORT}!`);
+        console.log(`GraphQL available at http://localhost:${PORT}/graphql`);
       });
     })
     .catch((err) => {
