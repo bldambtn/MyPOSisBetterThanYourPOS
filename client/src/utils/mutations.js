@@ -63,6 +63,8 @@ export const ADD_INVENTORY = gql`
       productName
       salePrice
       inStock
+      upc
+      plu
     }
   }
 `;
@@ -88,6 +90,8 @@ export const UPDATE_INVENTORY = gql`
       productName
       salePrice
       inStock
+      upc
+      plu
     }
   }
 `;

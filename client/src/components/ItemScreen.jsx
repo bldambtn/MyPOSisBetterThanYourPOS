@@ -44,13 +44,13 @@ const ItemScreen = () => {
     <div>
       {products.length > 0 && (
         <div>
-          <h2>Items:</h2>
           <ul>
             {products.map((product, index) => (
-              <li key={index}>
-                <h5>{product.productName}</h5>
-                <h5>Price: ${product.salePrice}</h5>
-                <h5>Quantity: {product.quantity}</h5>
+              <li key={index} className="product-item">
+                <h5 className="product-details">
+                  {product.productName}, {product.quantity}
+                </h5>
+                <h5 className="product-price">${product.salePrice}</h5>
               </li>
             ))}
           </ul>
