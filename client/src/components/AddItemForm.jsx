@@ -1,16 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal, Button, Form, Alert } from "react-bootstrap";
 
-const AddItemForm = ({ onClose, onSubmit }) => {
+const AddItemForm = ({ onClose, onSubmit, initialData }) => {
+  // Use initialData if provided (for editing), otherwise use default empty values for adding
   const [formState, setFormState] = useState({
     upc: "",
-    plu: "", 
+    plu: "",
     productName: "",
     inStock: "",
     salePrice: "",
   });
 
   const [errorMessage, setErrorMessage] = useState("");
+
+  // Update formState if initialData changes (e.g., when entering edit mode)
+  useEffect(() => {
+    if (initialData) {
+      setFormState({
+        upc: initialData.upc || "",
+        plu: initialData.plu || "",
+        productName: initialData.productName || "",
+        inStock: initialData.inStock ? String(initialData.inStock) : "",
+        salePrice: initialData.salePrice ? String(initialData.salePrice) : "",
+      });
+    }
+  }, [initialData]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -23,10 +37,9 @@ const AddItemForm = ({ onClose, onSubmit }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    // Basic validation
     if (
       !formState.upc ||
-      !formState.plu || 
+      !formState.plu ||
       !formState.productName ||
       !formState.inStock ||
       !formState.salePrice
@@ -40,7 +53,6 @@ const AddItemForm = ({ onClose, onSubmit }) => {
       return;
     }
 
-    // Convert string values to numbers where needed
     const numericFormState = {
       ...formState,
       inStock: parseInt(formState.inStock, 10),
@@ -50,29 +62,29 @@ const AddItemForm = ({ onClose, onSubmit }) => {
     onSubmit(numericFormState);
     setFormState({
       upc: "",
-      plu: "", 
+      plu: "",
       productName: "",
       inStock: "",
       salePrice: "",
     });
-    setErrorMessage(""); 
+    setErrorMessage("");
   };
 
   const handleDiscardChanges = () => {
     setFormState({
-      upc: "",
-      plu: "", 
-      productName: "",
-      inStock: "",
-      salePrice: "",
+      upc: initialData ? initialData.upc : "",
+      plu: initialData ? initialData.plu : "",
+      productName: initialData ? initialData.productName : "",
+      inStock: initialData ? String(initialData.inStock) : "",
+      salePrice: initialData ? String(initialData.salePrice) : "",
     });
-    setErrorMessage(""); 
+    setErrorMessage("");
   };
 
   return (
     <Modal show={true} onHide={onClose} className="add-item-form">
       <Modal.Header closeButton>
-        <Modal.Title>Add Item</Modal.Title>
+        <Modal.Title>{initialData ? "Edit Item" : "Add Item"}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
@@ -143,7 +155,7 @@ const AddItemForm = ({ onClose, onSubmit }) => {
           Discard Changes
         </Button>
         <Button className="add-item-btn" onClick={handleSubmit}>
-          Add Item
+          {initialData ? "Update Item" : "Add Item"}
         </Button>
       </Modal.Footer>
     </Modal>
